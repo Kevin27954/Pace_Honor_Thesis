@@ -1,7 +1,6 @@
 
 ## Default language features - Expect 1-2 weeks
 - [ ] Mathematical expressions
-- [ ] Type system
 - [ ] Variable declarations
 - [ ] If statements and expressions
 - [ ] Loops
@@ -11,6 +10,7 @@
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] Traits - From rust (Interfaces)
 - [ ] Compiler Error messages
+- [ ] Type system
 - [ ] Garbage Collector
 
 ## Custom Implementations -> Expect 1-2 Weeks
