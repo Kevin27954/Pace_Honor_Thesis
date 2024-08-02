@@ -43,4 +43,6 @@
 
 
 ## Gamify Experience -> Idk give a shitty version if no time, else Mona Lisa version. (1 week) only art.
-- [ ] ASCII art representations.
+- [ ] ASCII art representations using ART -> ASCII converter.
+> Mona Lisa Verison: (More realistic and math intense)[https://www.youtube.com/watch?v=gg40RWiaHRY]  
+> Shitty verison: Just normal ASCII shader converter.
