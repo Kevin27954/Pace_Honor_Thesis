@@ -1,5 +1,5 @@
 
-Default language features - 1-2 weeks
+## Default language features - 1-2 weeks
 - [ ] Mathematical expressions
 - [ ] Type system
 - [ ] Variable declarations
@@ -13,7 +13,7 @@ Default language features - 1-2 weeks
 - [ ] Compiler Error messages
 - [ ] Garbage Collector
 
-Custom Implementations -> 1-2 Weeks
+## Custom Implementations -> 1-2 Weeks
 - [ ] Ability to rewrite poentially **EVERYTHING** according to the user's syntax, e.g. concept:
 > @add (a) and (b) and return sum  
 > function add_two_number(a, b) {}
@@ -27,7 +27,7 @@ Custom Implementations -> 1-2 Weeks
 > @let a equal b  
 - [ ] Maybe Include Rust's "functions might be confused with" syntax so that the compiler can suggest better errors
 
-Compiler Implementations -> 1 month
+## Compiler Implementations -> 1 month
 - [ ] Gamify something similar to Rustlings, going over the features of programming syntax and features
 	    the idea would be a puzzle-like levels where you try to make stuff compile and be correct.
 > Stages will have 3 stars (all shown in ASCII art)
@@ -42,5 +42,5 @@ Compiler Implementations -> 1 month
 	- [ ] Ability to change the display from normal syntax to "custom syntax" only for a single line.
 
 
-Gamify Experience -> Idk give a shitty version if no time, else Mona Lisa version. (1 week) only art.
+## Gamify Experience -> Idk give a shitty version if no time, else Mona Lisa version. (1 week) only art.
 - [ ] ASCII art representations.
