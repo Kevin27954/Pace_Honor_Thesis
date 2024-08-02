@@ -14,7 +14,7 @@
 - [ ] Garbage Collector
 
 ## Custom Implementations -> 1-2 Weeks
-- [ ] Ability to rewrite poentially **EVERYTHING** according to the user's syntax, e.g. concept:
+- [ ] Ability to rewrite potentially **EVERYTHING** according to the user's syntax, e.g. concept:
 > @add (a) and (b) and return sum  
 > function add_two_number(a, b) {}
 > 
@@ -24,7 +24,7 @@
 > @let (a) be (b)  
 > let a = b  
 >   
-> @let a equal b  
+> @let a be b  
 - [ ] Maybe Include Rust's "functions might be confused with" syntax so that the compiler can suggest better errors
 
 ## Compiler Implementations -> 1 month
