@@ -18,6 +18,8 @@
 > @add (a) and (b) and return sum  
 > function add_two_number(a, b) {}
 > 
+> let sum = add_two_number(4, 1)  
+> or  
 > let sum = @add 4 and 1 and return sum  
 > print(sum)
 >
