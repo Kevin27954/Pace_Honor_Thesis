@@ -1,3 +1,36 @@
+use std::{env, process};
+
+use treewalker::run_file;
+mod treewalker;
+
 fn main() {
-    println!("Hello, world!");
+    if env::args().len() > 4 {
+        println!("You entered too many arguments");
+        process::exit(1);
+    } else {
+        // clt-tool run main.txt -v
+        // cli-tool kevling -l
+
+        for argument in env::args().skip(1) {
+            print!("{} ", argument);
+        }
+        println!();
+
+        let args: Vec<String> = env::args().collect();
+        println!("{:?}", args);
+        let cmd = &args[1];
+
+        match cmd.as_str() {
+            "run" => {
+                run_file(&args[2]);
+            }
+            "kevling" => {
+                todo!("Should start the ASCII adventure");
+            }
+            _ => {
+                println!("Unknown command");
+                process::exit(1);
+            }
+        }
+    }
 }
