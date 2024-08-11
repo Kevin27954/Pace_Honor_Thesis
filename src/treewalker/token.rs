@@ -2,15 +2,17 @@ use std::fmt::Display;
 
 use super::token_types::TokenType;
 
-enum Number {
-    Integer,
-    Float,
+#[derive(Debug)]
+pub enum Number {
+    // Up for consideration
+    // Integer(i64),
+    Float(f64),
 }
 
 #[derive(Debug)]
 pub enum Literal {
-    Number,
-    String,
+    Number(Number),
+    String(String),
 }
 
 pub struct Token {

@@ -1,7 +1,6 @@
 use std::{fs, process};
 
 use scanner::Scanner;
-use token::Token;
 
 mod errors;
 mod scanner;
@@ -10,7 +9,7 @@ mod token_types;
 
 pub fn run_file(path: &String) {
     let buffer = fs::read_to_string(path).unwrap_or_else(|_| {
-        eprintln!("Unable to read file {}", path);
+        errors::error(0, format!("Unable to read file {}", path));
         String::new()
     });
 
@@ -22,11 +21,12 @@ pub fn run_file(path: &String) {
 
 pub fn run(source: String) -> bool {
     let mut scanner = Scanner::new(source);
-    let tokens = scanner.scan();
+    let has_error = scanner.scan();
+    println!("{}", has_error);
 
-    for token in tokens {
+    for token in scanner.get_tokens() {
         println!("{}", token);
     }
 
-    return false;
+    return has_error;
 }
