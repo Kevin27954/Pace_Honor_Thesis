@@ -8,6 +8,7 @@ pub enum TokenType {
     LEFT_BRACE,
     RIGHT_BRACE,
 
+    // Symbols
     COMMA,
     DOT,
     MINUS,
@@ -16,6 +17,7 @@ pub enum TokenType {
     STAR,
     SEMICOLON,
 
+    // Equality Operator
     // !
     BANG,
     BANG_EQUAL,
@@ -26,19 +28,27 @@ pub enum TokenType {
     LESS,
     LESS_EQUAL,
 
-    STRING,
-    NUMBERS,
-
-    TRUE,
-    FALSE,
-
+    // Comparison Operators
     AND,
     OR,
 
+    // Literals
+    IDENTIFIERS,
+    STRING,
+    NUMBERS,
+
+    // Boolean values
+    TRUE,
+    FALSE,
+
+    // Conditional Statements
     IF,
     ELSE,
 
+    // Functions
     FUNCTION,
+
+    // Loops
     FOR,
     WHILE,
     DO,
@@ -46,8 +56,13 @@ pub enum TokenType {
     // Ending Keyword for functions, loops, etc
     END,
 
+    // Variable declaration
     LET,
+
+    // Return statement
     RETURN,
 
+    NEW_LINE,
+    WHITE_SPACE,
     EOF,
 }
