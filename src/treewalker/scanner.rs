@@ -129,10 +129,9 @@ impl Scanner {
         self.current += 1;
         match token {
             '\n' => {
-                if let None = self.peek_next() {
-                    self.line -= 1;
+                if let Some(_) = self.peek() {
+                    self.line += 1;
                 }
-                self.line += 1;
             }
             ' ' | '\r' | '\t' => {}
             '(' => self.add_token(TokenType::LEFT_PAREN),
@@ -203,15 +202,9 @@ impl Scanner {
 
                     let res = keywords.get(&identifier);
                     if let Some(token_type) = res {
-                        self.add_token_with_litearl(
-                            token_type.clone(),
-                            Literal::String(identifier),
-                        );
+                        self.add_token(token_type.clone());
                     } else {
-                        self.add_token_with_litearl(
-                            TokenType::IDENTIFIER,
-                            Literal::String(identifier),
-                        );
+                        self.add_token(TokenType::IDENTIFIER);
                     }
                 } else {
                     return Err(CompileErrors::UnknownCharacter(*token));
