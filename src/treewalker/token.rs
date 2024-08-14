@@ -24,10 +24,21 @@ pub struct Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}: {:?} {} {:?}",
-            self.line, self.token_type, self.lexeme, self.litearl
-        )
+        match &self.litearl {
+            Some(litearl) => {
+                write!(
+                    f,
+                    "{}: {:?} {} {:?}",
+                    self.line, self.token_type, self.lexeme, litearl
+                )
+            }
+            None => {
+                write!(
+                    f,
+                    "{}: {:?} {} {:?}",
+                    self.line, self.token_type, self.lexeme, self.litearl
+                )
+            }
+        }
     }
 }

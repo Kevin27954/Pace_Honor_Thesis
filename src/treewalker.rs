@@ -2,7 +2,9 @@ use std::{fs, process};
 
 use scanner::Scanner;
 
+mod ast_printer;
 mod errors;
+mod expr_types;
 mod scanner;
 mod token;
 mod token_types;
