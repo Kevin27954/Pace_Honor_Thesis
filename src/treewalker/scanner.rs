@@ -51,10 +51,7 @@ impl Scanner {
     }
 
     fn is_end(&self) -> bool {
-        if self.current >= self.source.len() {
-            return true;
-        }
-        false
+        return self.current >= self.source.len();
     }
 
     fn match_next(&mut self, want: char, idx: usize) -> Option<bool> {
@@ -72,6 +69,9 @@ impl Scanner {
     }
 
     fn peek(&self) -> Option<&char> {
+        if self.is_end() {
+            return Some(&'\0');
+        }
         return self.source.get(self.current);
     }
 
@@ -130,7 +130,7 @@ impl Scanner {
         self.current += 1;
         match token {
             '\n' => {
-                if let Some(_) = self.peek() {
+                if self.peek() != Some(&'\0') {
                     self.line += 1;
                 }
             }
@@ -218,7 +218,7 @@ impl Scanner {
 
     fn parse_string(&mut self) -> Result<String, CompileErrors> {
         let mut contains_new_line = false;
-        while let Some(false) = self.match_next('"', self.current) {
+        while self.peek().unwrap() != &'"' && !self.is_end() {
             if let Some('\n') = self.peek() {
                 self.line += 1;
                 contains_new_line = true;
@@ -226,12 +226,13 @@ impl Scanner {
             self.ignore_next();
         }
 
-        if let None = self.peek() {
-            self.line -= 1;
+        if self.is_end() {
             return Err(CompileErrors::UnterminatedString);
         } else if contains_new_line {
             return Err(CompileErrors::MultiLineStringError);
         }
+
+        self.ignore_next();
 
         let litearl: String = self.source[self.start + 1..self.current - 1]
             .iter()

@@ -19,7 +19,7 @@ pub fn run_file(path: &String) {
     });
 
     //let has_error = run(&buffer);
-    let has_error = run(&String::from("hello"));
+    let has_error = run(&String::from("\"hello\" \"unterminated"));
     if has_error {
         process::exit(1);
     }
@@ -33,12 +33,11 @@ pub fn run(source: &String) -> bool {
         println!("{}", token);
     }
 
-    let mut parser = Parser::new(&tokens);
-    let exprs = parser.parse();
-    for expr in exprs {
-        println!("{}", print_ast(&expr));
-        //println!("{:?}", expr);
-    }
+    //let mut parser = Parser::new(&tokens);
+    //let exprs = parser.parse();
+    //for expr in exprs {
+    //    println!("{}", print_ast(&expr));
+    //}
 
     return has_error;
 }
