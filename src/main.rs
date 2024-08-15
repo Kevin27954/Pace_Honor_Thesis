@@ -11,11 +11,6 @@ fn main() {
         // clt-tool run main.txt -v
         // cli-tool kevling -l
 
-        for argument in env::args().skip(1) {
-            print!("{} ", argument);
-        }
-        println!();
-
         let args: Vec<String> = env::args().collect();
         println!("{:?}", args);
         let cmd = &args[1];

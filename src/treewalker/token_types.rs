@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 #[allow(non_camel_case_types)]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum TokenType {
     // Parenthesis
     LEFT_PAREN,
@@ -42,6 +42,7 @@ pub enum TokenType {
     // Boolean values
     TRUE,
     FALSE,
+    NONE,
 
     // Conditional Statements
     IF,
@@ -85,5 +86,6 @@ pub fn get_keywords() -> HashMap<String, TokenType> {
         (String::from("return"), TokenType::RETURN),
         (String::from("true"), TokenType::TRUE),
         (String::from("false"), TokenType::FALSE),
+        (String::from("none"), TokenType::NONE),
     ])
 }

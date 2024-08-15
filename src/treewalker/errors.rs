@@ -5,7 +5,7 @@ pub fn error(line: u32, message: String) {
 }
 
 pub fn report(line: u32, error_at: String, message: String) {
-    println!("[line {}] Error {}: {}", line, error_at, message);
+    eprintln!("[line {}] Error {}: {}", line, error_at, message);
 }
 
 impl Error for CompileErrors {}
@@ -14,6 +14,7 @@ impl Error for CompileErrors {}
 pub enum CompileErrors {
     MultiLineStringError,
     UnterminatedString,
+    UnterminatedParenthesis,
     UnknownCharacter(char),
     UnknownError(String),
 }
@@ -26,6 +27,9 @@ impl std::fmt::Display for CompileErrors {
             }
             Self::UnterminatedString => {
                 write!(f, "String wasn't terminated")
+            }
+            Self::UnterminatedParenthesis => {
+                write!(f, "Parenthesis wasn't terminated")
             }
             Self::UnknownCharacter(char) => {
                 write!(f, "Unknown character: {}", char)

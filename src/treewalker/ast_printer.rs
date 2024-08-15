@@ -1,39 +1,35 @@
-use super::expr_types::{Expr, ExprLitearl};
+use super::expr_types::{Expr, Primary, Unary};
 use super::token::Literal;
 
 pub fn print_ast(expr: &Expr) -> String {
     match expr {
-        Expr::Unary(token, expr) => {
-            let exprs: &[&Expr] = &[expr.as_ref()];
-            parenthesize(&token.lexeme, exprs)
-        }
-        Expr::Binary(expr_left, token, expr_right) => {
-            let exprs: &[&Expr] = &[expr_left.as_ref(), expr_right.as_ref()];
-            parenthesize(&token.lexeme, exprs)
-        }
-        Expr::Litearl(token) => {
-            if let Some(token) = token {
-                match token {
-                    ExprLitearl::Boolean(bool) => return format!("{}", bool),
-                    ExprLitearl::Literal(literal) => match literal {
-                        Literal::Number(number) => {
-                            return format!("{:?}", number);
-                        }
-                        Literal::String(string) => {
-                            return format!("{}", string);
-                        }
-                    },
-                }
+        Expr::Primary(primary) => primary_string(primary),
+        Expr::Unary(unary) => match unary {
+            Unary::UnaryExpr(operator, unary) => {
+                let temp = unary.as_ref();
+                parenthesize(&operator.lexeme, &[&Expr::Unary(temp.clone())])
             }
-
-            String::from("nil")
+            Unary::Primary(primary) => primary_string(primary),
+        },
+        Expr::Binary(left, operator, right) => {
+            let slice = &[left.as_ref(), right.as_ref()];
+            parenthesize(&operator.lexeme, slice)
         }
-        Expr::Grouping(expr) => {
-            let exprs: &[&Expr] = &[expr.as_ref()];
-            parenthesize(&String::from("group"), exprs)
+        Expr::Group(expr) => parenthesize(&String::from("group"), &[expr.as_ref()]),
+
+        _ => {
+            todo!("Implement this")
         }
     }
 }
+
+/*
+!!!false
+! !!false
+
+!!false
+! false
+*/
 
 fn parenthesize(name: &String, exprs: &[&Expr]) -> String {
     let mut s = String::new();
@@ -47,4 +43,19 @@ fn parenthesize(name: &String, exprs: &[&Expr]) -> String {
 
     s.push(')');
     s
+}
+
+fn primary_string(primary: &Primary) -> String {
+    match primary {
+        Primary::None => return format!("None"),
+        Primary::Boolean(bool) => return format!("{}", bool),
+        Primary::Literal(literal) => match literal {
+            Literal::Number(number) => {
+                return format!("{:?}", number);
+            }
+            Literal::String(string) => {
+                return format!("{}", string);
+            }
+        },
+    }
 }
