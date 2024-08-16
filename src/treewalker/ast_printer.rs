@@ -7,29 +7,16 @@ pub fn print_ast(expr: &Expr) -> String {
         Expr::Unary(unary) => match unary {
             Unary::UnaryExpr(operator, unary) => {
                 let temp = unary.as_ref();
-                parenthesize(&operator.lexeme, &[&Expr::Unary(temp.clone())])
-            }
-            Unary::Primary(primary) => primary_string(primary),
+                parenthesize(&operator.lexeme, &[&temp.clone()])
+            } //Unary::Primary(primary) => primary_string(primary),
         },
         Expr::Binary(left, operator, right) => {
             let slice = &[left.as_ref(), right.as_ref()];
             parenthesize(&operator.lexeme, slice)
         }
         Expr::Group(expr) => parenthesize(&String::from("group"), &[expr.as_ref()]),
-
-        _ => {
-            todo!("Implement this")
-        }
     }
 }
-
-/*
-!!!false
-! !!false
-
-!!false
-! false
-*/
 
 fn parenthesize(name: &String, exprs: &[&Expr]) -> String {
     let mut s = String::new();

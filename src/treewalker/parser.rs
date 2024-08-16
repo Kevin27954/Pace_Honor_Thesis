@@ -1,7 +1,7 @@
 use crate::treewalker::expr_types::Primary;
 
 use super::{
-    errors::{error, CompileErrors},
+    errors::{parse_err, CompileErrors},
     expr_types::{Expr, Unary},
     token::Token,
     token_types::TokenType,
@@ -51,17 +51,19 @@ impl Parser<'_> {
         return self.tokens[self.current - 1].clone();
     }
 
-    pub fn parse(&mut self) -> Vec<Expr> {
+    pub fn parse(&mut self) -> (Vec<Expr>, bool) {
         let mut exprs: Vec<Expr> = Vec::new();
+        let mut has_error = false;
         while !self.is_end() {
             match self.equality() {
                 Ok(expr) => exprs.push(expr),
                 Err(err) => {
-                    error(0, format!("{}", err));
+                    has_error = true;
+                    parse_err(format!("{}", err));
                 }
             }
         }
-        exprs
+        (exprs, has_error)
     }
 
     fn equality(&mut self) -> Result<Expr, CompileErrors> {
@@ -125,11 +127,20 @@ impl Parser<'_> {
                 Expr::Primary(primary) => {
                     return Ok(Expr::Unary(Unary::UnaryExpr(
                         operator,
-                        Box::new(Unary::Primary(primary)),
+                        Box::new(Expr::Primary(primary)),
                     )));
                 }
                 Expr::Unary(unary) => {
-                    return Ok(Expr::Unary(Unary::UnaryExpr(operator, Box::new(unary))));
+                    return Ok(Expr::Unary(Unary::UnaryExpr(
+                        operator,
+                        Box::new(Expr::Unary(unary)),
+                    )));
+                }
+                Expr::Group(group) => {
+                    return Ok(Expr::Unary(Unary::UnaryExpr(
+                        operator,
+                        Box::new(Expr::Group(group)),
+                    )));
                 }
                 _ => {}
             }
@@ -149,13 +160,21 @@ impl Parser<'_> {
             TokenType::NONE => {
                 return Ok(Expr::Primary(Primary::None));
             }
-            TokenType::NUMBERS | TokenType::STRING => {
+            TokenType::NUMBER | TokenType::STRING => {
                 return Ok(Expr::Primary(Primary::Literal(
                     self.previous().litearl.to_owned().unwrap(),
                 )));
             }
             TokenType::LEFT_PAREN => {
+                if let Some(token) = self.peek() {
+                    if token.token_type == TokenType::RIGHT_PAREN {
+                        self.advance();
+                        return Err(CompileErrors::EmptyParentheses);
+                    }
+                }
+
                 let res = Ok(Expr::Group(Box::new(self.equality()?)));
+
                 if self.advance().token_type != TokenType::RIGHT_PAREN {
                     return Err(CompileErrors::UnterminatedParenthesis);
                 }

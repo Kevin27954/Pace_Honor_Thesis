@@ -37,7 +37,7 @@ pub enum TokenType {
     // Literals
     IDENTIFIER,
     STRING,
-    NUMBERS,
+    NUMBER,
 
     // Boolean values
     TRUE,

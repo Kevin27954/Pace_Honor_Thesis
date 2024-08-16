@@ -173,10 +173,7 @@ impl Scanner {
             }
             '/' => {
                 if let Some(true) = self.match_next('/', self.current) {
-                    while let Some(c) = self.peek() {
-                        if c.eq(&'\n') {
-                            break;
-                        }
+                    while self.peek() != Some(&'\n') && self.peek() != Some(&'\0') {
                         self.ignore_next();
                     }
                     self.add_token(tokens, TokenType::COMMENT);
@@ -194,7 +191,7 @@ impl Scanner {
                     let number = self.parse_number()?;
                     self.add_token_with_litearl(
                         tokens,
-                        TokenType::NUMBERS,
+                        TokenType::NUMBER,
                         Literal::Number(Number::Float(number)),
                     )
                 } else if self.is_alpha_numeric(Some(token)) {

@@ -18,10 +18,10 @@ pub fn run_file(path: &String) {
         String::new()
     });
 
-    //let has_error = run(&buffer);
-    let has_error = run(&String::from("\"hello\" \"unterminated"));
+    let has_error = run(&buffer);
+    //let has_error = run(&String::from("//Coment "));
     if has_error {
-        process::exit(1);
+        process::exit(65);
     }
 }
 
@@ -29,15 +29,20 @@ pub fn run(source: &String) -> bool {
     let mut scanner = Scanner::new(source);
     let (tokens, has_error) = scanner.scan();
 
+    println!("Scanner:");
     for token in &tokens {
         println!("{}", token);
     }
+    if has_error {
+        return has_error;
+    }
 
-    //let mut parser = Parser::new(&tokens);
-    //let exprs = parser.parse();
-    //for expr in exprs {
-    //    println!("{}", print_ast(&expr));
-    //}
+    println!("\nParser:");
+    let mut parser = Parser::new(&tokens);
+    let (exprs, has_error) = parser.parse();
+    for expr in exprs {
+        println!("{}", print_ast(&expr));
+    }
 
     return has_error;
 }

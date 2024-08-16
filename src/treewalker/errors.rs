@@ -4,6 +4,10 @@ pub fn error(line: u32, message: String) {
     report(line, "".to_string(), message);
 }
 
+pub fn parse_err(message: String) {
+    eprintln!("Error: {}", message);
+}
+
 pub fn report(line: u32, error_at: String, message: String) {
     eprintln!("[line {}] Error {}: {}", line, error_at, message);
 }
@@ -15,6 +19,7 @@ pub enum CompileErrors {
     MultiLineStringError,
     UnterminatedString,
     UnterminatedParenthesis,
+    EmptyParentheses,
     UnknownCharacter(char),
     UnknownError(String),
 }
@@ -26,10 +31,13 @@ impl std::fmt::Display for CompileErrors {
                 write!(f, "We don't Support Multi-Line Strings")
             }
             Self::UnterminatedString => {
-                write!(f, "String wasn't terminated")
+                write!(f, "Unterminated string")
             }
             Self::UnterminatedParenthesis => {
                 write!(f, "Parenthesis wasn't terminated")
+            }
+            Self::EmptyParentheses => {
+                write!(f, "Empty Parenthesis")
             }
             Self::UnknownCharacter(char) => {
                 write!(f, "Unknown character: {}", char)
