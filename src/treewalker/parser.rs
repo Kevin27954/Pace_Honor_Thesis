@@ -211,7 +211,11 @@ impl Parser<'_> {
             _ => {
                 // Shouldn't consume token is doesn't match
                 self.current -= 1;
-                let err_token = self.peek().unwrap().clone();
+                let mut err_token: Token = self.peek().unwrap().clone();
+                // An edge case for: '1 - //comment'
+                if err_token.token_type == TokenType::COMMENT {
+                    err_token = self.previous();
+                }
                 self.synchronize();
                 return Err(CompileErrors::ExpectExpr(err_token));
             }
