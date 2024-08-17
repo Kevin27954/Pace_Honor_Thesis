@@ -15,6 +15,21 @@ pub enum Literal {
     String(String),
 }
 
+impl Display for Literal {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Literal::String(string) => {
+                write!(f, "{}", string)
+            }
+            Literal::Number(float) => match float {
+                Number::Float(float) => {
+                    write!(f, "{}", float)
+                }
+            },
+        }
+    }
+}
+
 #[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
@@ -29,7 +44,7 @@ impl Display for Token {
             Some(litearl) => {
                 write!(
                     f,
-                    "{}: {:?} {} {:?}",
+                    "{}: {:?} {} {}",
                     self.line, self.token_type, self.lexeme, litearl
                 )
             }

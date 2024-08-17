@@ -1,5 +1,4 @@
 use super::expr_types::{Expr, Primary, Unary};
-use super::token::Literal;
 
 pub fn print_ast(expr: &Expr) -> String {
     match expr {
@@ -36,13 +35,6 @@ fn primary_string(primary: &Primary) -> String {
     match primary {
         Primary::None => return format!("None"),
         Primary::Boolean(bool) => return format!("{}", bool),
-        Primary::Literal(literal) => match literal {
-            Literal::Number(number) => {
-                return format!("{:?}", number);
-            }
-            Literal::String(string) => {
-                return format!("{}", string);
-            }
-        },
+        Primary::Literal(literal) => return format!("{}", literal),
     }
 }

@@ -51,6 +51,9 @@ pub enum TokenType {
     // Functions
     FUNCTION,
 
+    // Structs
+    STRUCT,
+
     // Loops
     FOR,
     WHILE,
@@ -68,6 +71,9 @@ pub enum TokenType {
     // Comments
     COMMENT,
 
+    // Terminating Symbols
+    NEW_LINE,
+
     EOF,
 }
 
@@ -78,6 +84,7 @@ pub fn get_keywords() -> HashMap<String, TokenType> {
         (String::from("if"), TokenType::IF),
         (String::from("else"), TokenType::ELSE),
         (String::from("function"), TokenType::FUNCTION),
+        (String::from("struct"), TokenType::STRUCT),
         (String::from("for"), TokenType::FOR),
         (String::from("while"), TokenType::WHILE),
         (String::from("do"), TokenType::DO),

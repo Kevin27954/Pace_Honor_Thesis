@@ -1,7 +1,7 @@
 use crate::treewalker::expr_types::Primary;
 
 use super::{
-    errors::{parse_err, CompileErrors},
+    errors::{parse_error, CompileErrors},
     expr_types::{Expr, Unary},
     token::Token,
     token_types::TokenType,
@@ -15,6 +15,38 @@ pub struct Parser<'a> {
 impl Parser<'_> {
     pub fn new(tokens: &Vec<Token>) -> Parser {
         Parser { tokens, current: 0 }
+    }
+
+    pub fn parse(&mut self) -> (Vec<Expr>, bool) {
+        let mut exprs: Vec<Expr> = Vec::new();
+        let mut has_error = false;
+        while !self.is_end() {
+            while !self.is_end()
+                && (self.peek().unwrap().token_type == TokenType::COMMENT
+                    || self.peek().unwrap().token_type == TokenType::NEW_LINE)
+            {
+                self.advance();
+            }
+
+            // Scenario when it is all comments
+            if self.is_end() {
+                break;
+            }
+
+            match self.parse_token() {
+                Ok(expr) => exprs.push(expr),
+                Err(err) => {
+                    has_error = true;
+                    parse_error(err);
+                }
+            }
+
+            if self.peek().unwrap().token_type == TokenType::NEW_LINE {
+                self.advance();
+            }
+        }
+
+        (exprs, has_error)
     }
 
     fn match_type(&mut self, want: &[TokenType]) -> bool {
@@ -51,19 +83,8 @@ impl Parser<'_> {
         return self.tokens[self.current - 1].clone();
     }
 
-    pub fn parse(&mut self) -> (Vec<Expr>, bool) {
-        let mut exprs: Vec<Expr> = Vec::new();
-        let mut has_error = false;
-        while !self.is_end() {
-            match self.equality() {
-                Ok(expr) => exprs.push(expr),
-                Err(err) => {
-                    has_error = true;
-                    parse_err(format!("{}", err));
-                }
-            }
-        }
-        (exprs, has_error)
+    fn parse_token(&mut self) -> Result<Expr, CompileErrors> {
+        return self.equality();
     }
 
     fn equality(&mut self) -> Result<Expr, CompileErrors> {
@@ -161,30 +182,62 @@ impl Parser<'_> {
                 return Ok(Expr::Primary(Primary::None));
             }
             TokenType::NUMBER | TokenType::STRING => {
-                return Ok(Expr::Primary(Primary::Literal(
-                    self.previous().litearl.to_owned().unwrap(),
-                )));
+                let litearl = self.previous().litearl.to_owned().unwrap();
+                return Ok(Expr::Primary(Primary::Literal(litearl)));
             }
             TokenType::LEFT_PAREN => {
+                let left_paren = self.previous();
+
                 if let Some(token) = self.peek() {
                     if token.token_type == TokenType::RIGHT_PAREN {
-                        self.advance();
-                        return Err(CompileErrors::EmptyParentheses);
+                        return Err(CompileErrors::EmptyParentheses(self.advance()));
+                    } else if token.token_type == TokenType::EOF {
+                        return Err(CompileErrors::UnterminatedParenthesis(left_paren));
                     }
                 }
 
-                let res = Ok(Expr::Group(Box::new(self.equality()?)));
+                let res = Ok(Expr::Group(Box::new(self.parse_token()?)));
 
-                if self.advance().token_type != TokenType::RIGHT_PAREN {
-                    return Err(CompileErrors::UnterminatedParenthesis);
+                if self.peek().unwrap().token_type != TokenType::RIGHT_PAREN {
+                    // Might need synchronize here -> THINK
+                    self.synchronize();
+                    return Err(CompileErrors::UnterminatedParenthesis(left_paren));
                 }
+
+                // consumes the right parenthesis
+                self.advance();
                 return res;
             }
             _ => {
-                return Err(CompileErrors::UnknownError(
-                    "Unknown Token or Unimplemented Token".to_string(),
-                ));
+                // Shouldn't consume token is doesn't match
+                self.current -= 1;
+                let err_token = self.peek().unwrap().clone();
+                self.synchronize();
+                return Err(CompileErrors::ExpectExpr(err_token));
             }
+        }
+    }
+
+    // Sync consumes new line.
+    fn synchronize(&mut self) {
+        self.advance();
+
+        while !self.is_end() {
+            if self.previous().token_type == TokenType::NEW_LINE {
+                break;
+            }
+            match self.peek().unwrap().token_type {
+                TokenType::IF
+                | TokenType::LET
+                | TokenType::FUNCTION
+                | TokenType::STRUCT
+                | TokenType::RETURN
+                | TokenType::FOR
+                | TokenType::WHILE => break,
+                _ => {}
+            }
+
+            self.advance();
         }
     }
 }

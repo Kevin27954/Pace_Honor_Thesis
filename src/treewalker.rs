@@ -19,7 +19,7 @@ pub fn run_file(path: &String) {
     });
 
     let has_error = run(&buffer);
-    //let has_error = run(&String::from("//Coment "));
+    //let has_error = run(&String::from("("));
     if has_error {
         process::exit(65);
     }
@@ -40,6 +40,8 @@ pub fn run(source: &String) -> bool {
     println!("\nParser:");
     let mut parser = Parser::new(&tokens);
     let (exprs, has_error) = parser.parse();
+    //let res = parser.equality();
+    //println!("{:?}", res);
     for expr in exprs {
         println!("{}", print_ast(&expr));
     }
