@@ -40,8 +40,8 @@
 > ASCII art RPG in the terminal experience.
 > We have them run little quest helping out villagers and their problems  
 > using the correct data structures.
-- [ ] Ability to show the viewer line by line what they are executing.
-	- [ ] Ability to change the display from normal syntax to "custom syntax" only for a single line.
+- [ ] ~~Ability to show the viewer line by line what they are executing.~~
+	- [ ] ~~Ability to change the display from normal syntax to "custom syntax" only for a single line.~~
 
 
 ## Gamify Experience -> Idk give a shitty version if no time, else Mona Lisa version. (Expect 1 week) only art.
