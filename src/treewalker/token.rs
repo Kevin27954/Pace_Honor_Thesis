@@ -2,19 +2,35 @@ use std::fmt::Display;
 
 use super::token_types::TokenType;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Number {
     // Up for consideration
     // Integer(i64),
     Float(f64),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum Literal {
     Number(Number),
     String(String),
 }
 
+impl Display for Literal {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Literal::String(string) => {
+                write!(f, "{}", string)
+            }
+            Literal::Number(float) => match float {
+                Number::Float(float) => {
+                    write!(f, "{}", float)
+                }
+            },
+        }
+    }
+}
+
+#[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
     pub lexeme: String,
@@ -24,10 +40,21 @@ pub struct Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(
-            f,
-            "{}: {:?} {} {:?}",
-            self.line, self.token_type, self.lexeme, self.litearl
-        )
+        match &self.litearl {
+            Some(litearl) => {
+                write!(
+                    f,
+                    "{}: {:?} {} {}",
+                    self.line, self.token_type, self.lexeme, litearl
+                )
+            }
+            None => {
+                write!(
+                    f,
+                    "{}: {:?} {} {:?}",
+                    self.line, self.token_type, self.lexeme, self.litearl
+                )
+            }
+        }
     }
 }

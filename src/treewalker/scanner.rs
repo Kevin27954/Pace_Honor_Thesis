@@ -10,64 +10,55 @@ pub struct Scanner {
     line: u32,
     start: usize,
     current: usize,
-    tokens: Vec<Token>,
 }
 
 impl Scanner {
-    pub fn new(source: String) -> Self {
+    pub fn new(source: &String) -> Self {
         Scanner {
             source: source.chars().collect(),
             line: 1,
             start: 0,
             current: 0,
-            tokens: vec![],
         }
     }
 
-    pub fn get_tokens(&self) -> &Vec<Token> {
-        &self.tokens
-    }
-
-    pub fn scan(&mut self) -> bool {
+    pub fn scan(&mut self) -> (Vec<Token>, bool) {
+        let mut tokens: Vec<Token> = vec![];
         let mut has_error = false;
         while !self.is_end() {
             // Should never fail as it loops to .len()
-            let char = self.source.get(self.current).unwrap().clone();
-            let res = self.scan_token(&char);
-            match res {
-                Ok(()) => {}
-                Err(err) => {
-                    has_error = true;
-                    error(self.line, format!("{}", err));
-                }
+            let char = self.source[self.current];
+            let res = self.scan_token(&char, &mut tokens);
+
+            if let Err(err) = res {
+                has_error = true;
+                error(self.line, format!("{}", err));
             }
 
             self.start = self.current;
         }
 
-        self.tokens.push(Token {
+        tokens.push(Token {
             token_type: TokenType::EOF,
             lexeme: String::new(),
             litearl: None,
             line: self.line,
         });
-        return has_error;
+
+        return (tokens, has_error);
     }
 
     fn is_end(&self) -> bool {
-        if self.current >= self.source.len() {
-            return true;
-        }
-        false
+        return self.current >= self.source.len();
     }
 
-    fn match_next(&mut self, want: char, idx: usize) -> Option<bool> {
-        if idx >= self.source.len() {
+    fn match_next(&mut self, want: char) -> Option<bool> {
+        if self.current >= self.source.len() {
             return None;
         }
 
         // It is impossible to get None as it is checked beforehand in previous statement
-        if *self.source.get(idx).unwrap() != want {
+        if *self.source.get(self.current).unwrap() != want {
             return Some(false);
         }
 
@@ -76,6 +67,9 @@ impl Scanner {
     }
 
     fn peek(&self) -> Option<&char> {
+        if self.is_end() {
+            return Some(&'\0');
+        }
         return self.source.get(self.current);
     }
 
@@ -83,7 +77,7 @@ impl Scanner {
         return self.source.get(self.current + 1);
     }
 
-    fn ignore_next(&mut self) {
+    fn consume_next(&mut self) {
         self.current += 1;
     }
 
@@ -103,10 +97,14 @@ impl Scanner {
         }
     }
 
-    fn add_token(&mut self, token: TokenType) {
-        let lexeme: String = self.source[self.start..self.current].iter().collect();
+    fn add_token(&mut self, tokens: &mut Vec<Token>, token: TokenType) {
+        let mut lexeme: String = self.source[self.start..self.current].iter().collect();
 
-        self.tokens.push(Token {
+        if token == TokenType::NEW_LINE {
+            lexeme = String::new();
+        }
+
+        tokens.push(Token {
             token_type: token,
             lexeme,
             litearl: None,
@@ -114,10 +112,15 @@ impl Scanner {
         })
     }
 
-    fn add_token_with_litearl(&mut self, token: TokenType, literal: Literal) {
+    fn add_token_with_litearl(
+        &mut self,
+        tokens: &mut Vec<Token>,
+        token: TokenType,
+        literal: Literal,
+    ) {
         let lexeme: String = self.source[self.start..self.current].iter().collect();
 
-        self.tokens.push(Token {
+        tokens.push(Token {
             token_type: token,
             lexeme,
             litearl: Some(literal),
@@ -125,86 +128,84 @@ impl Scanner {
         })
     }
 
-    fn scan_token(&mut self, token: &char) -> Result<(), CompileErrors> {
+    fn scan_token(&mut self, token: &char, tokens: &mut Vec<Token>) -> Result<(), CompileErrors> {
         self.current += 1;
         match token {
             '\n' => {
-                if let Some(_) = self.peek() {
+                if self.peek() != Some(&'\0') {
                     self.line += 1;
                 }
+                self.add_token(tokens, TokenType::NEW_LINE)
             }
             ' ' | '\r' | '\t' => {}
-            '(' => self.add_token(TokenType::LEFT_PAREN),
-            ')' => self.add_token(TokenType::RIGHT_PAREN),
-            ',' => self.add_token(TokenType::COMMA),
-            '.' => self.add_token(TokenType::DOT),
-            '-' => self.add_token(TokenType::MINUS),
-            '+' => self.add_token(TokenType::PLUS),
-            '*' => self.add_token(TokenType::STAR),
-            ';' => self.add_token(TokenType::SEMICOLON),
+            '(' => self.add_token(tokens, TokenType::LEFT_PAREN),
+            ')' => self.add_token(tokens, TokenType::RIGHT_PAREN),
+            ',' => self.add_token(tokens, TokenType::COMMA),
+            '.' => self.add_token(tokens, TokenType::DOT),
+            '-' => self.add_token(tokens, TokenType::MINUS),
+            '+' => self.add_token(tokens, TokenType::PLUS),
+            '*' => self.add_token(tokens, TokenType::STAR),
+            ';' => self.add_token(tokens, TokenType::SEMICOLON),
             '!' => {
-                if let Some(true) = self.match_next('=', self.current) {
-                    self.add_token(TokenType::BANG_EQUAL)
+                if let Some(true) = self.match_next('=') {
+                    self.add_token(tokens, TokenType::BANG_EQUAL)
                 } else {
-                    self.add_token(TokenType::BANG)
+                    self.add_token(tokens, TokenType::BANG)
                 }
             }
             '>' => {
-                if let Some(true) = self.match_next('=', self.current) {
-                    self.add_token(TokenType::GREATER_EQUAL)
+                if let Some(true) = self.match_next('=') {
+                    self.add_token(tokens, TokenType::GREATER_EQUAL)
                 } else {
-                    self.add_token(TokenType::GREATER)
+                    self.add_token(tokens, TokenType::GREATER)
                 }
             }
             '<' => {
-                if let Some(true) = self.match_next('=', self.current) {
-                    self.add_token(TokenType::LESS_EQUAL)
+                if let Some(true) = self.match_next('=') {
+                    self.add_token(tokens, TokenType::LESS_EQUAL)
                 } else {
-                    self.add_token(TokenType::LESS)
+                    self.add_token(tokens, TokenType::LESS)
                 }
             }
             '=' => {
-                if let Some(true) = self.match_next('=', self.current) {
-                    self.add_token(TokenType::EQUAL_EQUAL)
+                if let Some(true) = self.match_next('=') {
+                    self.add_token(tokens, TokenType::EQUAL_EQUAL)
                 } else {
-                    self.add_token(TokenType::EQUAL)
+                    self.add_token(tokens, TokenType::EQUAL)
                 }
             }
             '/' => {
-                if let Some(true) = self.match_next('/', self.current) {
-                    while let Some(c) = self.peek() {
-                        if c.eq(&'\n') {
-                            break;
-                        }
-                        self.ignore_next();
+                if let Some(true) = self.match_next('/') {
+                    while self.peek() != Some(&'\n') && self.peek() != Some(&'\0') {
+                        self.consume_next();
                     }
-                    self.add_token(TokenType::COMMENT);
+                    self.add_token(tokens, TokenType::COMMENT);
                 } else {
-                    self.add_token(TokenType::SLASH)
+                    self.add_token(tokens, TokenType::SLASH)
                 }
             }
             '"' => {
                 // If error, just return.
                 let litearl = self.parse_string()?;
-                self.add_token_with_litearl(TokenType::STRING, Literal::String(litearl))
+                self.add_token_with_litearl(tokens, TokenType::STRING, Literal::String(litearl))
             }
             c => {
                 if c.is_ascii_digit() {
                     let number = self.parse_number()?;
                     self.add_token_with_litearl(
-                        TokenType::NUMBERS,
+                        tokens,
+                        TokenType::NUMBER,
                         Literal::Number(Number::Float(number)),
                     )
                 } else if self.is_alpha_numeric(Some(token)) {
-                    // Literally can not fail
-                    let identifier = self.parse_keywords().unwrap();
+                    let identifier = self.parse_keywords();
                     let keywords = get_keywords();
 
                     let res = keywords.get(&identifier);
                     if let Some(token_type) = res {
-                        self.add_token(token_type.clone());
+                        self.add_token(tokens, token_type.clone());
                     } else {
-                        self.add_token(TokenType::IDENTIFIER);
+                        self.add_token(tokens, TokenType::IDENTIFIER);
                     }
                 } else {
                     return Err(CompileErrors::UnknownCharacter(*token));
@@ -216,16 +217,18 @@ impl Scanner {
 
     fn parse_string(&mut self) -> Result<String, CompileErrors> {
         let mut contains_new_line = false;
-        while let Some(false) = self.match_next('"', self.current) {
+        while self.peek().unwrap() != &'"' && !self.is_end() {
             if let Some('\n') = self.peek() {
                 self.line += 1;
                 contains_new_line = true;
             }
-            self.ignore_next();
+            self.consume_next();
         }
 
-        if let None = self.peek() {
-            self.line -= 1;
+        // Consumes the ending '"' if exist
+        self.consume_next();
+
+        if self.is_end() {
             return Err(CompileErrors::UnterminatedString);
         } else if contains_new_line {
             return Err(CompileErrors::MultiLineStringError);
@@ -240,16 +243,16 @@ impl Scanner {
 
     fn parse_number(&mut self) -> Result<f64, CompileErrors> {
         while self.is_digit(self.peek()) {
-            self.ignore_next();
+            self.consume_next();
         }
 
         let peek = self.peek();
 
         if let Some('.') = peek {
             if self.is_digit(self.peek_next()) {
-                self.ignore_next();
+                self.consume_next();
                 while self.is_digit(self.peek()) {
-                    self.ignore_next();
+                    self.consume_next();
                 }
             }
         }
@@ -259,18 +262,17 @@ impl Scanner {
         match litearl.parse::<f64>() {
             Ok(number) => Ok(number),
             // Should never fail, as I'm giving it only numbers
-            Err(err) => Err(CompileErrors::UnknownError(err.to_string())),
+            Err(_err) => Err(CompileErrors::NumberParseError(litearl)),
         }
     }
 
-    fn parse_keywords(&mut self) -> Result<String, CompileErrors> {
-        //todo!("Finish this parse_keywords");
+    fn parse_keywords(&mut self) -> String {
         while self.is_alpha_numeric(self.peek()) {
-            self.ignore_next();
+            self.consume_next();
         }
 
         let identifer: String = self.source[self.start..self.current].iter().collect();
 
-        Ok(identifer)
+        identifer
     }
 }
