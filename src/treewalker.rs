@@ -40,8 +40,6 @@ pub fn run(source: &String) -> bool {
     println!("\nParser:");
     let mut parser = Parser::new(&tokens);
     let (exprs, has_error) = parser.parse();
-    //let res = parser.equality();
-    //println!("{:?}", res);
     for expr in exprs {
         println!("{}", print_ast(&expr));
     }

@@ -4,48 +4,29 @@ use super::token::Token;
 #[derive(Debug, Clone)]
 pub enum Expr {
     Binary(Box<Expr>, Token, Box<Expr>),
-    //Equality(Equality),
-    //Comparison(Comparison),
-    //Term(Term),
-    //Factor(Factor),
     Unary(Unary),
     Primary(Primary),
     Group(Box<Expr>),
 }
 
 // Token = '!=', '=='
-
-//#[derive(Debug)]
 //pub enum Equality {
-//    EqExpr(Comparison, Option<Token>, Option<Comparison>),
-//}
-//
-//// Token = '<', '>', '<=', '>='
-//#[derive(Debug)]
-//pub enum Comparison {
-//    CmpExpr(Term, Option<Token>, Option<Term>),
-//}
-//
-//// Token = '+', '-'
-//#[derive(Debug)]
-//pub enum Term {
-//    TermExpr(Factor, Option<Token>, Option<Factor>),
-//}
-//
+
+// Token = '<', '>', '<=', '>='
+//pub enum Comparison { }
+
+// Token = '+', '-'
+//pub enum Term { }
+
 //// Token = '/', '*'
-//#[derive(Debug)]
-//pub enum Factor {
-//    FactorExpr(Unary, Option<Token>, Option<Unary>),
-//}
+//pub enum Factor { }
 
 // Token = '!', '-'
 #[derive(Debug, Clone)]
 pub enum Unary {
     UnaryExpr(Token, Box<Expr>),
-    //Primary(Primary),
 }
 
-// Wrapped in option for nil/None type
 #[derive(Debug, Clone)]
 pub enum Primary {
     Literal(Literal),

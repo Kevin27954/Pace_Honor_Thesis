@@ -7,7 +7,7 @@ pub fn print_ast(expr: &Expr) -> String {
             Unary::UnaryExpr(operator, unary) => {
                 let temp = unary.as_ref();
                 parenthesize(&operator.lexeme, &[&temp.clone()])
-            } //Unary::Primary(primary) => primary_string(primary),
+            }
         },
         Expr::Binary(left, operator, right) => {
             let slice = &[left.as_ref(), right.as_ref()];
@@ -28,7 +28,7 @@ fn parenthesize(name: &String, exprs: &[&Expr]) -> String {
     }
 
     s.push(')');
-    s
+    return s;
 }
 
 fn primary_string(primary: &Primary) -> String {

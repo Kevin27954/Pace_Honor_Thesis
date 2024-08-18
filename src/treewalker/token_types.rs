@@ -47,6 +47,7 @@ pub enum TokenType {
     // Conditional Statements
     IF,
     ELSE,
+    THEN,
 
     // Functions
     FUNCTION,
@@ -83,6 +84,7 @@ pub fn get_keywords() -> HashMap<String, TokenType> {
         (String::from("or"), TokenType::OR),
         (String::from("if"), TokenType::IF),
         (String::from("else"), TokenType::ELSE),
+        (String::from("then"), TokenType::THEN),
         (String::from("function"), TokenType::FUNCTION),
         (String::from("struct"), TokenType::STRUCT),
         (String::from("for"), TokenType::FOR),

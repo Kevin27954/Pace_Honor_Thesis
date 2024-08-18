@@ -199,7 +199,6 @@ impl Parser<'_> {
                 let res = Ok(Expr::Group(Box::new(self.parse_token()?)));
 
                 if self.peek().unwrap().token_type != TokenType::RIGHT_PAREN {
-                    // Might need synchronize here -> THINK
                     self.synchronize();
                     return Err(CompileErrors::UnterminatedParenthesis(left_paren));
                 }
