@@ -1,6 +1,9 @@
-use std::error::Error;
+use std::{
+    error::Error,
+    fmt::{Display, Formatter, Result},
+};
 
-use super::token::Token;
+use super::{runtime_types::RuntimeValue, token::Token, token_types::TokenType};
 
 pub fn error(line: u32, message: String) {
     report(line, "".to_string(), message);
@@ -29,6 +32,22 @@ pub fn parse_error(compile_err: CompileErrors) {
         }
     }
 }
+
+pub fn parse_runtime_err(runtime_err: RuntimeError) {
+    match &runtime_err {
+        RuntimeError::UnaryTypeMismatch(operator, _value) => {
+            report(operator.line, "".to_string(), runtime_err.to_string())
+        }
+        RuntimeError::BinaryTypeMismatch(_left, operator, _right) => {
+            report(operator.line, "".to_string(), runtime_err.to_string())
+        }
+        RuntimeError::DivideByZero(operator) => {
+            report(operator.line, "".to_string(), runtime_err.to_string())
+        }
+        _ => {}
+    }
+}
+
 pub fn report(line: u32, error_at: String, message: String) {
     eprintln!("[line {}] Error {}: {}", line, error_at, message);
 }
@@ -49,7 +68,7 @@ pub enum CompileErrors {
 }
 
 impl std::fmt::Display for CompileErrors {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Self::MultiLineStringError => {
                 write!(f, "We don't Support Multi-Line Strings")
@@ -81,6 +100,50 @@ impl std::fmt::Display for CompileErrors {
                     "An Unkown Error had occured at line {} with token {}: {:?}",
                     token.line, token.lexeme, err
                 )
+            }
+        }
+    }
+}
+
+pub enum RuntimeError<'a> {
+    UnaryTypeMismatch(&'a Token, RuntimeValue),
+    BinaryTypeMismatch(RuntimeValue, &'a Token, RuntimeValue),
+    DivideByZero(&'a Token),
+
+    InvalidOperation(RuntimeValue),
+    InvalidConverstion(RuntimeValue),
+
+    UnknownError,
+}
+
+impl Display for RuntimeError<'_> {
+    fn fmt(&self, f: &mut Formatter) -> Result {
+        match self {
+            Self::UnaryTypeMismatch(token_type, value) => {
+                write!(
+                    f,
+                    "Type Mismatch: Cannot apply operator {} to {}.",
+                    token_type.lexeme,
+                    value.err_format()
+                )
+            }
+            Self::BinaryTypeMismatch(left, opeartor, right) => {
+                write!(
+                    f,
+                    "Type Mismatch: Cannot apply operator {} to incompatible types: {} and {}",
+                    opeartor.lexeme,
+                    left.err_format(),
+                    right.err_format()
+                )
+            }
+            Self::DivideByZero(_) => {
+                write!(
+                    f,
+                    "Cannot divide by zero. Results in infinity, Not a Number (NaN)."
+                )
+            }
+            _ => {
+                unimplemented!()
             }
         }
     }

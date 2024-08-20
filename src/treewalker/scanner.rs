@@ -132,10 +132,10 @@ impl Scanner {
         self.current += 1;
         match token {
             '\n' => {
+                self.add_token(tokens, TokenType::NEW_LINE);
                 if self.peek() != Some(&'\0') {
                     self.line += 1;
                 }
-                self.add_token(tokens, TokenType::NEW_LINE)
             }
             ' ' | '\r' | '\t' => {}
             '(' => self.add_token(tokens, TokenType::LEFT_PAREN),
