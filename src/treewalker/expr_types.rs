@@ -7,6 +7,7 @@ pub enum Expr {
     Unary(Unary),
     Primary(Primary),
     Group(Box<Expr>),
+    Variable(Token),
 }
 
 // Token = '!=', '=='

@@ -1,6 +1,23 @@
-use super::expr_types::{Expr, Primary, Unary};
+use super::{
+    expr_types::{Expr, Primary, Unary},
+    statements::Stmt,
+};
 
-pub fn print_ast(expr: &Expr) -> String {
+pub fn print_ast(stmt: &Stmt) -> String {
+    match stmt {
+        Stmt::VarDecl(var, val) => match val {
+            Some(val) => {
+                format!("{} = {}", var.lexeme, print_expr(&val))
+            }
+            None => {
+                format!("{}", var.lexeme)
+            }
+        },
+        Stmt::Expression(expr) => print_expr(&expr),
+    }
+}
+
+pub fn print_expr(expr: &Expr) -> String {
     match expr {
         Expr::Primary(primary) => primary_string(primary),
         Expr::Unary(unary) => match unary {
@@ -14,6 +31,7 @@ pub fn print_ast(expr: &Expr) -> String {
             parenthesize(&operator.lexeme, slice)
         }
         Expr::Group(expr) => parenthesize(&String::from("group"), &[expr.as_ref()]),
+        Expr::Variable(var) => var.lexeme.to_string(),
     }
 }
 
@@ -24,7 +42,7 @@ fn parenthesize(name: &String, exprs: &[&Expr]) -> String {
 
     for i in 0..exprs.len() {
         s.push(' ');
-        s.push_str(&print_ast(&exprs[i]));
+        s.push_str(&print_expr(&exprs[i]));
     }
 
     s.push(')');

@@ -3,7 +3,7 @@ use std::{
     fmt::{Display, Formatter, Result},
 };
 
-use super::{runtime_types::RuntimeValue, token::Token, token_types::TokenType};
+use super::{runtime_types::RuntimeValue, token::Token};
 
 pub fn error(line: u32, message: String) {
     report(line, "".to_string(), message);
@@ -23,7 +23,10 @@ pub fn parse_error(compile_err: CompileErrors) {
             let err_at = format!("at \"{}\"", token.lexeme);
             report(token.line, err_at, compile_err.to_string())
         }
-        CompileErrors::EndOfFile => {}
+        CompileErrors::ExpectNewLine(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
         _ => {
             eprintln!(
                 "This error should not be called by parser_error\n{}",
@@ -44,6 +47,9 @@ pub fn parse_runtime_err(runtime_err: RuntimeError) {
         RuntimeError::DivideByZero(operator) => {
             report(operator.line, "".to_string(), runtime_err.to_string())
         }
+        RuntimeError::UndeclaredVariable(token) => {
+            report(token.line, "".to_string(), runtime_err.to_string())
+        }
         _ => {}
     }
 }
@@ -58,9 +64,11 @@ impl Error for CompileErrors {}
 pub enum CompileErrors {
     MultiLineStringError,
     UnterminatedString,
-    EndOfFile,
     UnknownCharacter(char),
     UnterminatedParenthesis(Token),
+    // Combine into ExpectToken(expected, got)
+    ExpectNewLine(Token),
+
     EmptyParentheses(Token),
     ExpectExpr(Token),
     NumberParseError(String),
@@ -71,13 +79,13 @@ impl std::fmt::Display for CompileErrors {
     fn fmt(&self, f: &mut Formatter<'_>) -> Result {
         match self {
             Self::MultiLineStringError => {
-                write!(f, "We don't Support Multi-Line Strings")
+                write!(f, "We don't support Multi-Line String")
             }
             Self::UnterminatedString => {
-                write!(f, "Unterminated string")
+                write!(f, "Unterminated String")
             }
-            Self::EndOfFile => {
-                write!(f, "")
+            Self::ExpectNewLine(_token) => {
+                write!(f, "Expected New Line")
             }
             Self::UnknownCharacter(char) => {
                 write!(f, "Unknown character: {}", char)
@@ -105,10 +113,11 @@ impl std::fmt::Display for CompileErrors {
     }
 }
 
-pub enum RuntimeError<'a> {
-    UnaryTypeMismatch(&'a Token, RuntimeValue),
-    BinaryTypeMismatch(RuntimeValue, &'a Token, RuntimeValue),
-    DivideByZero(&'a Token),
+pub enum RuntimeError {
+    UnaryTypeMismatch(Token, RuntimeValue),
+    BinaryTypeMismatch(RuntimeValue, Token, RuntimeValue),
+    DivideByZero(Token),
+    UndeclaredVariable(Token),
 
     InvalidOperation(RuntimeValue),
     InvalidConverstion(RuntimeValue),
@@ -116,7 +125,7 @@ pub enum RuntimeError<'a> {
     UnknownError,
 }
 
-impl Display for RuntimeError<'_> {
+impl Display for RuntimeError {
     fn fmt(&self, f: &mut Formatter) -> Result {
         match self {
             Self::UnaryTypeMismatch(token_type, value) => {
@@ -141,6 +150,9 @@ impl Display for RuntimeError<'_> {
                     f,
                     "Cannot divide by zero. Results in infinity, Not a Number (NaN)."
                 )
+            }
+            Self::UndeclaredVariable(var) => {
+                write!(f, "Undeclared Variable: {}", var.lexeme)
             }
             _ => {
                 unimplemented!()
