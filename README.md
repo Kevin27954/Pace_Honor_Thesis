@@ -1,6 +1,6 @@
 
 ## Default language features - Expect 1-2 weeks
-- [ ] Mathematical expressions
+- [x] Mathematical expressions
 - [ ] Variable declarations
 - [ ] If statements and expressions
 - [ ] Loops
