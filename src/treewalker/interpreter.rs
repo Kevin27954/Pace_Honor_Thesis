@@ -61,12 +61,11 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
 
             match &operator.token_type {
                 TokenType::SLASH => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         if right == &0.0 {
                             return Err(RuntimeError::DivideByZero(operator));
                         }
+
                         return Ok(RuntimeValue::Number(left / right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -75,9 +74,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::STAR => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Number(left * right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -86,9 +83,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::MINUS => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Number(left - right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -97,13 +92,9 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::PLUS => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Number(left + right));
-                    } else if let (RuntimeValue::String(left), RuntimeValue::String(right)) =
-                        (&left_val, &right_val)
-                    {
+                    } else if let Some((left, right)) = extract_string_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::String(left.clone() + right));
                     } else if let RuntimeValue::String(string) = &left_val {
                         return Ok(RuntimeValue::String(
@@ -118,9 +109,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::GREATER => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Boolean(left > right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -129,9 +118,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::GREATER_EQUAL => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Boolean(left >= right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -140,9 +127,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::LESS => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Boolean(left <= right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -151,9 +136,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::LESS_EQUAL => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Boolean(left <= right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -162,9 +145,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::BANG_EQUAL => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Boolean(!(left == right)));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -173,9 +154,7 @@ pub fn evaluate_expr(expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
                     }
                 }
                 TokenType::EQUAL_EQUAL => {
-                    if let (RuntimeValue::Number(left), RuntimeValue::Number(right)) =
-                        (&left_val, &right_val)
-                    {
+                    if let Some((left, right)) = extract_num_pair(&left_val, &right_val) {
                         return Ok(RuntimeValue::Boolean(left == right));
                     } else {
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -196,5 +175,29 @@ fn is_truthy(value: RuntimeValue) -> bool {
         RuntimeValue::String(_) | RuntimeValue::Number(_) => true,
         RuntimeValue::Boolean(bool) => bool,
         RuntimeValue::None => false,
+    }
+}
+
+fn extract_num_pair<'a>(
+    left: &'a RuntimeValue,
+    right: &'a RuntimeValue,
+) -> Option<(&'a f64, &'a f64)> {
+    match (left, right) {
+        (RuntimeValue::Number(left_num), RuntimeValue::Number(right_num)) => {
+            Some((left_num, right_num))
+        }
+        _ => None,
+    }
+}
+
+fn extract_string_pair<'a>(
+    left: &'a RuntimeValue,
+    right: &'a RuntimeValue,
+) -> Option<(&'a String, &'a String)> {
+    match (left, right) {
+        (RuntimeValue::String(left_string), RuntimeValue::String(right_string)) => {
+            Some((left_string, right_string))
+        }
+        _ => None,
     }
 }
