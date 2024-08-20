@@ -1,7 +1,6 @@
-
 ## Default language features - Expect 1-2 weeks
 - [x] Mathematical expressions
-- [ ] Variable declarations
+- [ ] (IP) Variable declarations
 - [ ] If statements and expressions
 - [ ] Loops
 	- [ ] While
@@ -9,8 +8,8 @@
 - [ ] Functions
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] Traits - From rust (Interfaces)
-- [ ] Compiler Error messages
-- [ ] Type system
+- [ ] (IP) Compiler Error messages
+- [x] Type system
 - [ ] Garbage Collector
 
 ## Custom Implementations -> Expect 1-2 Weeks
@@ -48,3 +47,7 @@
 - [ ] ASCII art representations using ART -> ASCII converter.
 > Mona Lisa Verison: More realistic and math intense (https://www.youtube.com/watch?v=gg40RWiaHRY)  
 > Shitty verison: Just normal ASCII shader converter.
+
+
+- IP -> In Progress
+- WIP -> Work in Progress
