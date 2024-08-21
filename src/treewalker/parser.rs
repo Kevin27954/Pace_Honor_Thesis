@@ -58,8 +58,11 @@ impl Parser<'_> {
 
     fn parse_block(&mut self) -> Result<Stmt, CompileErrors> {
         let mut stmts: Vec<Stmt> = Vec::new();
-
         let start_do_token = self.previous();
+
+        // If there is a comment, consume it
+        self.match_type(&[TokenType::COMMENT]);
+
         if !self.match_type(&[TokenType::NEW_LINE]) {
             return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
         }
@@ -111,7 +114,7 @@ impl Parser<'_> {
 
         let token = self.peek().unwrap().clone();
         match token.token_type {
-            TokenType::NEW_LINE | TokenType::EOF => {
+            TokenType::NEW_LINE | TokenType::EOF | TokenType::COMMENT => {
                 self.advance();
             }
             _ => {
