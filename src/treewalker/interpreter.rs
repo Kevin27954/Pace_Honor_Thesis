@@ -199,22 +199,10 @@ impl Interpreter {
                         ));
                     }
                     TokenType::BANG_EQUAL => {
-                        if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
-                            return Ok(RuntimeValue::Boolean(!(left == right)));
-                        }
-
-                        return Err(RuntimeError::BinaryTypeMismatch(
-                            left_val, operator, right_val,
-                        ));
+                        return Ok(RuntimeValue::Boolean(left_val != right_val));
                     }
                     TokenType::EQUAL_EQUAL => {
-                        if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
-                            return Ok(RuntimeValue::Boolean(left == right));
-                        }
-
-                        return Err(RuntimeError::BinaryTypeMismatch(
-                            left_val, operator, right_val,
-                        ));
+                        return Ok(RuntimeValue::Boolean(left_val == right_val));
                     }
                     _ => {}
                 }

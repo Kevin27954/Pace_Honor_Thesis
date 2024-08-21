@@ -24,7 +24,7 @@ pub fn run_file(path: &String) {
     });
 
     let (has_error, exit_num) = run(&buffer);
-    //let (has_error, exit_num) = run(&String::from("let a = 123\na= 33"));
+    //let (has_error, exit_num) = run(&String::from("do\nlet a = 123\na= 33\nend"));
     if has_error {
         process::exit(exit_num);
     }

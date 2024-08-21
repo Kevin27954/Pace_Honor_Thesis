@@ -42,18 +42,30 @@ impl Parser<'_> {
     }
 
     fn parse_decl(&mut self) -> Result<Stmt, CompileErrors> {
+        let stmt: Stmt;
+
         if self.match_type(&[TokenType::LET]) {
-            return self.parse_var_decl();
-        }
-
-        if self.match_type(&[TokenType::DO]) {
-            return self.parse_block();
-        }
-        if self.match_type(&[TokenType::END]) {
+            stmt = self.parse_var_decl()?;
+        } else if self.match_type(&[TokenType::DO]) {
+            stmt = self.parse_block()?;
+        } else if self.match_type(&[TokenType::END]) {
             return Err(CompileErrors::ExpectKeywordDo(self.previous()));
+        } else {
+            stmt = self.parse_stmt()?;
         }
 
-        return self.parse_stmt();
+        let token = self.peek().unwrap().clone();
+        match token.token_type {
+            // Expects one of the following after each Statement;
+            TokenType::NEW_LINE | TokenType::EOF | TokenType::COMMENT => {
+                self.advance();
+            }
+            _ => {
+                return Err(CompileErrors::ExpectNewLine(token));
+            }
+        }
+
+        return Ok(stmt);
     }
 
     fn parse_block(&mut self) -> Result<Stmt, CompileErrors> {
@@ -112,16 +124,6 @@ impl Parser<'_> {
             init = Some(self.equality()?);
         }
 
-        let token = self.peek().unwrap().clone();
-        match token.token_type {
-            TokenType::NEW_LINE | TokenType::EOF | TokenType::COMMENT => {
-                self.advance();
-            }
-            _ => {
-                return Err(CompileErrors::ExpectNewLine(token));
-            }
-        }
-
         return Ok(Stmt::VarDecl(identifier, init));
     }
 
@@ -131,19 +133,7 @@ impl Parser<'_> {
     }
 
     fn parse_expr_statement(&mut self) -> Result<Stmt, CompileErrors> {
-        let expr = self.assignment()?;
-
-        let token = self.peek().unwrap().clone();
-        match token.token_type {
-            TokenType::NEW_LINE | TokenType::EOF | TokenType::COMMENT => {
-                self.advance();
-            }
-            _ => {
-                return Err(CompileErrors::ExpectNewLine(token));
-            }
-        }
-
-        return Ok(Stmt::Expression(expr));
+        return Ok(Stmt::Expression(self.assignment()?));
     }
 
     fn match_type(&mut self, want: &[TokenType]) -> bool {
