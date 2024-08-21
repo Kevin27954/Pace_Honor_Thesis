@@ -66,10 +66,15 @@ impl Parser<'_> {
 
         while !self.match_type(&[TokenType::END]) && !self.is_end() {
             while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
-            if self.match_type(&[TokenType::END]) || self.is_end() {
+            if self.is_end() {
+                return Err(CompileErrors::UnterminatedDo(start_do_token));
+            }
+            if self.match_type(&[TokenType::END]) {
                 break;
             }
 
+            // So we can parse out all the inner scope
+            // But only run the ones with correct syntax
             match self.parse_decl() {
                 Ok(expr) => stmts.push(expr),
                 Err(err) => {
@@ -79,12 +84,8 @@ impl Parser<'_> {
             }
         }
 
-        if self.is_end() {
+        if self.previous().token_type != TokenType::END {
             return Err(CompileErrors::UnterminatedDo(start_do_token));
-        }
-
-        if !self.match_type(&[TokenType::NEW_LINE]) {
-            return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
         }
 
         return Ok(Stmt::Block(stmts));

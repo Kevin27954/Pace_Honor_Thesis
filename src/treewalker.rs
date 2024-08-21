@@ -24,7 +24,7 @@ pub fn run_file(path: &String) {
     });
 
     let (has_error, exit_num) = run(&buffer);
-    //let (has_error, exit_num) = run(&String::from("let temp = 123"));
+    //let (has_error, exit_num) = run(&String::from("do\n1+ 2 + 4 \n"));
     if has_error {
         process::exit(exit_num);
     }
