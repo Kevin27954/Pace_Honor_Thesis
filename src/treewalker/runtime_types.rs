@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter, Result};
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Clone, Debug)]
 pub enum RuntimeValue {
     String(String),
     Number(f64),

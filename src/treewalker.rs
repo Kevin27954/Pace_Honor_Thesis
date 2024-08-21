@@ -1,7 +1,7 @@
 use std::{fs, process};
 
 use ast_printer::print_ast;
-use interpreter::interpret;
+use interpreter::Interpreter;
 use parser::Parser;
 use scanner::Scanner;
 
@@ -10,8 +10,10 @@ mod errors;
 mod expr_types;
 mod interpreter;
 mod parser;
+mod runtime_env;
 mod runtime_types;
 mod scanner;
+mod statements;
 mod token;
 mod token_types;
 
@@ -22,7 +24,7 @@ pub fn run_file(path: &String) {
     });
 
     let (has_error, exit_num) = run(&buffer);
-    //let has_error = run(&String::from("("));
+    //let (has_error, exit_num) = run(&String::from("let a = 123\na= 33"));
     if has_error {
         process::exit(exit_num);
     }
@@ -42,19 +44,32 @@ pub fn run(source: &String) -> (bool, i32) {
 
     println!("\nParser:");
     let mut parser = Parser::new(&tokens);
-    let (exprs, has_error) = parser.parse();
-    for expr in &exprs {
-        println!("{}", print_ast(expr));
+    let (stmt, has_error) = parser.parse();
+    for stmt in &stmt {
+        println!("{}", print_ast(stmt));
     }
     if has_error {
         return (has_error, 65);
     }
 
     println!("\nInterpreter:");
-    let mut has_error: bool = false;
-    for expr in &exprs {
-        has_error = interpret(expr);
+    // No need to pass in because we will evaluate line by line and error out
+    // at the point there is an error, rather than push all error to the top.
+    let mut interpreter = Interpreter::new();
+    let has_error: bool = false;
+    for stmt in &stmt {
+        interpreter.interpret(stmt);
     }
+
+    println!("\nAll Variables Delcared (For development purposes):");
+    let envs = interpreter.get_runtime_env().return_runtime_env();
+    let mut envs = envs.iter();
+    while let Some(env) = envs.next() {
+        for (var, val) in env {
+            println!("{} = {}", var, val.err_format());
+        }
+    }
+
     if has_error {
         return (has_error, 70);
     }
