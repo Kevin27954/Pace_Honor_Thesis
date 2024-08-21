@@ -1,11 +1,9 @@
 use std::{fs, process};
 
 use ast_printer::print_ast;
-use expr_types::{Expr, Primary};
 use interpreter::Interpreter;
 use parser::Parser;
 use scanner::Scanner;
-use statements::Stmt;
 
 mod ast_printer;
 mod errors;
@@ -55,6 +53,8 @@ pub fn run(source: &String) -> (bool, i32) {
     }
 
     println!("\nInterpreter:");
+    // No need to pass in because we will evaluate line by line and error out
+    // at the point there is an error, rather than push all error to the top.
     let mut interpreter = Interpreter::new();
     let has_error: bool = false;
     for stmt in &stmt {
@@ -62,8 +62,12 @@ pub fn run(source: &String) -> (bool, i32) {
     }
 
     println!("\nAll Variables Delcared (For development purposes):");
-    for (var, val) in interpreter.get_runtime_env().return_runtime_env() {
-        println!("{} = {}", var, val.err_format());
+    let envs = interpreter.get_runtime_env().return_runtime_env();
+    let mut envs = envs.iter();
+    while let Some(env) = envs.next() {
+        for (var, val) in env {
+            println!("{} = {}", var, val.err_format());
+        }
     }
 
     if has_error {

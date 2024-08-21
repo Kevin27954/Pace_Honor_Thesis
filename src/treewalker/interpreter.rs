@@ -1,3 +1,5 @@
+use std::collections::LinkedList;
+
 use super::{
     errors::{parse_runtime_err, RuntimeError},
     expr_types::{Expr, Primary, Unary},
@@ -24,45 +26,50 @@ impl Interpreter {
     }
 
     pub fn interpret(&mut self, stmt: &Stmt) -> bool {
-        let mut has_error = false;
         match stmt {
             Stmt::Expression(expr) => {
                 let result = self.evaluate_expr(expr);
                 match result {
                     Ok(value) => println!("{}", value),
                     Err(runtime_err) => {
-                        has_error = true;
-                        parse_runtime_err(runtime_err)
+                        parse_runtime_err(runtime_err);
+                        return true;
                     }
                 }
             }
             Stmt::VarDecl(var, val) => {
-                let mut runtime_val = RuntimeValue::None;
-                match val {
+                let runtime_val = match val {
                     Some(expr) => match self.evaluate_expr(&expr) {
-                        Ok(val) => {
-                            runtime_val = val;
-                        }
+                        Ok(val) => val,
                         Err(runtime_err) => {
-                            has_error = true;
-                            parse_runtime_err(runtime_err)
+                            parse_runtime_err(runtime_err);
+                            return true;
                         }
                     },
+                    None => RuntimeValue::None,
+                };
 
-                    None => {}
+                self.runtime_env
+                    .define_var(var.lexeme.to_string(), runtime_val);
+            }
+            Stmt::Block(stmts) => {
+                self.runtime_env.add_scope();
+
+                for stmt in stmts {
+                    if self.interpret(&stmt) {
+                        self.runtime_env.pop_scope();
+                        return true;
+                    }
                 }
-                self.define_var(var.lexeme.to_string(), runtime_val);
+
+                self.runtime_env.pop_scope();
             }
         }
 
-        return has_error;
+        return false;
     }
 
-    fn define_var(&mut self, var: String, val: RuntimeValue) {
-        self.runtime_env.define_var(var, val);
-    }
-
-    fn evaluate_expr(&self, expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
+    fn evaluate_expr(&mut self, expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
         match expr {
             Expr::Primary(primary) => match primary {
                 Primary::Literal(literal) => match literal {
@@ -75,6 +82,7 @@ impl Interpreter {
                 Primary::None => Ok(RuntimeValue::None),
             },
             Expr::Group(expr) => self.evaluate_expr(expr.as_ref()),
+            Expr::Variable(var) => self.runtime_env.get_val(var),
             Expr::Unary(unary) => match unary {
                 Unary::UnaryExpr(operator, expr) => {
                     let value = self.evaluate_expr(expr.as_ref())?;
@@ -212,8 +220,10 @@ impl Interpreter {
 
                 unreachable!("Binary -> This part should never be reached")
             }
-            Expr::Variable(var) => {
-                return self.runtime_env.get_val(var);
+            Expr::Assignment(var, expr) => {
+                let value = self.evaluate_expr(expr.as_ref())?;
+                self.runtime_env.assign_var(var, value.clone())?;
+                return Ok(value);
             }
         }
     }

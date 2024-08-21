@@ -27,9 +27,24 @@ pub fn parse_error(compile_err: CompileErrors) {
             let err_at = format!("at \"{}\"", token.lexeme);
             report(token.line, err_at, compile_err.to_string())
         }
+        CompileErrors::InvalidIdentifier(ref token) => {
+            report(token.line, "".to_string(), compile_err.to_string())
+        }
+        CompileErrors::KeywordAsIdentifier(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
+        CompileErrors::ExpectKeywordDo(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
+        CompileErrors::UnterminatedDo(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
         _ => {
             eprintln!(
-                "This error should not be called by parser_error\n{}",
+                "This error should not be called by parser_error.\nYou probably didn't implement it yet:\n{}",
                 compile_err
             )
         }
@@ -66,12 +81,16 @@ pub enum CompileErrors {
     UnterminatedString,
     UnknownCharacter(char),
     UnterminatedParenthesis(Token),
-    // Combine into ExpectToken(expected, got)
+    UnterminatedDo(Token),
+    // Combine into ExpectToken(expected, got)?
     ExpectNewLine(Token),
+    ExpectExpr(Token),
+    ExpectKeywordDo(Token),
+
+    InvalidIdentifier(Token),
+    KeywordAsIdentifier(Token),
 
     EmptyParentheses(Token),
-    ExpectExpr(Token),
-    NumberParseError(String),
     UnknownError(Token, String),
 }
 
@@ -87,14 +106,27 @@ impl std::fmt::Display for CompileErrors {
             Self::ExpectNewLine(_token) => {
                 write!(f, "Expected New Line")
             }
+            Self::ExpectKeywordDo(token) => {
+                write!(f, "Expected Keyword 'do' before '{}'", token.lexeme)
+            }
+            Self::InvalidIdentifier(_token) => {
+                write!(f, "Invalid Identifier name")
+            }
+            Self::KeywordAsIdentifier(token) => {
+                write!(
+                    f,
+                    "Can't use Reserved Word '{}' as Identifier",
+                    token.lexeme
+                )
+            }
             Self::UnknownCharacter(char) => {
                 write!(f, "Unknown character: {}", char)
             }
-            Self::NumberParseError(string) => {
-                write!(f, "Unable to parse number {}.", string)
-            }
             Self::UnterminatedParenthesis(_token) => {
                 write!(f, "Parenthesis wasn't terminated")
+            }
+            Self::UnterminatedDo(_token) => {
+                write!(f, "'do' wasn't accompanied by 'end'")
             }
             Self::EmptyParentheses(_token) => {
                 write!(f, "Empty Parenthesis")

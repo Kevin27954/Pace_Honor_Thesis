@@ -3,6 +3,7 @@ use super::token::Token;
 
 #[derive(Debug, Clone)]
 pub enum Expr {
+    Assignment(Token, Box<Expr>),
     Binary(Box<Expr>, Token, Box<Expr>),
     Unary(Unary),
     Primary(Primary),

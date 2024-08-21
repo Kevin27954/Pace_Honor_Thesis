@@ -262,7 +262,10 @@ impl Scanner {
         match litearl.parse::<f64>() {
             Ok(number) => Ok(number),
             // Should never fail, as I'm giving it only numbers
-            Err(_err) => Err(CompileErrors::NumberParseError(litearl)),
+            Err(_err) => {
+                unreachable!("Error should never occur as it is guarantee to be a number");
+                //Err(CompileErrors::NumberParseError(litearl));
+            }
         }
     }
 
@@ -271,8 +274,8 @@ impl Scanner {
             self.consume_next();
         }
 
-        let identifer: String = self.source[self.start..self.current].iter().collect();
+        let identifier: String = self.source[self.start..self.current].iter().collect();
 
-        identifer
+        identifier
     }
 }

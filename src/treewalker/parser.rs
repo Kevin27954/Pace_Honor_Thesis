@@ -1,4 +1,4 @@
-use crate::treewalker::expr_types::Primary;
+use crate::treewalker::{expr_types::Primary, token_types::get_keywords};
 
 use super::{
     errors::{parse_error, CompileErrors},
@@ -22,12 +22,7 @@ impl Parser<'_> {
         let mut exprs: Vec<Stmt> = Vec::new();
         let mut has_error = false;
         while !self.is_end() {
-            while !self.is_end()
-                && (self.peek().unwrap().token_type == TokenType::COMMENT
-                    || self.peek().unwrap().token_type == TokenType::NEW_LINE)
-            {
-                self.advance();
-            }
+            while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
 
             // Scenario when it is all comments
             if self.is_end() {
@@ -52,12 +47,59 @@ impl Parser<'_> {
             return self.parse_var_decl();
         }
 
+        if self.match_type(&[TokenType::DO]) {
+            return self.parse_block();
+        }
+        if self.match_type(&[TokenType::END]) {
+            return Err(CompileErrors::ExpectKeywordDo(self.previous()));
+        }
+
         return self.parse_stmt();
+    }
+
+    fn parse_block(&mut self) -> Result<Stmt, CompileErrors> {
+        let mut stmts: Vec<Stmt> = Vec::new();
+
+        let start_do_token = self.previous();
+        if !self.match_type(&[TokenType::NEW_LINE]) {
+            return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
+        }
+
+        while !self.match_type(&[TokenType::END]) && !self.is_end() {
+            while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
+            if self.match_type(&[TokenType::END]) || self.is_end() {
+                break;
+            }
+
+            match self.parse_decl() {
+                Ok(expr) => stmts.push(expr),
+                Err(err) => {
+                    self.synchronize();
+                    parse_error(err);
+                }
+            }
+        }
+
+        if self.is_end() {
+            return Err(CompileErrors::UnterminatedDo(start_do_token));
+        }
+
+        if !self.match_type(&[TokenType::NEW_LINE]) {
+            return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
+        }
+
+        return Ok(Stmt::Block(stmts));
     }
 
     fn parse_var_decl(&mut self) -> Result<Stmt, CompileErrors> {
         if !self.match_type(&[TokenType::IDENTIFIER]) {
-            todo!("Also make an apporiate error. What if it is a special keyword?");
+            let token = self.peek().unwrap().clone();
+
+            if get_keywords().contains_key(&token.lexeme) {
+                return Err(CompileErrors::KeywordAsIdentifier(token));
+            }
+
+            return Err(CompileErrors::InvalidIdentifier(token));
         }
         let identifier = self.previous();
 
@@ -86,7 +128,7 @@ impl Parser<'_> {
     }
 
     fn parse_expr_statement(&mut self) -> Result<Stmt, CompileErrors> {
-        let expr = self.equality()?;
+        let expr = self.assignment()?;
 
         let token = self.peek().unwrap().clone();
         match token.token_type {
@@ -133,6 +175,23 @@ impl Parser<'_> {
 
     fn previous(&self) -> Token {
         return self.tokens[self.current - 1].clone();
+    }
+
+    fn assignment(&mut self) -> Result<Expr, CompileErrors> {
+        let expr = self.equality()?;
+
+        if self.match_type(&[TokenType::EQUAL]) {
+            let token = self.previous();
+            let value = self.assignment()?;
+
+            if let Expr::Variable(var) = expr {
+                return Ok(Expr::Assignment(var, Box::new(value)));
+            }
+
+            return Err(CompileErrors::ExpectExpr(token));
+        }
+
+        return Ok(expr);
     }
 
     fn equality(&mut self) -> Result<Expr, CompileErrors> {

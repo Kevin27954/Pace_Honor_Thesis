@@ -14,6 +14,16 @@ pub fn print_ast(stmt: &Stmt) -> String {
             }
         },
         Stmt::Expression(expr) => print_expr(&expr),
+        Stmt::Block(stmts) => {
+            let mut ast = String::new();
+            ast.push_str("do");
+            for stmt in stmts {
+                ast.push_str(format!("\n{}", print_ast(&stmt)).as_str());
+            }
+            ast.push_str("\nend");
+
+            ast
+        }
     }
 }
 
@@ -32,6 +42,7 @@ pub fn print_expr(expr: &Expr) -> String {
         }
         Expr::Group(expr) => parenthesize(&String::from("group"), &[expr.as_ref()]),
         Expr::Variable(var) => var.lexeme.to_string(),
+        Expr::Assignment(var, expr) => parenthesize(&var.lexeme, &[expr.as_ref()]),
     }
 }
 
