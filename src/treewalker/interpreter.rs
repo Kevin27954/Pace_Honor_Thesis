@@ -1,5 +1,3 @@
-use std::collections::LinkedList;
-
 use super::{
     errors::{parse_runtime_err, RuntimeError},
     expr_types::{Expr, Primary, Unary},
@@ -25,6 +23,7 @@ impl Interpreter {
         &self.runtime_env
     }
 
+    // returns TRUE if error
     pub fn interpret(&mut self, stmt: &Stmt) -> bool {
         match stmt {
             Stmt::Expression(expr) => {
@@ -118,20 +117,20 @@ impl Interpreter {
                             }
 
                             return Ok(RuntimeValue::Number(left / right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::STAR => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Number(left * right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::MINUS => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
@@ -145,75 +144,77 @@ impl Interpreter {
                     TokenType::PLUS => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Number(left + right));
-                        } else if let Some((left, right)) =
-                            self.extract_string_pair(&left_val, &right_val)
+                        }
+                        if let Some((left, right)) = self.extract_string_pair(&left_val, &right_val)
                         {
                             return Ok(RuntimeValue::String(left.clone() + right));
-                        } else if let RuntimeValue::String(string) = &left_val {
+                        }
+                        if let RuntimeValue::String(string) = &left_val {
                             return Ok(RuntimeValue::String(
                                 string.clone() + &right_val.to_string(),
                             ));
-                        } else if let RuntimeValue::String(string) = &right_val {
-                            return Ok(RuntimeValue::String(left_val.to_string() + string));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+                        if let RuntimeValue::String(string) = &right_val {
+                            return Ok(RuntimeValue::String(left_val.to_string() + string));
+                        }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::GREATER => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Boolean(left > right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::GREATER_EQUAL => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Boolean(left >= right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::LESS => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Boolean(left <= right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::LESS_EQUAL => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Boolean(left <= right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::BANG_EQUAL => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Boolean(!(left == right)));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     TokenType::EQUAL_EQUAL => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
                             return Ok(RuntimeValue::Boolean(left == right));
-                        } else {
-                            return Err(RuntimeError::BinaryTypeMismatch(
-                                left_val, operator, right_val,
-                            ));
                         }
+
+                        return Err(RuntimeError::BinaryTypeMismatch(
+                            left_val, operator, right_val,
+                        ));
                     }
                     _ => {}
                 }

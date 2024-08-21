@@ -123,7 +123,6 @@ impl Parser<'_> {
 
     fn parse_stmt(&mut self) -> Result<Stmt, CompileErrors> {
         // Incase there are other statements to parse
-
         return self.parse_expr_statement();
     }
 

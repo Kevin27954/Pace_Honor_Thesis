@@ -65,7 +65,6 @@ pub fn parse_runtime_err(runtime_err: RuntimeError) {
         RuntimeError::UndeclaredVariable(token) => {
             report(token.line, "".to_string(), runtime_err.to_string())
         }
-        _ => {}
     }
 }
 
@@ -91,7 +90,6 @@ pub enum CompileErrors {
     KeywordAsIdentifier(Token),
 
     EmptyParentheses(Token),
-    UnknownError(Token, String),
 }
 
 impl std::fmt::Display for CompileErrors {
@@ -134,13 +132,6 @@ impl std::fmt::Display for CompileErrors {
             Self::ExpectExpr(_token) => {
                 write!(f, "Expected Expression")
             }
-            Self::UnknownError(token, err) => {
-                write!(
-                    f,
-                    "An Unkown Error had occured at line {} with token {}: {:?}",
-                    token.line, token.lexeme, err
-                )
-            }
         }
     }
 }
@@ -150,11 +141,6 @@ pub enum RuntimeError {
     BinaryTypeMismatch(RuntimeValue, Token, RuntimeValue),
     DivideByZero(Token),
     UndeclaredVariable(Token),
-
-    InvalidOperation(RuntimeValue),
-    InvalidConverstion(RuntimeValue),
-
-    UnknownError,
 }
 
 impl Display for RuntimeError {
@@ -185,9 +171,6 @@ impl Display for RuntimeError {
             }
             Self::UndeclaredVariable(var) => {
                 write!(f, "Undeclared Variable: {}", var.lexeme)
-            }
-            _ => {
-                unimplemented!()
             }
         }
     }
