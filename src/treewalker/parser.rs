@@ -23,7 +23,6 @@ impl Parser<'_> {
         let mut has_error = false;
         while !self.is_end() {
             while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
-
             // Scenario when it is all comments
             if self.is_end() {
                 break;
@@ -101,6 +100,7 @@ impl Parser<'_> {
 
             return Err(CompileErrors::InvalidIdentifier(token));
         }
+
         let identifier = self.previous();
 
         let mut init: Option<Expr> = None;
@@ -131,7 +131,7 @@ impl Parser<'_> {
 
         let token = self.peek().unwrap().clone();
         match token.token_type {
-            TokenType::NEW_LINE | TokenType::EOF => {
+            TokenType::NEW_LINE | TokenType::EOF | TokenType::COMMENT => {
                 self.advance();
             }
             _ => {
