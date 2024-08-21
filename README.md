@@ -35,7 +35,7 @@
 > 1 star = Impossible to get i guess  
 > 2 star = you used custom syntax  
 > 3 star = you used normal syntax?  
-- [ ] Gamify the experience of learning the 5 more important data structures
+- [ ] Gamify the experience of learning the 3 more important data structures - (Arrays, LinkedList, Trees)
 > ASCII art RPG in the terminal experience.
 > We have them run little quest helping out villagers and their problems  
 > using the correct data structures.
