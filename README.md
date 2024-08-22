@@ -7,7 +7,6 @@
 	- [ ] For
 - [ ] Functions
 - [ ] Structs - From rust (Objects but smaller)
-- [ ] Traits - From rust (Interfaces)
 - [ ] (IP) Error messages
 - [x] Type system
 - [ ] Garbage Collector
