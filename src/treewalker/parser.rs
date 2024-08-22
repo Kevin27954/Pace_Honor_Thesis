@@ -46,10 +46,6 @@ impl Parser<'_> {
 
         if self.match_type(&[TokenType::LET]) {
             stmt = self.parse_var_decl()?;
-        } else if self.match_type(&[TokenType::DO]) {
-            stmt = self.parse_block()?;
-        } else if self.match_type(&[TokenType::END]) {
-            return Err(CompileErrors::ExpectKeywordDo(self.previous()));
         } else {
             stmt = self.parse_stmt()?;
         }
@@ -66,6 +62,14 @@ impl Parser<'_> {
         }
 
         return Ok(stmt);
+    }
+
+    fn parse_stmt(&mut self) -> Result<Stmt, CompileErrors> {
+        if self.match_type(&[TokenType::DO]) {
+            return self.parse_block();
+        }
+        // Incase there are other statements to parse
+        return self.parse_expr_statement();
     }
 
     fn parse_block(&mut self) -> Result<Stmt, CompileErrors> {
@@ -125,11 +129,6 @@ impl Parser<'_> {
         }
 
         return Ok(Stmt::VarDecl(identifier, init));
-    }
-
-    fn parse_stmt(&mut self) -> Result<Stmt, CompileErrors> {
-        // Incase there are other statements to parse
-        return self.parse_expr_statement();
     }
 
     fn parse_expr_statement(&mut self) -> Result<Stmt, CompileErrors> {
