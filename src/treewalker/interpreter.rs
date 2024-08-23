@@ -26,16 +26,13 @@ impl Interpreter {
     // returns TRUE if error
     pub fn interpret(&mut self, stmt: &Stmt) -> bool {
         match stmt {
-            Stmt::Expression(expr) => {
-                let result = self.evaluate_expr(expr);
-                match result {
-                    Ok(value) => println!("{}", value),
-                    Err(runtime_err) => {
-                        parse_runtime_err(runtime_err);
-                        return true;
-                    }
+            Stmt::Expression(expr) => match self.evaluate_expr(expr) {
+                Ok(value) => println!("{}", value),
+                Err(runtime_err) => {
+                    parse_runtime_err(runtime_err);
+                    return true;
                 }
-            }
+            },
             Stmt::VarDecl(var, val) => {
                 let runtime_val = match val {
                     Some(expr) => match self.evaluate_expr(&expr) {
@@ -62,6 +59,27 @@ impl Interpreter {
                 }
 
                 self.runtime_env.pop_scope();
+            }
+            Stmt::IfStmt(expr, block, else_block) => {
+                let truthy: bool;
+                match self.evaluate_expr(&expr) {
+                    Ok(val) => {
+                        truthy = self.is_truthy(val);
+                    }
+                    Err(err) => {
+                        parse_runtime_err(err);
+                        return true;
+                    }
+                };
+
+                if truthy {
+                    self.interpret(block.as_ref());
+                } else {
+                    // Should never be none if it reached here
+                    if let Some(block) = else_block.as_ref() {
+                        self.interpret(block);
+                    }
+                }
             }
         }
 

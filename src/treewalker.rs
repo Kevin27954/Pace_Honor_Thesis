@@ -1,6 +1,6 @@
 use std::{fs, process};
 
-use ast_printer::print_ast;
+use ast_printer::ASTPrinter;
 use interpreter::Interpreter;
 use parser::Parser;
 use scanner::Scanner;
@@ -42,11 +42,12 @@ pub fn run(source: &String) -> (bool, i32) {
         return (has_error, 65);
     }
 
+    let mut ast_printer = ASTPrinter::new();
     println!("\nParser:");
     let mut parser = Parser::new(&tokens);
     let (stmt, has_error) = parser.parse();
     for stmt in &stmt {
-        println!("{}", print_ast(stmt));
+        println!("{}", ast_printer.print_ast(stmt));
     }
     if has_error {
         return (has_error, 65);

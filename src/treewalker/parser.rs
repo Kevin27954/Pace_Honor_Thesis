@@ -22,7 +22,7 @@ impl Parser<'_> {
         let mut exprs: Vec<Stmt> = Vec::new();
         let mut has_error = false;
         while !self.is_end() {
-            while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
+            self.skip_comments_and_newlines();
             // Scenario when it is all comments
             if self.is_end() {
                 break;
@@ -66,48 +66,14 @@ impl Parser<'_> {
 
     fn parse_stmt(&mut self) -> Result<Stmt, CompileErrors> {
         if self.match_type(&[TokenType::DO]) {
-            return self.parse_block();
+            return self.parse_do_block();
         }
+        if self.match_type(&[TokenType::IF]) {
+            return self.parse_if_stmt();
+        }
+
         // Incase there are other statements to parse
         return self.parse_expr_statement();
-    }
-
-    fn parse_block(&mut self) -> Result<Stmt, CompileErrors> {
-        let mut stmts: Vec<Stmt> = Vec::new();
-        let start_do_token = self.previous();
-
-        // If there is a comment, consume it
-        self.match_type(&[TokenType::COMMENT]);
-
-        if !self.match_type(&[TokenType::NEW_LINE]) {
-            return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
-        }
-
-        while !self.match_type(&[TokenType::END]) && !self.is_end() {
-            while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
-            if self.is_end() {
-                return Err(CompileErrors::UnterminatedDo(start_do_token));
-            }
-            if self.match_type(&[TokenType::END]) {
-                break;
-            }
-
-            // So we can parse out all the inner scope
-            // But only run the ones with correct syntax
-            match self.parse_decl() {
-                Ok(expr) => stmts.push(expr),
-                Err(err) => {
-                    self.synchronize();
-                    parse_error(err);
-                }
-            }
-        }
-
-        if self.previous().token_type != TokenType::END {
-            return Err(CompileErrors::UnterminatedDo(start_do_token));
-        }
-
-        return Ok(Stmt::Block(stmts));
     }
 
     fn parse_var_decl(&mut self) -> Result<Stmt, CompileErrors> {
@@ -129,6 +95,85 @@ impl Parser<'_> {
         }
 
         return Ok(Stmt::VarDecl(identifier, init));
+    }
+
+    fn parse_if_stmt(&mut self) -> Result<Stmt, CompileErrors> {
+        let start_if = self.previous();
+
+        let expr = self.equality()?;
+        if !self.match_type(&[TokenType::THEN]) {
+            return Err(CompileErrors::ExpectThen(self.peek().unwrap().clone()));
+        }
+        self.match_type(&[TokenType::COMMENT]);
+        if !self.match_type(&[TokenType::NEW_LINE]) {
+            return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
+        }
+
+        let if_block = self.parse_then_block(&start_if)?;
+        let mut else_block: Option<Stmt> = None;
+
+        if self.previous().token_type == TokenType::ELSE {
+            else_block = Some(self.parse_then_block(&start_if)?);
+        }
+
+        return Ok(Stmt::IfStmt(expr, Box::new(if_block), Box::new(else_block)));
+    }
+
+    fn parse_then_block(&mut self, start_if: &Token) -> Result<Stmt, CompileErrors> {
+        let mut stmts: Vec<Stmt> = Vec::new();
+
+        self.skip_comments_and_newlines();
+        while !self.match_type(&[TokenType::END, TokenType::ELSE]) && !self.is_end() {
+            match self.parse_decl() {
+                Ok(stmt) => {
+                    stmts.push(stmt);
+                }
+                Err(err) => {
+                    self.synchronize();
+                    parse_error(err);
+                }
+            }
+
+            self.skip_comments_and_newlines();
+        }
+
+        match self.previous().token_type {
+            TokenType::ELSE | TokenType::END => {}
+            _ => {
+                return Err(CompileErrors::UnterminatedIf(start_if.clone()));
+            }
+        }
+
+        return Ok(Stmt::Block(stmts));
+    }
+
+    fn parse_do_block(&mut self) -> Result<Stmt, CompileErrors> {
+        let mut stmts: Vec<Stmt> = Vec::new();
+        let start_do_token = self.previous();
+
+        self.match_type(&[TokenType::COMMENT]);
+
+        if !self.match_type(&[TokenType::NEW_LINE]) {
+            return Err(CompileErrors::ExpectNewLine(self.peek().unwrap().clone()));
+        }
+
+        self.skip_comments_and_newlines();
+        while !self.match_type(&[TokenType::END]) && !self.is_end() {
+            match self.parse_decl() {
+                Ok(expr) => stmts.push(expr),
+                Err(err) => {
+                    self.synchronize();
+                    parse_error(err);
+                }
+            }
+            self.skip_comments_and_newlines();
+        }
+
+        if self.previous().token_type != TokenType::END {
+            return Err(CompileErrors::UnterminatedDo(start_do_token));
+        }
+
+        return Ok(Stmt::Block(stmts));
     }
 
     fn parse_expr_statement(&mut self) -> Result<Stmt, CompileErrors> {
@@ -301,7 +346,6 @@ impl Parser<'_> {
                     return Err(CompileErrors::UnterminatedParenthesis(left_paren));
                 }
 
-                // consumes the right parenthesis
                 self.advance();
                 return res;
             }
@@ -345,5 +389,9 @@ impl Parser<'_> {
 
             self.advance();
         }
+    }
+
+    fn skip_comments_and_newlines(&mut self) {
+        while self.match_type(&[TokenType::COMMENT, TokenType::NEW_LINE]) {}
     }
 }

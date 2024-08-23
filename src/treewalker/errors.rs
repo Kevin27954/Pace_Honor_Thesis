@@ -42,6 +42,18 @@ pub fn parse_error(compile_err: CompileErrors) {
             let err_at = format!("at \"{}\"", token.lexeme);
             report(token.line, err_at, compile_err.to_string())
         }
+        CompileErrors::UnexpectedKeyword(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
+        CompileErrors::ExpectThen(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
+        CompileErrors::UnterminatedIf(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
         _ => {
             eprintln!(
                 "This error should not be called by parser_error.\nYou probably didn't implement it yet:\n{}",
@@ -81,10 +93,13 @@ pub enum CompileErrors {
     UnknownCharacter(char),
     UnterminatedParenthesis(Token),
     UnterminatedDo(Token),
+    UnterminatedIf(Token),
+    UnexpectedKeyword(Token),
     // Combine into ExpectToken(expected, got)?
     ExpectNewLine(Token),
     ExpectExpr(Token),
     ExpectKeywordDo(Token),
+    ExpectThen(Token),
 
     InvalidIdentifier(Token),
     KeywordAsIdentifier(Token),
@@ -107,6 +122,12 @@ impl std::fmt::Display for CompileErrors {
             Self::ExpectKeywordDo(token) => {
                 write!(f, "Expected Keyword 'do' before '{}'", token.lexeme)
             }
+            Self::ExpectExpr(_token) => {
+                write!(f, "Expected Expression")
+            }
+            Self::ExpectThen(_token) => {
+                write!(f, "Expected 'then' Keyword")
+            }
             Self::InvalidIdentifier(_token) => {
                 write!(f, "Invalid Identifier name")
             }
@@ -117,6 +138,9 @@ impl std::fmt::Display for CompileErrors {
                     token.lexeme
                 )
             }
+            Self::UnexpectedKeyword(token) => {
+                write!(f, "Unexpected keyword '{}'", token.lexeme)
+            }
             Self::UnknownCharacter(char) => {
                 write!(f, "Unknown character: {}", char)
             }
@@ -126,11 +150,11 @@ impl std::fmt::Display for CompileErrors {
             Self::UnterminatedDo(_token) => {
                 write!(f, "'do' wasn't accompanied by 'end'")
             }
+            Self::UnterminatedIf(_token) => {
+                write!(f, "'if' block wasn't terminated")
+            }
             Self::EmptyParentheses(_token) => {
                 write!(f, "Empty Parenthesis")
-            }
-            Self::ExpectExpr(_token) => {
-                write!(f, "Expected Expression")
             }
         }
     }
