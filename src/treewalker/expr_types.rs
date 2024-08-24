@@ -5,6 +5,7 @@ use super::token::Token;
 pub enum Expr {
     Assignment(Token, Box<Expr>),
     Binary(Box<Expr>, Token, Box<Expr>),
+    Logical(Box<Expr>, Token, Box<Expr>),
     Unary(Unary),
     Primary(Primary),
     Group(Box<Expr>),

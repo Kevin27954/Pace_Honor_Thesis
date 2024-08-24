@@ -21,13 +21,9 @@ impl Parser<'_> {
     pub fn parse(&mut self) -> (Vec<Stmt>, bool) {
         let mut exprs: Vec<Stmt> = Vec::new();
         let mut has_error = false;
-        while !self.is_end() {
-            self.skip_comments_and_newlines();
-            // Scenario when it is all comments
-            if self.is_end() {
-                break;
-            }
 
+        self.skip_comments_and_newlines();
+        while !self.is_end() {
             match self.parse_decl() {
                 Ok(expr) => exprs.push(expr),
                 Err(err) => {
@@ -36,6 +32,8 @@ impl Parser<'_> {
                     parse_error(err);
                 }
             }
+
+            self.skip_comments_and_newlines();
         }
 
         (exprs, has_error)
@@ -71,9 +69,74 @@ impl Parser<'_> {
         if self.match_type(&[TokenType::IF]) {
             return self.parse_if_stmt();
         }
+        if self.match_type(&[TokenType::WHILE]) {
+            return self.parse_while_stmt();
+        }
+        if self.match_type(&[TokenType::FOR]) {
+            return self.parse_for_stmt();
+        }
 
-        // Incase there are other statements to parse
         return self.parse_expr_statement();
+    }
+
+    fn parse_for_stmt(&mut self) -> Result<Stmt, CompileErrors> {
+        let init: Option<Stmt> = match self.match_type(&[TokenType::SEMICOLON]) {
+            true => None,
+            false => {
+                let stmt = if self.match_type(&[TokenType::LET]) {
+                    self.parse_var_decl()?
+                } else {
+                    self.parse_expr_statement()?
+                };
+
+                if !self.match_type(&[TokenType::SEMICOLON]) {
+                    return Err(CompileErrors::ExpectSemiColon(self.peek().unwrap().clone()));
+                }
+
+                Some(stmt)
+            }
+        };
+
+        let condition: Option<Expr> = match self.match_type(&[TokenType::SEMICOLON]) {
+            true => None,
+            false => {
+                let expr = self.assignment()?;
+
+                if !self.match_type(&[TokenType::SEMICOLON]) {
+                    return Err(CompileErrors::ExpectSemiColon(self.peek().unwrap().clone()));
+                }
+
+                Some(expr)
+            }
+        };
+
+        let operation: Option<Expr> = match self.match_type(&[TokenType::SEMICOLON]) {
+            true => None,
+            false => Some(self.assignment()?),
+        };
+
+        if !self.match_type(&[TokenType::DO]) {
+            return Err(CompileErrors::ExpectKeywordDo(self.peek().unwrap().clone()));
+        }
+
+        let mut body = self.parse_do_block()?;
+
+        if let Some(expr) = operation {
+            if let Stmt::Block(ref mut stmts) = body {
+                stmts.push(Stmt::Expression(expr));
+            }
+        }
+
+        body = match condition {
+            Some(expr) => Stmt::WhileStmt(expr, Box::new(body)),
+            None => Stmt::WhileStmt(Expr::Primary(Primary::Boolean(true)), Box::new(body)),
+        };
+
+        if let Some(var_decl) = init {
+            body = Stmt::Block(vec![var_decl, body]);
+        }
+
+        return Ok(body);
     }
 
     fn parse_var_decl(&mut self) -> Result<Stmt, CompileErrors> {
@@ -91,7 +154,7 @@ impl Parser<'_> {
 
         let mut init: Option<Expr> = None;
         if self.match_type(&[TokenType::EQUAL]) {
-            init = Some(self.equality()?);
+            init = Some(self.logcal_or()?);
         }
 
         return Ok(Stmt::VarDecl(identifier, init));
@@ -124,16 +187,7 @@ impl Parser<'_> {
 
         self.skip_comments_and_newlines();
         while !self.match_type(&[TokenType::END, TokenType::ELSE]) && !self.is_end() {
-            match self.parse_decl() {
-                Ok(stmt) => {
-                    stmts.push(stmt);
-                }
-                Err(err) => {
-                    self.synchronize();
-                    parse_error(err);
-                }
-            }
-
+            stmts.push(self.parse_decl()?);
             self.skip_comments_and_newlines();
         }
 
@@ -145,6 +199,18 @@ impl Parser<'_> {
         }
 
         return Ok(Stmt::Block(stmts));
+    }
+
+    fn parse_while_stmt(&mut self) -> Result<Stmt, CompileErrors> {
+        let expr = self.assignment()?;
+
+        if !self.match_type(&[TokenType::DO]) {
+            return Err(CompileErrors::ExpectKeywordDo(self.peek().unwrap().clone()));
+        }
+
+        let while_body = self.parse_do_block()?;
+
+        return Ok(Stmt::WhileStmt(expr, Box::new(while_body)));
     }
 
     fn parse_do_block(&mut self) -> Result<Stmt, CompileErrors> {
@@ -159,13 +225,7 @@ impl Parser<'_> {
 
         self.skip_comments_and_newlines();
         while !self.match_type(&[TokenType::END]) && !self.is_end() {
-            match self.parse_decl() {
-                Ok(expr) => stmts.push(expr),
-                Err(err) => {
-                    self.synchronize();
-                    parse_error(err);
-                }
-            }
+            stmts.push(self.parse_decl()?);
             self.skip_comments_and_newlines();
         }
 
@@ -215,7 +275,7 @@ impl Parser<'_> {
     }
 
     fn assignment(&mut self) -> Result<Expr, CompileErrors> {
-        let expr = self.equality()?;
+        let expr = self.logcal_or()?;
 
         if self.match_type(&[TokenType::EQUAL]) {
             let token = self.previous();
@@ -226,6 +286,30 @@ impl Parser<'_> {
             }
 
             return Err(CompileErrors::ExpectExpr(token));
+        }
+
+        return Ok(expr);
+    }
+
+    fn logcal_or(&mut self) -> Result<Expr, CompileErrors> {
+        let mut expr = self.logical_and()?;
+
+        while self.match_type(&[TokenType::OR]) {
+            let operator = self.previous();
+            let right = self.logical_and()?;
+            expr = Expr::Logical(Box::new(expr), operator, Box::new(right));
+        }
+
+        return Ok(expr);
+    }
+
+    fn logical_and(&mut self) -> Result<Expr, CompileErrors> {
+        let mut expr = self.equality()?;
+
+        while self.match_type(&[TokenType::AND]) {
+            let operator = self.previous();
+            let right = self.equality()?;
+            expr = Expr::Logical(Box::new(expr), operator, Box::new(right));
         }
 
         return Ok(expr);
@@ -287,8 +371,7 @@ impl Parser<'_> {
     fn unary(&mut self) -> Result<Expr, CompileErrors> {
         if self.match_type(&[TokenType::BANG, TokenType::MINUS]) {
             let operator = self.previous();
-            let right = self.unary()?;
-            match right {
+            match self.unary()? {
                 Expr::Primary(primary) => {
                     return Ok(Expr::Unary(Unary::UnaryExpr(
                         operator,

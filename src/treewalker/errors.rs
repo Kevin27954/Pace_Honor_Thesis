@@ -46,6 +46,10 @@ pub fn parse_error(compile_err: CompileErrors) {
             let err_at = format!("at \"{}\"", token.lexeme);
             report(token.line, err_at, compile_err.to_string())
         }
+        CompileErrors::ExpectSemiColon(ref token) => {
+            let err_at = format!("at \"{}\"", token.lexeme);
+            report(token.line, err_at, compile_err.to_string())
+        }
         CompileErrors::ExpectThen(ref token) => {
             let err_at = format!("at \"{}\"", token.lexeme);
             report(token.line, err_at, compile_err.to_string())
@@ -100,6 +104,7 @@ pub enum CompileErrors {
     ExpectExpr(Token),
     ExpectKeywordDo(Token),
     ExpectThen(Token),
+    ExpectSemiColon(Token),
 
     InvalidIdentifier(Token),
     KeywordAsIdentifier(Token),
@@ -127,6 +132,9 @@ impl std::fmt::Display for CompileErrors {
             }
             Self::ExpectThen(_token) => {
                 write!(f, "Expected 'then' Keyword")
+            }
+            Self::ExpectSemiColon(_token) => {
+                write!(f, "Expected ';' here")
             }
             Self::InvalidIdentifier(_token) => {
                 write!(f, "Invalid Identifier name")

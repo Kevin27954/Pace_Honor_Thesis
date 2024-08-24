@@ -39,11 +39,13 @@ impl ASTPrinter {
 
                 ast
             }
-            Stmt::IfStmt(expr, block, else_block) => {
+            Stmt::IfStmt(expr, if_block, else_block) => {
                 let mut ast = String::new();
                 ast.push_str(format!("{}(if {}", self.tab_space(), self.print_expr(expr)).as_str());
                 self.scope_level += 1;
-                ast.push_str(format!("\n{}{}", self.tab_space(), self.print_ast(block)).as_str());
+                ast.push_str(
+                    format!("\n{}{}", self.tab_space(), self.print_ast(if_block)).as_str(),
+                );
                 ast.push_str(format!("{})", self.tab_space()).as_str());
 
                 if let Some(block) = else_block.as_ref() {
@@ -53,6 +55,14 @@ impl ASTPrinter {
                     );
                 }
                 self.scope_level -= 1;
+
+                ast
+            }
+            Stmt::WhileStmt(expr, while_body) => {
+                let mut ast = String::new();
+                ast.push_str("(while ");
+                ast.push_str(format!("{}", self.print_expr(expr)).as_str());
+                ast.push_str(format!("\n{}))", self.print_ast(while_body)).as_str());
 
                 ast
             }
@@ -75,6 +85,10 @@ impl ASTPrinter {
             Expr::Group(expr) => self.parenthesize(&String::from("group"), &[expr.as_ref()]),
             Expr::Variable(var) => var.lexeme.to_string(),
             Expr::Assignment(var, expr) => self.parenthesize(&var.lexeme, &[expr.as_ref()]),
+            Expr::Logical(left, operator, right) => {
+                let slice = &[left.as_ref(), right.as_ref()];
+                self.parenthesize(&operator.lexeme, slice)
+            }
         }
     }
 

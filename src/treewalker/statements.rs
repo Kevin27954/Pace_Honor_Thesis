@@ -6,4 +6,5 @@ pub enum Stmt {
     VarDecl(Token, Option<Expr>),
     Block(Vec<Stmt>),
     IfStmt(Expr, Box<Stmt>, Box<Option<Stmt>>),
+    WhileStmt(Expr, Box<Stmt>),
 }

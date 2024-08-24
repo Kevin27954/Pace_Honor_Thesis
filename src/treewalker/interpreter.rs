@@ -60,7 +60,7 @@ impl Interpreter {
 
                 self.runtime_env.pop_scope();
             }
-            Stmt::IfStmt(expr, block, else_block) => {
+            Stmt::IfStmt(expr, if_block, else_block) => {
                 let truthy: bool;
                 match self.evaluate_expr(&expr) {
                     Ok(val) => {
@@ -73,11 +73,21 @@ impl Interpreter {
                 };
 
                 if truthy {
-                    self.interpret(block.as_ref());
+                    self.interpret(if_block.as_ref());
                 } else {
-                    // Should never be none if it reached here
                     if let Some(block) = else_block.as_ref() {
                         self.interpret(block);
+                    }
+                }
+            }
+            Stmt::WhileStmt(expr, while_block) => {
+                while let Ok(val) = self.evaluate_expr(expr) {
+                    if !self.is_truthy(val) {
+                        break;
+                    }
+
+                    if self.interpret(while_block.as_ref()) {
+                        return true;
                     }
                 }
             }
@@ -121,6 +131,27 @@ impl Interpreter {
 
                     unreachable!("Unary -> This part should never be reached")
                 }
+            },
+            Expr::Logical(left, operator, right) => match operator.token_type {
+                TokenType::AND => {
+                    let left_val = self.evaluate_expr(left.as_ref())?;
+                    if !self.is_truthy(left_val.clone()) {
+                        return Ok(left_val);
+                    }
+
+                    let right_val = self.evaluate_expr(right.as_ref())?;
+                    return Ok(right_val);
+                }
+                TokenType::OR => {
+                    let left_val = self.evaluate_expr(left.as_ref())?;
+                    if self.is_truthy(left_val.clone()) {
+                        return Ok(left_val);
+                    }
+
+                    let right_val = self.evaluate_expr(right.as_ref())?;
+                    return Ok(right_val);
+                }
+                _ => unreachable!(),
             },
             Expr::Binary(left, operator, right) => {
                 let left_val = self.evaluate_expr(left.as_ref())?;
@@ -200,7 +231,7 @@ impl Interpreter {
                     }
                     TokenType::LESS => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
-                            return Ok(RuntimeValue::Boolean(left <= right));
+                            return Ok(RuntimeValue::Boolean(left < right));
                         }
 
                         return Err(RuntimeError::BinaryTypeMismatch(
