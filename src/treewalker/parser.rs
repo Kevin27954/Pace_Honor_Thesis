@@ -1,7 +1,7 @@
 use crate::treewalker::{expr_types::Primary, token_types::get_keywords};
 
 use super::{
-    errors::{parse_error, CompileErrors},
+    errors::{error, parse_error, CompileErrors},
     expr_types::{Expr, Unary},
     statements::Stmt,
     token::Token,
@@ -394,7 +394,17 @@ impl Parser<'_> {
             }
         }
 
-        return self.primary();
+        return self.call();
+    }
+
+    fn call(&mut self) -> Result<Expr, CompileErrors> {
+        let mut expr = self.primary()?;
+
+        while self.match_type(&[TokenType::LEFT_PAREN]) {
+            expr = self.finish_call(expr)?;
+        }
+
+        return Ok(expr);
     }
 
     fn primary(&mut self) -> Result<Expr, CompileErrors> {
@@ -449,6 +459,29 @@ impl Parser<'_> {
                 return Err(CompileErrors::ExpectExpr(err_token));
             }
         }
+    }
+
+    fn finish_call(&mut self, expr: Expr) -> Result<Expr, CompileErrors> {
+        let mut arguments: Vec<Expr> = Vec::new();
+
+        if self.peek().unwrap().token_type != TokenType::RIGHT_PAREN {
+            loop {
+                if arguments.len() > 16 {
+                    error(self.peek().unwrap().line, "Too many arguments".to_string());
+                }
+
+                arguments.push(self.assignment()?);
+                if !self.match_type(&[TokenType::COMMA]) {
+                    break;
+                }
+            }
+        }
+
+        if !self.match_type(&[TokenType::RIGHT_PAREN]) {
+            unimplemented!("Expected right parenthesis, function not closed.")
+        }
+
+        return Ok(Expr::Call(Box::new(expr), self.previous(), arguments));
     }
 
     // Sync consumes new line.

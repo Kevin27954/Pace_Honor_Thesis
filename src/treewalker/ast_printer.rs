@@ -89,6 +89,23 @@ impl ASTPrinter {
                 let slice = &[left.as_ref(), right.as_ref()];
                 self.parenthesize(&operator.lexeme, slice)
             }
+
+            Expr::Call(calle, _right_paren, assignments) => {
+                let mut ast = String::new();
+                ast.push_str(
+                    self.parenthesize(&"function".to_string(), &[calle.as_ref()])
+                        .as_str(),
+                );
+
+                ast.push('(');
+                for assignment in assignments {
+                    ast.push_str(self.print_expr(assignment).as_str());
+                    ast.push_str(", ");
+                }
+                ast.push(')');
+
+                ast
+            }
         }
     }
 

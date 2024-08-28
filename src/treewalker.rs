@@ -8,6 +8,7 @@ use scanner::Scanner;
 mod ast_printer;
 mod errors;
 mod expr_types;
+mod functions;
 mod interpreter;
 mod parser;
 mod runtime_env;

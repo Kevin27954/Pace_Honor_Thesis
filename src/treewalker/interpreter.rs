@@ -14,8 +14,9 @@ pub struct Interpreter {
 
 impl Interpreter {
     pub fn new() -> Self {
+        let global = RuntimeEnv::new();
         Interpreter {
-            runtime_env: RuntimeEnv::new(),
+            runtime_env: global,
         }
     }
 
@@ -27,7 +28,7 @@ impl Interpreter {
     pub fn interpret(&mut self, stmt: &Stmt) -> bool {
         match stmt {
             Stmt::Expression(expr) => match self.evaluate_expr(expr) {
-                Ok(value) => println!("{}", value),
+                Ok(_value) => {}
                 Err(runtime_err) => {
                     parse_runtime_err(runtime_err);
                     return true;
@@ -263,6 +264,36 @@ impl Interpreter {
                 self.runtime_env.assign_var(var, value.clone())?;
                 return Ok(value);
             }
+            Expr::Call(callee, _right_paren, assignments) => {
+                let callee = self.evaluate_expr(callee)?;
+
+                let mut values: Vec<RuntimeValue> = Vec::new();
+                for assignment in assignments {
+                    values.push(self.evaluate_expr(assignment)?);
+                }
+
+                match callee {
+                    RuntimeValue::NativeFunction(ref func) => {
+                        if func.name == "print".to_string() && values.len() > func.get_arity() {
+                            unimplemented!("too many args ferronccjj");
+                        } else if func.name != "print".to_string()
+                            && func.get_arity() != values.len()
+                        {
+                            unimplemented!("Unequal arguments efasdfrro");
+                        }
+                    }
+                    _ => {
+                        unimplemented!("Not a function eror");
+                    }
+                }
+
+                let value = match callee {
+                    RuntimeValue::NativeFunction(ref func) => func.call(values),
+                    _ => unreachable!(),
+                };
+
+                Ok(value)
+            }
         }
     }
 
@@ -271,6 +302,7 @@ impl Interpreter {
             RuntimeValue::String(_) | RuntimeValue::Number(_) => true,
             RuntimeValue::Boolean(bool) => bool,
             RuntimeValue::None => false,
+            RuntimeValue::NativeFunction(_) => true,
         }
     }
 

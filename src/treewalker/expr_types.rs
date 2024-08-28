@@ -10,21 +10,9 @@ pub enum Expr {
     Primary(Primary),
     Group(Box<Expr>),
     Variable(Token),
+    Call(Box<Expr>, Token, Vec<Expr>),
 }
 
-// Token = '!=', '=='
-//pub enum Equality {
-
-// Token = '<', '>', '<=', '>='
-//pub enum Comparison { }
-
-// Token = '+', '-'
-//pub enum Term { }
-
-//// Token = '/', '*'
-//pub enum Factor { }
-
-// Token = '!', '-'
 #[derive(Debug, Clone)]
 pub enum Unary {
     UnaryExpr(Token, Box<Expr>),

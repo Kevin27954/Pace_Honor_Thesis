@@ -1,6 +1,11 @@
 use std::collections::{HashMap, LinkedList};
 
-use super::{errors::RuntimeError, runtime_types::RuntimeValue, token::Token};
+use super::{
+    errors::RuntimeError,
+    functions::{clock, print, NativeFunctions},
+    runtime_types::RuntimeValue,
+    token::Token,
+};
 
 pub struct RuntimeEnv {
     runtime_env: LinkedList<HashMap<String, RuntimeValue>>,
@@ -9,8 +14,32 @@ pub struct RuntimeEnv {
 impl RuntimeEnv {
     pub fn new() -> Self {
         let mut env = LinkedList::new();
-        env.push_front(HashMap::new());
+        let mut global: HashMap<String, RuntimeValue> = HashMap::new();
+
+        global.insert(
+            "clock".to_string(),
+            RuntimeValue::NativeFunction(NativeFunctions {
+                arity: 0,
+                name: "clock".to_string(),
+                function: clock,
+            }),
+        );
+
+        global.insert(
+            "print".to_string(),
+            RuntimeValue::NativeFunction(NativeFunctions {
+                arity: 16,
+                name: "print".to_string(),
+                function: print,
+            }),
+        );
+
+        env.push_front(global);
         RuntimeEnv { runtime_env: env }
+    }
+
+    pub fn get_global(&self) -> &HashMap<String, RuntimeValue> {
+        self.runtime_env.front().unwrap()
     }
 
     pub fn add_scope(&mut self) {
