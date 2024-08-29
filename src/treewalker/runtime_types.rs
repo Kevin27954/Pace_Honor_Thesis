@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter, Result};
 
-use super::functions::NativeFunctions;
+use super::functions::{NativeFunctions, RuntimeFunctions};
 
 #[derive(PartialEq, Clone, Debug)]
 pub enum RuntimeValue {
@@ -9,6 +9,7 @@ pub enum RuntimeValue {
     Boolean(bool),
     None,
     NativeFunction(NativeFunctions),
+    RuntimeFunctions(RuntimeFunctions),
 }
 
 impl Display for RuntimeValue {
@@ -26,8 +27,11 @@ impl Display for RuntimeValue {
             Self::None => {
                 write!(f, "none")
             }
-            Self::NativeFunction(functions) => {
-                write!(f, "{}", functions)
+            Self::NativeFunction(function) => {
+                write!(f, "{}", function)
+            }
+            Self::RuntimeFunctions(function) => {
+                write!(f, "{}", function)
             }
         }
     }
@@ -49,6 +53,9 @@ impl RuntimeValue {
                 format!("None 'none'")
             }
             Self::NativeFunction(function) => {
+                format!("Function '{}'", function)
+            }
+            Self::RuntimeFunctions(function) => {
                 format!("Function '{}'", function)
             }
         }

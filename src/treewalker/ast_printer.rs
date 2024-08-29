@@ -66,6 +66,35 @@ impl ASTPrinter {
 
                 ast
             }
+            Stmt::RuntimeFunctions(name, params, body) => {
+                let mut ast = String::new();
+                ast.push_str(name);
+                ast.push_str(
+                    format!(
+                        " {}",
+                        params
+                            .iter()
+                            .map(|token| token.lexeme.as_str())
+                            .collect::<String>()
+                    )
+                    .as_str(),
+                );
+
+                ast.push_str(self.print_ast(body).as_str());
+
+                ast
+            }
+            Stmt::Return(token, expr) => {
+                let mut ast = String::new();
+                ast.push_str("(return");
+
+                if let Some(expr) = expr {
+                    ast.push_str(self.print_expr(expr).as_str());
+                }
+                ast.push_str(")");
+
+                ast
+            }
         }
     }
 

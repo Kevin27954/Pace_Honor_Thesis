@@ -44,6 +44,8 @@ impl Parser<'_> {
 
         if self.match_type(&[TokenType::LET]) {
             stmt = self.parse_var_decl()?;
+        } else if self.match_type(&[TokenType::FUNCTION]) {
+            stmt = self.parse_fn_decl()?;
         } else {
             stmt = self.parse_stmt()?;
         }
@@ -62,6 +64,43 @@ impl Parser<'_> {
         return Ok(stmt);
     }
 
+    fn parse_fn_decl(&mut self) -> Result<Stmt, CompileErrors> {
+        if !self.match_type(&[TokenType::IDENTIFIER]) {
+            unimplemented!("expected identifer errors");
+        }
+        let identifier = self.previous();
+
+        if !self.match_type(&[TokenType::LEFT_PAREN]) {
+            unimplemented!("expect left raparm")
+        }
+
+        let mut params: Vec<Token> = Vec::new();
+        if self.peek().unwrap().token_type != TokenType::RIGHT_PAREN {
+            loop {
+                if params.len() > 16 {
+                    error(self.peek().unwrap().line, "Too many arguments".to_string());
+                }
+
+                params.push(self.advance());
+                if !self.match_type(&[TokenType::COMMA]) {
+                    break;
+                }
+            }
+        }
+
+        if !self.match_type(&[TokenType::RIGHT_PAREN]) {
+            unimplemented!("expect right raparm")
+        }
+
+        let block = self.parse_do_block()?;
+
+        return Ok(Stmt::RuntimeFunctions(
+            identifier.lexeme,
+            params,
+            Box::new(block),
+        ));
+    }
+
     fn parse_stmt(&mut self) -> Result<Stmt, CompileErrors> {
         if self.match_type(&[TokenType::DO]) {
             return self.parse_do_block();
@@ -75,8 +114,21 @@ impl Parser<'_> {
         if self.match_type(&[TokenType::FOR]) {
             return self.parse_for_stmt();
         }
+        if self.match_type(&[TokenType::RETURN]) {
+            return self.parse_return_stmt();
+        }
 
         return self.parse_expr_statement();
+    }
+
+    fn parse_return_stmt(&mut self) -> Result<Stmt, CompileErrors> {
+        let return_token = self.previous();
+        let value: Option<Expr> = match self.match_type(&[TokenType::COMMENT]) {
+            true => None,
+            false => Some(self.assignment()?),
+        };
+
+        return Ok(Stmt::Return(return_token, value));
     }
 
     fn parse_for_stmt(&mut self) -> Result<Stmt, CompileErrors> {

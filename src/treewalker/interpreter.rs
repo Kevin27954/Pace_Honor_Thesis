@@ -1,5 +1,7 @@
+use crate::treewalker::functions::RuntimeFunctions;
+
 use super::{
-    errors::{parse_runtime_err, RuntimeError},
+    errors::{parse_error, parse_runtime_err, RuntimeError},
     expr_types::{Expr, Primary, Unary},
     runtime_env::RuntimeEnv,
     runtime_types::RuntimeValue,
@@ -9,7 +11,7 @@ use super::{
 };
 
 pub struct Interpreter {
-    runtime_env: RuntimeEnv,
+    pub runtime_env: RuntimeEnv,
 }
 
 impl Interpreter {
@@ -25,13 +27,13 @@ impl Interpreter {
     }
 
     // returns TRUE if error
-    pub fn interpret(&mut self, stmt: &Stmt) -> bool {
+    pub fn interpret(&mut self, stmt: &Stmt) -> (RuntimeValue, bool) {
         match stmt {
             Stmt::Expression(expr) => match self.evaluate_expr(expr) {
                 Ok(_value) => {}
                 Err(runtime_err) => {
                     parse_runtime_err(runtime_err);
-                    return true;
+                    return (RuntimeValue::None, false);
                 }
             },
             Stmt::VarDecl(var, val) => {
@@ -40,7 +42,7 @@ impl Interpreter {
                         Ok(val) => val,
                         Err(runtime_err) => {
                             parse_runtime_err(runtime_err);
-                            return true;
+                            return (RuntimeValue::None, false);
                         }
                     },
                     None => RuntimeValue::None,
@@ -53,9 +55,10 @@ impl Interpreter {
                 self.runtime_env.add_scope();
 
                 for stmt in stmts {
-                    if self.interpret(&stmt) {
+                    let (val, error) = self.interpret(&stmt);
+                    if error {
                         self.runtime_env.pop_scope();
-                        return true;
+                        return (val, error);
                     }
                 }
 
@@ -69,15 +72,15 @@ impl Interpreter {
                     }
                     Err(err) => {
                         parse_runtime_err(err);
-                        return true;
+                        return (RuntimeValue::None, false);
                     }
                 };
 
                 if truthy {
-                    self.interpret(if_block.as_ref());
+                    return self.interpret(if_block.as_ref());
                 } else {
                     if let Some(block) = else_block.as_ref() {
-                        self.interpret(block);
+                        return self.interpret(block);
                     }
                 }
             }
@@ -87,14 +90,38 @@ impl Interpreter {
                         break;
                     }
 
-                    if self.interpret(while_block.as_ref()) {
-                        return true;
+                    let (val, is_return) = self.interpret(while_block.as_ref());
+                    if is_return {
+                        return (val, is_return);
                     }
+                }
+            }
+            Stmt::RuntimeFunctions(name, params, body) => {
+                let runtime_fn = RuntimeFunctions {
+                    name: name.to_string(),
+                    params: params.to_vec(),
+                    block: body.as_ref().clone(),
+                };
+
+                self.runtime_env.add_scope();
+                self.runtime_env
+                    .define_var(name.to_string(), RuntimeValue::RuntimeFunctions(runtime_fn));
+            }
+            Stmt::Return(token, value) => {
+                if let Some(expr) = value {
+                    match self.evaluate_expr(expr) {
+                        Ok(val) => {
+                            return (val, true);
+                        }
+                        Err(err) => parse_runtime_err(err),
+                    }
+                } else {
+                    return (RuntimeValue::None, true);
                 }
             }
         }
 
-        return false;
+        return (RuntimeValue::None, false);
     }
 
     fn evaluate_expr(&mut self, expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
@@ -282,6 +309,11 @@ impl Interpreter {
                             unimplemented!("Unequal arguments efasdfrro");
                         }
                     }
+                    RuntimeValue::RuntimeFunctions(ref func) => {
+                        if values.len() != func.get_arity() {
+                            unimplemented!("Unequal arguments efasdfrro");
+                        }
+                    }
                     _ => {
                         unimplemented!("Not a function eror");
                     }
@@ -289,6 +321,7 @@ impl Interpreter {
 
                 let value = match callee {
                     RuntimeValue::NativeFunction(ref func) => func.call(values),
+                    RuntimeValue::RuntimeFunctions(ref func) => func.call(self, values),
                     _ => unreachable!(),
                 };
 
@@ -303,6 +336,7 @@ impl Interpreter {
             RuntimeValue::Boolean(bool) => bool,
             RuntimeValue::None => false,
             RuntimeValue::NativeFunction(_) => true,
+            RuntimeValue::RuntimeFunctions(_) => true,
         }
     }
 
