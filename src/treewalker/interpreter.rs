@@ -8,6 +8,7 @@ use super::{
     runtime_env::RuntimeEnv,
     runtime_types::RuntimeValue,
     statements::Stmt,
+    structs::Struct,
     token::{Literal, Number, Token},
     token_types::TokenType,
 };
@@ -125,6 +126,16 @@ impl Interpreter {
                 } else {
                     return (RuntimeValue::None, true);
                 }
+            }
+            Stmt::StructStmt(token, fields) => {
+                let user_struct = RuntimeValue::Struct(Struct {
+                    name: token.lexeme.to_string(),
+                    properties: fields.to_vec(),
+                    fields: HashMap::new(),
+                });
+
+                self.runtime_env
+                    .define_var(token.lexeme.to_string(), user_struct);
             }
         }
 
@@ -314,12 +325,17 @@ impl Interpreter {
                         } else if func.name != "print".to_string()
                             && func.get_arity() != values.len()
                         {
-                            unimplemented!("Unequal arguments efasdfrro");
+                            unimplemented!("Unequal arguments ");
                         }
                     }
                     RuntimeValue::RuntimeFunctions(ref func) => {
                         if values.len() != func.get_arity() {
-                            unimplemented!("Unequal arguments efasdfrro");
+                            unimplemented!("Unequal arguments ");
+                        }
+                    }
+                    RuntimeValue::Struct(ref user_struct) => {
+                        if values.len() != user_struct.arity() {
+                            unimplemented!("Unequal arguments ");
                         }
                     }
                     _ => {
@@ -330,10 +346,33 @@ impl Interpreter {
                 let value = match callee {
                     RuntimeValue::NativeFunction(ref func) => func.call(values),
                     RuntimeValue::RuntimeFunctions(ref func) => func.call(self, values),
+                    RuntimeValue::Struct(user_struct) => user_struct.new(values),
                     _ => unreachable!(),
                 };
 
                 Ok(value)
+            }
+            Expr::Dot(user_struct, field) => {
+                let users_struct = self.evaluate_expr(user_struct)?;
+                match users_struct {
+                    RuntimeValue::Struct(ref s) => s.get(field),
+                    _ => {
+                        unimplemented!("Not a struct, can't call fields")
+                    }
+                }
+            }
+            Expr::Set(user_struct, field, value) => {
+                let mut users_struct = self.evaluate_expr(user_struct)?;
+                match users_struct {
+                    RuntimeValue::Struct(ref mut s) => {
+                        let value = self.evaluate_expr(value)?;
+                        s.set(field, value.clone())?;
+                        Ok(value)
+                    }
+                    _ => {
+                        unimplemented!("Not a struct, can't call fields")
+                    }
+                }
             }
         }
     }
@@ -372,6 +411,7 @@ impl Interpreter {
             RuntimeValue::None => false,
             RuntimeValue::NativeFunction(_) => true,
             RuntimeValue::RuntimeFunctions(_) => true,
+            RuntimeValue::Struct(_) => true,
         }
     }
 

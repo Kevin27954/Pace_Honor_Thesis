@@ -9,4 +9,5 @@ pub enum Stmt {
     WhileStmt(Expr, Box<Stmt>),
     RuntimeFunctions(String, Vec<Token>, Box<Stmt>),
     Return(Token, Option<Expr>),
+    StructStmt(Token, Vec<Token>),
 }

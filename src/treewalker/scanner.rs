@@ -140,12 +140,15 @@ impl Scanner {
             ' ' | '\r' | '\t' => {}
             '(' => self.add_token(tokens, TokenType::LEFT_PAREN),
             ')' => self.add_token(tokens, TokenType::RIGHT_PAREN),
+            '{' => self.add_token(tokens, TokenType::LEFT_BRACE),
+            '}' => self.add_token(tokens, TokenType::RIGHT_BRACE),
             ',' => self.add_token(tokens, TokenType::COMMA),
             '.' => self.add_token(tokens, TokenType::DOT),
             '-' => self.add_token(tokens, TokenType::MINUS),
             '+' => self.add_token(tokens, TokenType::PLUS),
             '*' => self.add_token(tokens, TokenType::STAR),
             ';' => self.add_token(tokens, TokenType::SEMICOLON),
+            ':' => self.add_token(tokens, TokenType::COLON),
             '!' => {
                 if let Some(true) = self.match_next('=') {
                     self.add_token(tokens, TokenType::BANG_EQUAL)
