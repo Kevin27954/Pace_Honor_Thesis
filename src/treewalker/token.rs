@@ -1,15 +1,30 @@
-use std::fmt::Display;
+use std::{fmt::Display, hash::Hash};
 
 use super::token_types::TokenType;
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Number {
     // Up for consideration
     // Integer(i64),
     Float(f64),
 }
 
-#[derive(Debug, Clone)]
+impl Number {
+    pub fn hash_f64(&self, value: &f64) -> u32 {
+        let bits = value.to_bits();
+        (bits ^ (bits >> 32)) as u32
+    }
+}
+
+impl Hash for Number {
+    fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+        match self {
+            Number::Float(num) => self.hash_f64(num).hash(state),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq, Hash)]
 pub enum Literal {
     Number(Number),
     String(String),
@@ -30,7 +45,7 @@ impl Display for Literal {
     }
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Hash)]
 pub struct Token {
     pub token_type: TokenType,
     pub lexeme: String,

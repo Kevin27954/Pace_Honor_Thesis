@@ -1,22 +1,33 @@
+use std::collections::HashMap;
+
+use crate::treewalker::functions::RuntimeFunctions;
+
 use super::{
     errors::{parse_runtime_err, RuntimeError},
     expr_types::{Expr, Primary, Unary},
     runtime_env::RuntimeEnv,
     runtime_types::RuntimeValue,
     statements::Stmt,
-    token::{Literal, Number},
+    token::{Literal, Number, Token},
     token_types::TokenType,
 };
 
 pub struct Interpreter {
-    runtime_env: RuntimeEnv,
+    pub runtime_env: RuntimeEnv,
+    symbol_table: HashMap<Expr, usize>,
 }
 
 impl Interpreter {
     pub fn new() -> Self {
+        let global = RuntimeEnv::new();
         Interpreter {
-            runtime_env: RuntimeEnv::new(),
+            runtime_env: global,
+            symbol_table: HashMap::new(),
         }
+    }
+
+    pub fn resolve(&mut self, expr: &Expr, levels: usize) {
+        self.symbol_table.insert(expr.clone(), levels);
     }
 
     pub fn get_runtime_env(&self) -> &RuntimeEnv {
@@ -24,25 +35,22 @@ impl Interpreter {
     }
 
     // returns TRUE if error
-    pub fn interpret(&mut self, stmt: &Stmt) -> bool {
+    pub fn interpret(&mut self, stmt: &Stmt) -> (RuntimeValue, bool) {
         match stmt {
-            Stmt::Expression(expr) => {
-                let result = self.evaluate_expr(expr);
-                match result {
-                    Ok(value) => println!("{}", value),
-                    Err(runtime_err) => {
-                        parse_runtime_err(runtime_err);
-                        return true;
-                    }
+            Stmt::Expression(expr) => match self.evaluate_expr(expr) {
+                Ok(_value) => {}
+                Err(runtime_err) => {
+                    parse_runtime_err(runtime_err);
+                    return (RuntimeValue::None, false);
                 }
-            }
+            },
             Stmt::VarDecl(var, val) => {
                 let runtime_val = match val {
                     Some(expr) => match self.evaluate_expr(&expr) {
                         Ok(val) => val,
                         Err(runtime_err) => {
                             parse_runtime_err(runtime_err);
-                            return true;
+                            return (RuntimeValue::None, false);
                         }
                     },
                     None => RuntimeValue::None,
@@ -55,17 +63,72 @@ impl Interpreter {
                 self.runtime_env.add_scope();
 
                 for stmt in stmts {
-                    if self.interpret(&stmt) {
+                    let (val, error) = self.interpret(&stmt);
+                    if error {
                         self.runtime_env.pop_scope();
-                        return true;
+                        return (val, error);
                     }
                 }
 
                 self.runtime_env.pop_scope();
             }
+            Stmt::IfStmt(expr, if_block, else_block) => {
+                let truthy: bool;
+                match self.evaluate_expr(&expr) {
+                    Ok(val) => {
+                        truthy = self.is_truthy(val);
+                    }
+                    Err(err) => {
+                        parse_runtime_err(err);
+                        return (RuntimeValue::None, false);
+                    }
+                };
+
+                if truthy {
+                    return self.interpret(if_block.as_ref());
+                } else {
+                    if let Some(block) = else_block.as_ref() {
+                        return self.interpret(block);
+                    }
+                }
+            }
+            Stmt::WhileStmt(expr, while_block) => {
+                while let Ok(val) = self.evaluate_expr(expr) {
+                    if !self.is_truthy(val) {
+                        break;
+                    }
+
+                    let (val, is_return) = self.interpret(while_block.as_ref());
+                    if is_return {
+                        return (val, is_return);
+                    }
+                }
+            }
+            Stmt::RuntimeFunctions(name, params, body) => {
+                let runtime_fn = RuntimeFunctions {
+                    name: name.to_string(),
+                    params: params.to_vec(),
+                    block: body.as_ref().clone(),
+                };
+
+                self.runtime_env
+                    .define_var(name.to_string(), RuntimeValue::RuntimeFunctions(runtime_fn));
+            }
+            Stmt::Return(_token, value) => {
+                if let Some(expr) = value {
+                    match self.evaluate_expr(expr) {
+                        Ok(val) => {
+                            return (val, true);
+                        }
+                        Err(err) => parse_runtime_err(err),
+                    }
+                } else {
+                    return (RuntimeValue::None, true);
+                }
+            }
         }
 
-        return false;
+        return (RuntimeValue::None, false);
     }
 
     fn evaluate_expr(&mut self, expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
@@ -81,7 +144,7 @@ impl Interpreter {
                 Primary::None => Ok(RuntimeValue::None),
             },
             Expr::Group(expr) => self.evaluate_expr(expr.as_ref()),
-            Expr::Variable(var) => self.runtime_env.get_val(var),
+            Expr::Variable(var) => self.look_up_var(var, expr),
             Expr::Unary(unary) => match unary {
                 Unary::UnaryExpr(operator, expr) => {
                     let value = self.evaluate_expr(expr.as_ref())?;
@@ -103,6 +166,27 @@ impl Interpreter {
 
                     unreachable!("Unary -> This part should never be reached")
                 }
+            },
+            Expr::Logical(left, operator, right) => match operator.token_type {
+                TokenType::AND => {
+                    let left_val = self.evaluate_expr(left.as_ref())?;
+                    if !self.is_truthy(left_val.clone()) {
+                        return Ok(left_val);
+                    }
+
+                    let right_val = self.evaluate_expr(right.as_ref())?;
+                    return Ok(right_val);
+                }
+                TokenType::OR => {
+                    let left_val = self.evaluate_expr(left.as_ref())?;
+                    if self.is_truthy(left_val.clone()) {
+                        return Ok(left_val);
+                    }
+
+                    let right_val = self.evaluate_expr(right.as_ref())?;
+                    return Ok(right_val);
+                }
+                _ => unreachable!(),
             },
             Expr::Binary(left, operator, right) => {
                 let left_val = self.evaluate_expr(left.as_ref())?;
@@ -182,7 +266,7 @@ impl Interpreter {
                     }
                     TokenType::LESS => {
                         if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
-                            return Ok(RuntimeValue::Boolean(left <= right));
+                            return Ok(RuntimeValue::Boolean(left < right));
                         }
 
                         return Err(RuntimeError::BinaryTypeMismatch(
@@ -199,22 +283,10 @@ impl Interpreter {
                         ));
                     }
                     TokenType::BANG_EQUAL => {
-                        if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
-                            return Ok(RuntimeValue::Boolean(!(left == right)));
-                        }
-
-                        return Err(RuntimeError::BinaryTypeMismatch(
-                            left_val, operator, right_val,
-                        ));
+                        return Ok(RuntimeValue::Boolean(left_val != right_val));
                     }
                     TokenType::EQUAL_EQUAL => {
-                        if let Some((left, right)) = self.extract_num_pair(&left_val, &right_val) {
-                            return Ok(RuntimeValue::Boolean(left == right));
-                        }
-
-                        return Err(RuntimeError::BinaryTypeMismatch(
-                            left_val, operator, right_val,
-                        ));
+                        return Ok(RuntimeValue::Boolean(left_val == right_val));
                     }
                     _ => {}
                 }
@@ -223,10 +295,74 @@ impl Interpreter {
             }
             Expr::Assignment(var, expr) => {
                 let value = self.evaluate_expr(expr.as_ref())?;
-                self.runtime_env.assign_var(var, value.clone())?;
+                //self.runtime_env.assign_var(var, value.clone())?;
+                self.assign_var(var, expr)?;
                 return Ok(value);
             }
+            Expr::Call(callee, _right_paren, assignments) => {
+                let callee = self.evaluate_expr(callee)?;
+
+                let mut values: Vec<RuntimeValue> = Vec::new();
+                for assignment in assignments {
+                    values.push(self.evaluate_expr(assignment)?);
+                }
+
+                match callee {
+                    RuntimeValue::NativeFunction(ref func) => {
+                        if func.name == "print".to_string() && values.len() > func.get_arity() {
+                            unimplemented!("too many args ferronccjj");
+                        } else if func.name != "print".to_string()
+                            && func.get_arity() != values.len()
+                        {
+                            unimplemented!("Unequal arguments efasdfrro");
+                        }
+                    }
+                    RuntimeValue::RuntimeFunctions(ref func) => {
+                        if values.len() != func.get_arity() {
+                            unimplemented!("Unequal arguments efasdfrro");
+                        }
+                    }
+                    _ => {
+                        unimplemented!("Not a function error");
+                    }
+                }
+
+                let value = match callee {
+                    RuntimeValue::NativeFunction(ref func) => func.call(values),
+                    RuntimeValue::RuntimeFunctions(ref func) => func.call(self, values),
+                    _ => unreachable!(),
+                };
+
+                Ok(value)
+            }
         }
+    }
+
+    fn look_up_var(&self, token: &Token, expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
+        let option_distance = self.symbol_table.get(expr);
+
+        if let Some(distance) = option_distance {
+            self.runtime_env.get_at(*distance, token)
+        } else {
+            if let Some(val) = self.runtime_env.get_global().get(&token.lexeme) {
+                return Ok(val.clone());
+            } else {
+                return Ok(RuntimeValue::None);
+            }
+        }
+    }
+
+    fn assign_var(&mut self, token: &Token, expr: &Expr) -> Result<(), RuntimeError> {
+        let val = self.evaluate_expr(expr)?;
+        let option_distance = self.symbol_table.get(expr);
+
+        if let Some(distance) = option_distance {
+            self.runtime_env.assign_at(*distance, token, val)?;
+        } else {
+            self.runtime_env.assign_global(token.lexeme.clone(), val)?;
+        }
+
+        Ok(())
     }
 
     fn is_truthy(&self, value: RuntimeValue) -> bool {
@@ -234,6 +370,8 @@ impl Interpreter {
             RuntimeValue::String(_) | RuntimeValue::Number(_) => true,
             RuntimeValue::Boolean(bool) => bool,
             RuntimeValue::None => false,
+            RuntimeValue::NativeFunction(_) => true,
+            RuntimeValue::RuntimeFunctions(_) => true,
         }
     }
 
