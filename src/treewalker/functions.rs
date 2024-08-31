@@ -19,7 +19,7 @@ impl RuntimeFunctions {
         self.params.len()
     }
 
-    pub fn call(&self, interperter: &mut Interpreter, args: Vec<&RuntimeValue>) -> RuntimeValue {
+    pub fn call(&self, interperter: &mut Interpreter, args: Vec<RuntimeValue>) -> RuntimeValue {
         interperter.runtime_env.add_scope();
 
         for i in 0..args.len() {
@@ -61,7 +61,7 @@ impl PartialEq for RuntimeFunctions {
 pub struct NativeFunctions {
     pub arity: usize,
     pub name: String,
-    pub function: fn(Vec<&RuntimeValue>) -> RuntimeValue,
+    pub function: fn(Vec<RuntimeValue>) -> RuntimeValue,
 }
 
 impl NativeFunctions {
@@ -69,7 +69,7 @@ impl NativeFunctions {
         self.arity
     }
 
-    pub fn call(&self, args: Vec<&RuntimeValue>) -> RuntimeValue {
+    pub fn call(&self, args: Vec<RuntimeValue>) -> RuntimeValue {
         (self.function)(args)
     }
 }
@@ -92,7 +92,7 @@ impl PartialEq for NativeFunctions {
     }
 }
 
-pub fn clock(_args: Vec<&RuntimeValue>) -> RuntimeValue {
+pub fn clock(_args: Vec<RuntimeValue>) -> RuntimeValue {
     let secs = SystemTime::now().duration_since(UNIX_EPOCH);
     match secs {
         Ok(sec) => RuntimeValue::Number(sec.as_secs_f64()),
@@ -100,7 +100,7 @@ pub fn clock(_args: Vec<&RuntimeValue>) -> RuntimeValue {
     }
 }
 
-pub fn print(args: Vec<&RuntimeValue>) -> RuntimeValue {
+pub fn print(args: Vec<RuntimeValue>) -> RuntimeValue {
     let output_str = args
         .iter()
         .map(|x| x.to_string())

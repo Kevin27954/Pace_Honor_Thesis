@@ -59,7 +59,7 @@ impl RuntimeEnv {
         self.runtime_env.pop_front();
     }
 
-    pub fn define_var(&mut self, var: String, val: &RuntimeValue) {
+    pub fn define_var(&mut self, var: String, val: RuntimeValue) {
         self.runtime_env
             .front_mut()
             .unwrap()
@@ -91,7 +91,7 @@ impl RuntimeEnv {
         return Err(RuntimeError::UndeclaredVariable(var.clone()));
     }
 
-    pub fn get_at(&self, distance: usize, token: &Token) -> Result<&RuntimeValue, RuntimeError> {
+    pub fn get_at(&self, distance: usize, token: &Token) -> Result<RuntimeValue, RuntimeError> {
         let mut iter = self.runtime_env.iter();
 
         for _ in 1..distance {
@@ -100,7 +100,7 @@ impl RuntimeEnv {
 
         if let Some(env) = iter.next() {
             if let Some(val) = env.get(&token.lexeme) {
-                return Ok(val);
+                return Ok(val.clone());
             } else {
                 unreachable!("Supposiblity unreach");
             }
