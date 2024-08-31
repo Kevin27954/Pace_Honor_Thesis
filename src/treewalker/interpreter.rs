@@ -1,17 +1,20 @@
+use std::collections::HashMap;
+
 use crate::treewalker::functions::RuntimeFunctions;
 
 use super::{
-    errors::{parse_error, parse_runtime_err, RuntimeError},
+    errors::{parse_runtime_err, RuntimeError},
     expr_types::{Expr, Primary, Unary},
     runtime_env::RuntimeEnv,
     runtime_types::RuntimeValue,
     statements::Stmt,
-    token::{Literal, Number},
+    token::{Literal, Number, Token},
     token_types::TokenType,
 };
 
 pub struct Interpreter {
     pub runtime_env: RuntimeEnv,
+    symbol_table: HashMap<Expr, usize>,
 }
 
 impl Interpreter {
@@ -19,7 +22,12 @@ impl Interpreter {
         let global = RuntimeEnv::new();
         Interpreter {
             runtime_env: global,
+            symbol_table: HashMap::new(),
         }
+    }
+
+    pub fn resolve(&mut self, expr: &Expr, levels: usize) {
+        self.symbol_table.insert(expr.clone(), levels);
     }
 
     pub fn get_runtime_env(&self) -> &RuntimeEnv {
@@ -103,11 +111,10 @@ impl Interpreter {
                     block: body.as_ref().clone(),
                 };
 
-                self.runtime_env.add_scope();
                 self.runtime_env
                     .define_var(name.to_string(), RuntimeValue::RuntimeFunctions(runtime_fn));
             }
-            Stmt::Return(token, value) => {
+            Stmt::Return(_token, value) => {
                 if let Some(expr) = value {
                     match self.evaluate_expr(expr) {
                         Ok(val) => {
@@ -137,7 +144,7 @@ impl Interpreter {
                 Primary::None => Ok(RuntimeValue::None),
             },
             Expr::Group(expr) => self.evaluate_expr(expr.as_ref()),
-            Expr::Variable(var) => self.runtime_env.get_val(var),
+            Expr::Variable(var) => self.look_up_var(var, expr),
             Expr::Unary(unary) => match unary {
                 Unary::UnaryExpr(operator, expr) => {
                     let value = self.evaluate_expr(expr.as_ref())?;
@@ -288,7 +295,8 @@ impl Interpreter {
             }
             Expr::Assignment(var, expr) => {
                 let value = self.evaluate_expr(expr.as_ref())?;
-                self.runtime_env.assign_var(var, value.clone())?;
+                //self.runtime_env.assign_var(var, value.clone())?;
+                self.assign_var(var, expr)?;
                 return Ok(value);
             }
             Expr::Call(callee, _right_paren, assignments) => {
@@ -315,7 +323,7 @@ impl Interpreter {
                         }
                     }
                     _ => {
-                        unimplemented!("Not a function eror");
+                        unimplemented!("Not a function error");
                     }
                 }
 
@@ -328,6 +336,33 @@ impl Interpreter {
                 Ok(value)
             }
         }
+    }
+
+    fn look_up_var(&self, token: &Token, expr: &Expr) -> Result<RuntimeValue, RuntimeError> {
+        let option_distance = self.symbol_table.get(expr);
+
+        if let Some(distance) = option_distance {
+            self.runtime_env.get_at(*distance, token)
+        } else {
+            if let Some(val) = self.runtime_env.get_global().get(&token.lexeme) {
+                return Ok(val.clone());
+            } else {
+                return Ok(RuntimeValue::None);
+            }
+        }
+    }
+
+    fn assign_var(&mut self, token: &Token, expr: &Expr) -> Result<(), RuntimeError> {
+        let val = self.evaluate_expr(expr)?;
+        let option_distance = self.symbol_table.get(expr);
+
+        if let Some(distance) = option_distance {
+            self.runtime_env.assign_at(*distance, token, val)?;
+        } else {
+            self.runtime_env.assign_global(token.lexeme.clone(), val)?;
+        }
+
+        Ok(())
     }
 
     fn is_truthy(&self, value: RuntimeValue) -> bool {

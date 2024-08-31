@@ -3,6 +3,7 @@ use std::{fs, process};
 use ast_printer::ASTPrinter;
 use interpreter::Interpreter;
 use parser::Parser;
+use resolver::Resolver;
 use scanner::Scanner;
 
 mod ast_printer;
@@ -11,6 +12,7 @@ mod expr_types;
 mod functions;
 mod interpreter;
 mod parser;
+mod resolver;
 mod runtime_env;
 mod runtime_types;
 mod scanner;
@@ -53,11 +55,19 @@ pub fn run(source: &String) -> (bool, i32) {
     if has_error {
         return (has_error, 65);
     }
+    println!();
 
-    println!("\nInterpreter:");
     // No need to pass in because we will evaluate line by line and error out
     // at the point there is an error, rather than push all error to the top.
     let mut interpreter = Interpreter::new();
+    let mut resolver = Resolver::new(&mut interpreter);
+    let has_error = resolver.resolve(&stmt);
+
+    if has_error {
+        return (has_error, 65);
+    }
+
+    println!("\nInterpreter:");
     let has_error: bool = false;
     for stmt in &stmt {
         interpreter.interpret(stmt);

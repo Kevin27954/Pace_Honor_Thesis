@@ -7,8 +7,9 @@ use super::{
     token::Token,
 };
 
+#[derive(Debug)]
 pub struct RuntimeEnv {
-    runtime_env: LinkedList<HashMap<String, RuntimeValue>>,
+    pub runtime_env: LinkedList<HashMap<String, RuntimeValue>>,
 }
 
 impl RuntimeEnv {
@@ -39,7 +40,14 @@ impl RuntimeEnv {
     }
 
     pub fn get_global(&self) -> &HashMap<String, RuntimeValue> {
-        self.runtime_env.front().unwrap()
+        &self.runtime_env.back().unwrap()
+    }
+
+    pub fn assign_global(&mut self, name: String, val: RuntimeValue) -> Result<(), RuntimeError> {
+        let global = self.runtime_env.back_mut().unwrap();
+        global.insert(name, val);
+
+        Ok(())
     }
 
     pub fn add_scope(&mut self) {
@@ -69,8 +77,6 @@ impl RuntimeEnv {
     }
 
     pub fn get_val(&self, var: &Token) -> Result<RuntimeValue, RuntimeError> {
-        // Might need to clone if it gets complicated
-
         let mut iter = self.runtime_env.iter();
 
         while let Some(env) = iter.next() {
@@ -80,6 +86,43 @@ impl RuntimeEnv {
         }
 
         return Err(RuntimeError::UndeclaredVariable(var.clone()));
+    }
+
+    pub fn get_at(&self, distance: usize, token: &Token) -> Result<RuntimeValue, RuntimeError> {
+        let mut iter = self.runtime_env.iter();
+
+        for _ in 1..distance {
+            iter.next();
+        }
+
+        if let Some(env) = iter.next() {
+            if let Some(val) = env.get(&token.lexeme) {
+                return Ok(val.clone());
+            } else {
+                unreachable!("Supposiblity unreach");
+            }
+        } else {
+            unreachable!("shouldn't be ");
+        }
+    }
+
+    pub fn assign_at(
+        &mut self,
+        distance: usize,
+        token: &Token,
+        val: RuntimeValue,
+    ) -> Result<(), RuntimeError> {
+        let mut iter = self.runtime_env.iter_mut().rev();
+
+        for _ in 0..distance {
+            iter.next();
+        }
+
+        if let Some(env) = iter.next() {
+            env.insert(token.lexeme.clone(), val);
+        }
+
+        Ok(())
     }
 
     // This is for testing purposes only, will be deleted
