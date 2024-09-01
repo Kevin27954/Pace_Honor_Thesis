@@ -108,7 +108,5 @@ pub fn print(args: Vec<RuntimeValue>) -> RuntimeValue {
         .join(", ");
     println!("{output_str}");
 
-    println!("{:?}", args);
-
     RuntimeValue::None
 }

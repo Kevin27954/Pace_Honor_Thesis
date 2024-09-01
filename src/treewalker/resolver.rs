@@ -167,7 +167,6 @@ impl<'a> Resolver<'a> {
     fn resolve_fn(&mut self, func: &Stmt, scope_type: ScopeType) {
         let prev_scope = self.scope_type.clone();
         self.scope_type = scope_type;
-
         self.add_scope();
 
         match func {

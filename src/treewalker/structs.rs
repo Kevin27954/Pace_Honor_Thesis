@@ -1,6 +1,6 @@
-use std::{collections::HashMap, fmt::Display};
+use std::{borrow::BorrowMut, collections::HashMap, fmt::Display};
 
-use super::{errors::RuntimeError, runtime_types::RuntimeValue, token::Token};
+use super::{errors::RuntimeError, expr_types::Expr, runtime_types::RuntimeValue, token::Token};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Struct {
@@ -35,6 +35,41 @@ impl Struct {
         };
 
         return Err(RuntimeError::UndeclaredVariable(token.clone()));
+    }
+
+    pub fn test(
+        &mut self,
+        expr: &Expr,
+        name: &Token,
+        value: RuntimeValue,
+    ) -> Result<&mut Struct, RuntimeError> {
+        let mut temp_expr = expr;
+        let mut temp_token = Vec::new();
+        while let Expr::Dot(inner_expr, token) = temp_expr {
+            temp_expr = inner_expr;
+            temp_token.push(token);
+        }
+
+        let mut struct_fields = Some(self.fields.borrow_mut());
+        for token in temp_token.iter().rev() {
+            struct_fields = match struct_fields.unwrap().get_mut(&token.lexeme) {
+                Some(rs) => match rs {
+                    RuntimeValue::Struct(s) => Some(s.fields.borrow_mut()),
+                    _ => None,
+                },
+                None => return Err(RuntimeError::UndeclaredVariable(name.clone())),
+            }
+        }
+
+        let temp = struct_fields
+            .unwrap()
+            .insert(name.lexeme.to_string(), value);
+
+        if let None = temp {
+            return Err(RuntimeError::UndeclaredVariable(name.clone()));
+        }
+
+        Ok(self)
     }
 
     pub fn set(&mut self, token: &Token, value: RuntimeValue) -> Result<(), RuntimeError> {

@@ -29,6 +29,7 @@ impl Interpreter {
 
     pub fn resolve(&mut self, expr: &Expr, levels: usize) {
         self.symbol_table.insert(expr.clone(), levels);
+        println!("{:?}", self.symbol_table);
     }
 
     pub fn get_runtime_env(&self) -> &RuntimeEnv {
@@ -362,6 +363,26 @@ impl Interpreter {
                 }
             }
             Expr::Set(user_struct, field, value) => {
+                let struct_name = self.extract_first_token(user_struct.as_ref());
+
+                let mut name = None;
+                match struct_name.unwrap() {
+                    Expr::Variable(token) => name = Some(token),
+                    _ => {}
+                }
+
+                let mut the_struct = self.evaluate_expr(struct_name.unwrap())?;
+
+                match the_struct {
+                    RuntimeValue::Struct(ref mut s) => {
+                        let value = self.evaluate_expr(value)?;
+                        let idk = s.test(user_struct, field, value)?.clone();
+                        self.runtime_env
+                            .assign_var(name.unwrap(), RuntimeValue::Struct(idk))?;
+                    }
+                    _ => {}
+                }
+
                 let mut users_struct = self.evaluate_expr(user_struct)?;
                 match users_struct {
                     RuntimeValue::Struct(ref mut s) => {
@@ -437,6 +458,14 @@ impl Interpreter {
             (RuntimeValue::String(left_string), RuntimeValue::String(right_string)) => {
                 Some((left_string, right_string))
             }
+            _ => None,
+        }
+    }
+
+    fn extract_first_token<'a>(&self, expr: &'a Expr) -> Option<&'a Expr> {
+        match expr {
+            Expr::Variable(_token) => Some(expr),
+            Expr::Dot(boxed_expr, _) => self.extract_first_token(boxed_expr),
             _ => None,
         }
     }
