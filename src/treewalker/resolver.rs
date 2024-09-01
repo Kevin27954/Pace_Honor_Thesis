@@ -95,6 +95,10 @@ impl<'a> Resolver<'a> {
                 self.resolve_expr(expr);
                 self.resolve_stmt(body.as_ref());
             }
+            Stmt::StructStmt(token, fields) => {
+                self.declare(token.lexeme.to_string());
+                self.define(token.lexeme.to_string());
+            }
         }
 
         has_error
@@ -119,6 +123,13 @@ impl<'a> Resolver<'a> {
                 }
                 None => {}
             },
+            Expr::Dot(user_struct, _field) => {
+                self.resolve_expr(user_struct.as_ref());
+            }
+            Expr::Set(user_struct, _field, value) => {
+                self.resolve_expr(user_struct.as_ref());
+                self.resolve_expr(value.as_ref());
+            }
 
             Expr::Assignment(token, expr) => {
                 self.resolve_expr(expr.as_ref());
@@ -156,7 +167,6 @@ impl<'a> Resolver<'a> {
     fn resolve_fn(&mut self, func: &Stmt, scope_type: ScopeType) {
         let prev_scope = self.scope_type.clone();
         self.scope_type = scope_type;
-
         self.add_scope();
 
         match func {

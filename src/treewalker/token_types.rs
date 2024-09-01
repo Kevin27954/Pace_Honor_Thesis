@@ -6,9 +6,8 @@ pub enum TokenType {
     // Parenthesis
     LEFT_PAREN,
     RIGHT_PAREN,
-    // There shouldn't be braces for functions.
-    // LEFT_BRACE,
-    // RIGHT_BRACE,
+    LEFT_BRACE,
+    RIGHT_BRACE,
 
     // Symbols
     COMMA,
@@ -18,6 +17,7 @@ pub enum TokenType {
     SLASH,
     STAR,
     SEMICOLON,
+    COLON,
 
     // Equality Operator
     // !

@@ -17,6 +17,7 @@ mod runtime_env;
 mod runtime_types;
 mod scanner;
 mod statements;
+mod structs;
 mod token;
 mod token_types;
 

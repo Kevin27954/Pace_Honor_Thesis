@@ -13,6 +13,8 @@ pub enum Expr {
     Group(Box<Expr>),
     Variable(Token),
     Call(Box<Expr>, Token, Vec<Expr>),
+    Dot(Box<Expr>, Token),
+    Set(Box<Expr>, Token, Box<Expr>),
 }
 
 #[derive(Debug, Clone, PartialEq, Hash)]
@@ -28,4 +30,3 @@ pub enum Primary {
 }
 
 impl Eq for Expr {}
-

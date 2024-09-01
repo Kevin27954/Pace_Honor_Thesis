@@ -1,6 +1,9 @@
 use std::fmt::{Display, Formatter, Result};
 
-use super::functions::{NativeFunctions, RuntimeFunctions};
+use super::{
+    functions::{NativeFunctions, RuntimeFunctions},
+    structs::Struct,
+};
 
 #[derive(PartialEq, Clone, Debug)]
 pub enum RuntimeValue {
@@ -10,6 +13,7 @@ pub enum RuntimeValue {
     None,
     NativeFunction(NativeFunctions),
     RuntimeFunctions(RuntimeFunctions),
+    Struct(Struct),
 }
 
 impl Display for RuntimeValue {
@@ -32,6 +36,9 @@ impl Display for RuntimeValue {
             }
             Self::RuntimeFunctions(function) => {
                 write!(f, "{}", function)
+            }
+            Self::Struct(user_struct) => {
+                write!(f, "{}", user_struct)
             }
         }
     }
@@ -57,6 +64,9 @@ impl RuntimeValue {
             }
             Self::RuntimeFunctions(function) => {
                 format!("Function '{}'", function)
+            }
+            Self::Struct(user_struct) => {
+                format!("struct {}", user_struct)
             }
         }
     }

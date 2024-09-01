@@ -60,7 +60,10 @@ impl RuntimeEnv {
     }
 
     pub fn define_var(&mut self, var: String, val: RuntimeValue) {
-        self.runtime_env.front_mut().unwrap().insert(var, val);
+        self.runtime_env
+            .front_mut()
+            .unwrap()
+            .insert(var, val.clone());
     }
 
     pub fn assign_var(&mut self, var: &Token, val: RuntimeValue) -> Result<(), RuntimeError> {

@@ -46,6 +46,8 @@ impl Parser<'_> {
             stmt = self.parse_var_decl()?;
         } else if self.match_type(&[TokenType::FUNCTION]) {
             stmt = self.parse_fn_decl()?;
+        } else if self.match_type(&[TokenType::STRUCT]) {
+            stmt = self.parse_struct_decl()?;
         } else {
             stmt = self.parse_stmt()?;
         }
@@ -62,6 +64,35 @@ impl Parser<'_> {
         }
 
         return Ok(stmt);
+    }
+
+    fn parse_struct_decl(&mut self) -> Result<Stmt, CompileErrors> {
+        if !self.match_type(&[TokenType::IDENTIFIER]) {
+            unimplemented!("expected identifer errors");
+        }
+        let identifier = self.previous();
+
+        if !self.match_type(&[TokenType::LEFT_BRACE]) {
+            unimplemented!("expect left brace");
+        }
+
+        let mut properties: Vec<Token> = Vec::new();
+        self.skip_comments_and_newlines();
+        while self.peek().unwrap().token_type != TokenType::RIGHT_BRACE && !self.is_end() {
+            properties.push(self.advance());
+
+            if !self.match_type(&[TokenType::COMMA]) {
+                self.skip_comments_and_newlines();
+                break;
+            }
+            self.skip_comments_and_newlines();
+        }
+
+        if !self.match_type(&[TokenType::RIGHT_BRACE]) {
+            unimplemented!("expect right raparm")
+        }
+
+        Ok(Stmt::StructStmt(identifier, properties))
     }
 
     fn parse_fn_decl(&mut self) -> Result<Stmt, CompileErrors> {
@@ -335,6 +366,8 @@ impl Parser<'_> {
 
             if let Expr::Variable(var) = expr {
                 return Ok(Expr::Assignment(var, Box::new(value)));
+            } else if let Expr::Dot(expr, token) = expr {
+                return Ok(Expr::Set(expr, token, Box::new(value)));
             }
 
             return Err(CompileErrors::ExpectExpr(token));
@@ -452,8 +485,27 @@ impl Parser<'_> {
     fn call(&mut self) -> Result<Expr, CompileErrors> {
         let mut expr = self.primary()?;
 
-        while self.match_type(&[TokenType::LEFT_PAREN]) {
-            expr = self.finish_call(expr)?;
+        loop {
+            if self.match_type(&[TokenType::LEFT_PAREN]) {
+                expr = self.finish_call(expr, TokenType::RIGHT_PAREN)?;
+                if !self.match_type(&[TokenType::RIGHT_PAREN]) {
+                    unimplemented!("Expected right parenthesis, function not closed.")
+                }
+            } else if self.match_type(&[TokenType::LEFT_BRACE]) {
+                expr = self.finish_call(expr, TokenType::RIGHT_BRACE)?;
+                if !self.match_type(&[TokenType::RIGHT_BRACE]) {
+                    unimplemented!("Expected right brace, function not closed.")
+                }
+            } else if self.match_type(&[TokenType::DOT]) {
+                if !self.match_type(&[TokenType::IDENTIFIER]) {
+                    return Err(CompileErrors::UnexpectedKeyword(
+                        self.peek().unwrap().clone(),
+                    ));
+                }
+                expr = Expr::Dot(Box::new(expr), self.previous());
+            } else {
+                break;
+            }
         }
 
         return Ok(expr);
@@ -513,10 +565,14 @@ impl Parser<'_> {
         }
     }
 
-    fn finish_call(&mut self, expr: Expr) -> Result<Expr, CompileErrors> {
+    fn finish_struct(&mut self, expr: Expr) -> Result<Expr, CompileErrors> {
+        unimplemented!("struct expr didn't finish");
+    }
+
+    fn finish_call(&mut self, expr: Expr, end_token: TokenType) -> Result<Expr, CompileErrors> {
         let mut arguments: Vec<Expr> = Vec::new();
 
-        if self.peek().unwrap().token_type != TokenType::RIGHT_PAREN {
+        if self.peek().unwrap().token_type != end_token {
             loop {
                 if arguments.len() > 16 {
                     error(self.peek().unwrap().line, "Too many arguments".to_string());
@@ -527,10 +583,6 @@ impl Parser<'_> {
                     break;
                 }
             }
-        }
-
-        if !self.match_type(&[TokenType::RIGHT_PAREN]) {
-            unimplemented!("Expected right parenthesis, function not closed.")
         }
 
         return Ok(Expr::Call(Box::new(expr), self.previous(), arguments));

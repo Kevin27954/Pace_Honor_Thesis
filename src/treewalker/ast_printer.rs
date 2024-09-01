@@ -95,6 +95,25 @@ impl ASTPrinter {
 
                 ast
             }
+            Stmt::StructStmt(token, fields) => {
+                let mut ast = String::new();
+                ast.push_str("(struct");
+                ast.push_str(&token.lexeme);
+                ast.push_str(" ");
+                ast.push_str(
+                    format!(
+                        " {}",
+                        fields
+                            .iter()
+                            .map(|token| token.lexeme.to_string() + ", ")
+                            .collect::<String>()
+                    )
+                    .as_str(),
+                );
+                ast.push_str(")");
+
+                ast
+            }
         }
     }
 
@@ -133,6 +152,24 @@ impl ASTPrinter {
                 }
                 ast.push(')');
 
+                ast
+            }
+            Expr::Dot(user_struct, field) => {
+                let mut ast = String::new();
+                ast.push_str(format!("({:?}.{}))", user_struct.as_ref(), field.lexeme).as_str());
+                ast
+            }
+            Expr::Set(user_struct, field, value) => {
+                let mut ast = String::new();
+                ast.push_str(
+                    format!(
+                        "({:?}.{} = {:?}))",
+                        user_struct.as_ref(),
+                        field.lexeme,
+                        value.as_ref()
+                    )
+                    .as_str(),
+                );
                 ast
             }
         }
