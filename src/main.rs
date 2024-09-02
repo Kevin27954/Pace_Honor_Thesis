@@ -1,31 +1,26 @@
-use std::{env, process};
+use compiler::{
+    chunk::{Chunk, OpCode},
+    values::Value,
+};
+use debug::disassemble_chunk;
+use vm::VM;
 
-use treewalker::run_file;
-mod treewalker;
+mod compiler;
+mod debug;
+mod vm;
 
 fn main() {
-    if env::args().len() > 4 {
-        println!("You entered too many arguments");
-        process::exit(1);
-    } else {
-        // clt-tool run main.txt -v
-        // cli-tool kevling -l
+    let mut chunk = Chunk::new();
 
-        let args: Vec<String> = env::args().collect();
-        println!("{:?}", args);
-        let cmd = &args[1];
+    let constant_idx = chunk.add_value(Value::Number(1.2));
+    chunk.write_code(OpCode::OpConstant(constant_idx as u8), 1);
 
-        match cmd.as_str() {
-            "run" => {
-                run_file(&args[2]);
-            }
-            "kevling" => {
-                todo!("Should start the ASCII adventure");
-            }
-            _ => {
-                println!("Unknown command");
-                process::exit(1);
-            }
-        }
-    }
+    chunk.write_code(OpCode::OpNegate, 8);
+
+    chunk.write_code(OpCode::OpReturn, 8);
+
+    disassemble_chunk(&chunk, "Test Chunk".to_string());
+
+    let mut vm = VM::new(&chunk);
+    vm.interpret();
 }
