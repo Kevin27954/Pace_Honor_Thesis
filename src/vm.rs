@@ -34,7 +34,7 @@ impl<'a> VM<'a> {
         }
     }
 
-    pub fn interpret(&mut self) -> InterpretResult {
+    pub fn interpret(&mut self, source: String) -> InterpretResult {
         return self.run();
     }
 

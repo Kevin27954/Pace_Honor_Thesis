@@ -1,26 +1,52 @@
+use std::{env, fs, path::Path, process};
+
 use compiler::{
     chunk::{Chunk, OpCode},
     values::Value,
 };
 use debug::disassemble_chunk;
-use vm::VM;
+use scanner::Scanner;
+use vm::{InterpretResult, VM};
 
 mod compiler;
 mod debug;
+mod scanner;
 mod vm;
 
 fn main() {
-    let mut chunk = Chunk::new();
+    if env::args().len() > 4 {
+        println!("You entered too many arguments");
+        process::exit(1);
+    } else {
+        let args: Vec<String> = env::args().collect();
+        let cmd = &args[1];
 
-    let constant_idx = chunk.add_value(Value::Number(1.2));
-    chunk.write_code(OpCode::OpConstant(constant_idx as u8), 1);
+        match cmd.as_str() {
+            "run" => {
+                read_file(&args[2]);
+            }
+            "sparkling" => {
+                todo!("Should start the ASCII adventure");
+            }
+            _ => {
+                println!("Unknown command");
+                process::exit(1);
+            }
+        }
+    }
+}
 
-    chunk.write_code(OpCode::OpNegate, 8);
+fn read_file(path: &String) {
+    let buffer =
+        fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    chunk.write_code(OpCode::OpReturn, 8);
+    let mut scanner = Scanner::new(String::from("end"));
+    println!("{}", scanner.scan_token());
+    let result: InterpretResult = InterpretResult::OK;
 
-    disassemble_chunk(&chunk, "Test Chunk".to_string());
-
-    let mut vm = VM::new(&chunk);
-    vm.interpret();
+    match result {
+        InterpretResult::CompileError => process::exit(65),
+        InterpretResult::RuntimeError => process::exit(70),
+        _ => {}
+    }
 }
