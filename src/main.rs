@@ -40,9 +40,12 @@ fn read_file(path: &String) {
     let buffer =
         fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    let mut scanner = Scanner::new(String::from("end"));
+    let source_str = String::from("end");
+    let mut scanner = Scanner::new(source_str);
     println!("{}", scanner.scan_token());
-    let result: InterpretResult = InterpretResult::OK;
+
+    let mut vm = VM::new(Chunk::new());
+    let result: InterpretResult = vm.interpret(buffer);
 
     match result {
         InterpretResult::CompileError => process::exit(65),

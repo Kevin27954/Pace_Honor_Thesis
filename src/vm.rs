@@ -3,7 +3,9 @@ use core::panic;
 use crate::{
     compiler::{
         chunk::{Chunk, OpCode},
+        compile,
         values::Value,
+        Parser,
     },
     debug::{disaseemble_code, disassemble_chunk},
 };
@@ -16,8 +18,8 @@ pub enum InterpretResult {
     RuntimeError,
 }
 
-pub struct VM<'a> {
-    chunk: &'a Chunk,
+pub struct VM {
+    chunk: Chunk,
     stack: Vec<Value>,
 
     ic: usize,
@@ -25,9 +27,10 @@ pub struct VM<'a> {
 
 // Gives the lifetime of VM struct a name we can use. Same impliciations as the VM struct in the
 // struct declaration
-impl<'a> VM<'a> {
-    pub fn new(chunk: &'a Chunk) -> Self {
+impl VM {
+    pub fn new(chunk: Chunk) -> Self {
         VM {
+            // Here just to have a field. Will be replaced in interpret
             chunk,
             stack: Vec::new(),
             ic: 0,
@@ -35,6 +38,16 @@ impl<'a> VM<'a> {
     }
 
     pub fn interpret(&mut self, source: String) -> InterpretResult {
+        // Idea: Given a source code, compile and run it.
+        let chunk = Chunk::new();
+
+        let mut parser = Parser::new();
+        if !parser.compile(source, &chunk) {
+            return InterpretResult::CompileError;
+        }
+
+        self.chunk = chunk;
+
         return self.run();
     }
 
@@ -49,7 +62,7 @@ impl<'a> VM<'a> {
         loop {
             if DEBUG {
                 println!("Stack:       {:?}", self.stack);
-                disaseemble_code(self.chunk, self.ic);
+                disaseemble_code(&self.chunk, self.ic);
             }
 
             let instruction = self.get_op_code();

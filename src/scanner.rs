@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum TokenType {
     // Parenthesis
     LeftParen,
@@ -85,9 +85,9 @@ impl Display for TokenType {
 }
 
 pub struct Token {
-    token_type: TokenType,
-    lexeme: String,
-    line: usize,
+    pub token_type: TokenType,
+    pub lexeme: String,
+    pub line: usize,
 }
 
 impl Token {
@@ -116,6 +116,7 @@ pub struct Scanner {
 impl Scanner {
     pub fn new(source: String) -> Self {
         let mut chars: Vec<char> = source.chars().collect();
+        // Signify it is the end of file
         chars.push('\0');
         Scanner {
             source: chars,
@@ -141,7 +142,7 @@ impl Scanner {
         Token::new(TokenType::Error, msg, self.line)
     }
 
-    fn advance(&mut self) -> char {
+    pub fn advance(&mut self) -> char {
         let char = self.source[self.current];
         self.current += 1;
         char
@@ -151,7 +152,7 @@ impl Scanner {
         self.source[idx]
     }
 
-    fn peek(&self) -> char {
+    pub fn peek(&self) -> char {
         self.source[self.current]
     }
 
