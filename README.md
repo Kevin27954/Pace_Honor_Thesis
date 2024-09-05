@@ -1,6 +1,6 @@
 ## Default language features - Expect 1 month
 - [x] Mathematical expressions
-- [x] (IP) Variable declarations
+- [ ] (IP) Variable declarations
 - [ ] If statements and expressions
 - [ ] Loops
 	- [ ] While
@@ -8,7 +8,7 @@
 - [ ] Functions
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] (IP) Error messages
-- [x] Type system
+- [ ] Type system
 - [ ] Garbage Collector
 
 ## Custom Implementations -> Expect 2 Weeks
