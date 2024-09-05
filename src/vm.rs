@@ -3,7 +3,6 @@ use core::panic;
 use crate::{
     compiler::{
         chunk::{Chunk, OpCode},
-        compile,
         values::Value,
         Parser,
     },
@@ -39,10 +38,11 @@ impl VM {
 
     pub fn interpret(&mut self, source: String) -> InterpretResult {
         // Idea: Given a source code, compile and run it.
-        let chunk = Chunk::new();
+        let mut chunk = Chunk::new();
 
-        let mut parser = Parser::new();
-        if !parser.compile(source, &chunk) {
+        let mut parser = Parser::new(&mut chunk);
+        //if !parser.compile(source, &chunk) {
+        if !parser.compile(source) {
             return InterpretResult::CompileError;
         }
 

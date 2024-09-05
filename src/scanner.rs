@@ -84,6 +84,7 @@ impl Display for TokenType {
     }
 }
 
+#[derive(Clone)]
 pub struct Token {
     pub token_type: TokenType,
     pub lexeme: String,
@@ -127,7 +128,7 @@ impl Scanner {
     }
 
     fn is_at_end(&self) -> bool {
-        self.current >= self.source.len()
+        self.source[self.current] == '\0' || self.current >= self.source.len()
     }
 
     fn make_token(&self, token_type: TokenType) -> Token {

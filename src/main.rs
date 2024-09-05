@@ -10,6 +10,7 @@ use vm::{InterpretResult, VM};
 
 mod compiler;
 mod debug;
+mod expr_prec;
 mod scanner;
 mod vm;
 
@@ -40,12 +41,12 @@ fn read_file(path: &String) {
     let buffer =
         fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    let source_str = String::from("end");
-    let mut scanner = Scanner::new(source_str);
-    println!("{}", scanner.scan_token());
+    let source_str = String::from("1 + 3 * 7 + ds + 33 + 2");
+    //let mut scanner = Scanner::new(source_str);
+    //println!("{}", scanner.scan_token());
 
     let mut vm = VM::new(Chunk::new());
-    let result: InterpretResult = vm.interpret(buffer);
+    let result: InterpretResult = vm.interpret(source_str);
 
     match result {
         InterpretResult::CompileError => process::exit(65),

@@ -1,6 +1,9 @@
-use chunk::Chunk;
+use chunk::{Chunk, OpCode};
+use values::Value;
 
 use crate::{
+    debug::disassemble_chunk,
+    expr_prec::{get_parse_rule, ParseFn, PRECEDENCE},
     scanner::{Scanner, Token, TokenType},
     vm::InterpretResult,
 };
@@ -13,77 +16,179 @@ enum CompileError {
     CompileError,
 }
 
-pub struct Parser {
+pub struct Parser<'a> {
     previous: Option<Token>,
     current: Option<Token>,
-    has_error: bool,
+
+    chunk: &'a mut Chunk,
+    scanner: Option<Scanner>,
+
+    pub has_error: bool,
     // Can possibly replace with Result/Option type
     panic_error: bool,
 }
 
-impl Parser {
-    pub fn new() -> Self {
+impl<'a> Parser<'a> {
+    pub fn new(chunk: &'a mut Chunk) -> Self {
         Parser {
             // Inital state is None, All subsequent values are not null.
+            // Current and Peek/Next, makes more sense so far
             previous: None,
             current: None,
+
+            chunk,
+            scanner: None,
+
             has_error: false,
             panic_error: false,
         }
     }
 
-    pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
-        let mut scanner = Scanner::new(source);
-        let res = self.advance(&mut scanner);
+    //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
+    pub fn compile(&mut self, source: String) -> bool {
+        self.scanner = Some(Scanner::new(source));
+        let res = self.advance();
         if let Err(_) = res {
             self.has_error = true;
         }
 
-        todo!("Call on expression");
-        //self.expression();
+        self.expression();
+
+        self.consume(TokenType::EOF, "End of File");
+
+        self.emit_return();
+        if self.has_error {
+            disassemble_chunk(self.chunk, "Parser Errors".to_string());
+        }
 
         !self.has_error
+    }
+
+    fn expression(&mut self) {
+        self.parse_precedence(PRECEDENCE.assignment);
+    }
+
+    fn binary(&mut self) {
+        if let Some(ref token) = self.previous {
+            let operator = token.token_type;
+
+            let rule = get_parse_rule(operator);
+            // The numbers would be in the values table already after this.
+            self.parse_precedence(rule.precedence);
+
+            match operator {
+                TokenType::Plus => self.emit_opcode(OpCode::OpAdd),
+                TokenType::Minus => self.emit_opcode(OpCode::OpSubtract),
+                TokenType::Star => self.emit_opcode(OpCode::OpMultiply),
+                TokenType::Slash => self.emit_opcode(OpCode::OpDivide),
+                _ => unreachable!(),
+            }
+        }
+    }
+
+    fn group(&mut self) -> Result<(), CompileError> {
+        self.expression();
+        self.consume(TokenType::RightParen, "Expected ) here.")?;
+        Ok(())
+    }
+
+    fn unary(&mut self) {
+        if let Some(ref token) = self.previous {
+            let token_type = token.token_type;
+
+            // It can be any type of number afterwards, so we choose to call expr instead, which
+            // returns us the number.
+
+            // Will emit the OpCode inside.
+            self.parse_precedence(PRECEDENCE.unary);
+
+            match token_type {
+                TokenType::Minus => self.emit_opcode(OpCode::OpNegate),
+                _ => {}
+            }
+        }
+    }
+
+    fn number(&mut self) {
+        if let Some(token) = &self.previous {
+            let number: f64 = token.lexeme.parse().expect("Not a number");
+            let idx = self.chunk.add_value(Value::Number(number));
+            self.chunk
+                .write_code(OpCode::OpConstant(idx as u8), token.line);
+        }
+    }
+
+    fn parse_precedence(&mut self, prec: u8) {
+        self.advance();
+        if let Some(ref token) = self.previous {
+            let prefix = get_parse_rule(token.token_type);
+            if let None = prefix.prefix_rule {
+                self.error(&self.previous, "Expected Expression");
+                return;
+            }
+
+            self.call_rule(prefix.prefix_rule.unwrap());
+        }
+
+        while prec <= get_parse_rule(self.grab_curr_token().unwrap()).precedence {
+            self.advance();
+            let infix = get_parse_rule(self.grab_prev_token().unwrap());
+            if let Some(infix_rule) = infix.infix_rule {
+                self.call_rule(infix_rule);
+            }
+        }
+    }
+
+    fn emit_opcode(&mut self, code: OpCode) {
+        if let Some(ref token) = self.previous {
+            // Potential Error in the future here, I'm referencing self.chunk rather than getting
+            // chunk, is there a potential error? Self.chunk is current chunk...
+            self.chunk.write_code(code, token.line);
+        }
+    }
+
+    fn emit_return(&mut self) {
+        self.emit_opcode(OpCode::OpReturn)
     }
 
     // The key is to ignore all errors afterwards, Not have a return error.
     // Thus result should work because it should ignore all later code due to an error and we can
     // just syncrhonize at the approiate place - (places where we are calling the parsing method
-    fn advance(&mut self, scanner: &mut Scanner) -> Result<(), CompileError> {
+    fn advance(&mut self) -> Result<(), CompileError> {
         self.previous = self.current.take();
 
         loop {
-            self.current = Some(scanner.scan_token());
-            if let Some(token) = &self.current {
-                if token.token_type != TokenType::Error {
-                    break;
+            if let Some(ref mut scanner) = self.scanner {
+                self.current = Some(scanner.scan_token());
+                if let Some(token) = &self.current {
+                    if token.token_type != TokenType::Error {
+                        break;
+                    }
                 }
             }
 
             self.has_error = true;
+            // Catch it here potentially, instead of passing up.
             self.error(&self.current, "You got some dogshit symbols")?
         }
 
         Ok(())
     }
 
-    fn consume(
-        &mut self,
-        scanner: &mut Scanner,
-        token_type: TokenType,
-    ) -> Result<(), CompileError> {
+    fn consume(&mut self, token_type: TokenType, message: &str) -> Result<(), CompileError> {
         if let Some(token) = &self.current {
             if token.token_type == token_type {
-                self.advance(scanner);
+                self.advance();
                 return Ok(());
             }
         }
 
-        self.error(&self.current, "Unexpected Token")
+        self.error(&self.current, message)
     }
 
     fn error(&self, opt_token: &Option<Token>, message: &str) -> Result<(), CompileError> {
         if let Some(token) = opt_token {
-            print!("[line{}] Error", token.line);
+            print!("[line {}] Error", token.line);
 
             if token.token_type == TokenType::EOF {
                 print!(" at end of file");
@@ -91,13 +196,52 @@ impl Parser {
                 // The message would be passed?
                 // But don't we still want to display the Token??
                 // Or are we not going to store the token? when we get an error?
+                println!("{}", token);
             } else {
-                print!(" at {}", token.lexeme);
+                print!(" at {}", token);
             }
 
             println!(": {message}");
         }
 
         Err(CompileError::CompileError)
+    }
+
+    fn call_rule(&mut self, parse_fn: ParseFn) {
+        // TODO Fix result types
+        match parse_fn {
+            ParseFn::Unary => self.unary(),
+            ParseFn::Number => self.number(),
+            ParseFn::Grouping => {
+                self.group();
+            }
+            ParseFn::Expression => self.expression(),
+            ParseFn::Binary => self.binary(),
+        };
+    }
+
+    fn grab_curr_token(&self) -> Option<TokenType> {
+        if let Some(ref token) = self.current {
+            return Some(token.token_type);
+        }
+        None
+    }
+
+    fn grab_prev_token(&self) -> Option<TokenType> {
+        if let Some(ref token) = self.previous {
+            return Some(token.token_type);
+        }
+        None
+    }
+
+    // TODO Might be Useless Fn
+    fn current_chunk(&self) -> &Chunk {
+        self.chunk
+    }
+
+    // TODO Might be Useless Fn
+    fn emit_bytes(&mut self, byte1: OpCode, byte2: OpCode) {
+        self.emit_opcode(byte1);
+        self.emit_opcode(byte2);
     }
 }
