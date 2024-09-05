@@ -9,7 +9,7 @@ use crate::{
     debug::disaseemble_code,
 };
 
-const DEBUG: bool = true;
+static DEBUG: bool = true;
 
 pub enum InterpretResult {
     OK,
@@ -24,13 +24,12 @@ pub struct VM {
     ic: usize,
 }
 
-// Gives the lifetime of VM struct a name we can use. Same impliciations as the VM struct in the
-// struct declaration
 impl VM {
     pub fn new(chunk: Chunk) -> Self {
         VM {
             // Here just to have a field. Will be replaced in interpret
             chunk,
+
             stack: Vec::new(),
             ic: 0,
         }
@@ -41,7 +40,6 @@ impl VM {
         let mut chunk = Chunk::new();
 
         let mut parser = Parser::new(&mut chunk);
-        //if !parser.compile(source, &chunk) {
         if !parser.compile(source) {
             return InterpretResult::CompileError;
         }

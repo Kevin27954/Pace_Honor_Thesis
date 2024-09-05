@@ -46,8 +46,8 @@ impl<'a> Parser<'a> {
     //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
     pub fn compile(&mut self, source: String) -> bool {
         self.scanner = Some(Scanner::new(source));
-        self.advance();
 
+        self.advance();
         self.expression();
 
         self.consume(TokenType::EOF, "End of File");
@@ -60,7 +60,33 @@ impl<'a> Parser<'a> {
         !self.has_error
     }
 
+    fn parse_precedence(&mut self, prec: u8) {
+        self.advance();
+        if let Some(ref token) = self.previous {
+            let prefix = get_parse_rule(token.token_type);
+            if let None = prefix.prefix_rule {
+                self.error(token, "Expected Expression");
+                self.panic_error = true;
+                return;
+            }
+
+            // Only used for this instance, so it is fine to unwrap.
+            self.call_rule(prefix.prefix_rule.unwrap());
+        }
+
+        // grab_<>_token() is to handle borrow checker
+        // I can't take thw values as the rules will need to use them.
+        while prec <= get_parse_rule(self.grab_curr_token().unwrap()).precedence {
+            self.advance();
+            let infix = get_parse_rule(self.grab_prev_token().unwrap());
+            if let Some(infix_rule) = infix.infix_rule {
+                self.call_rule(infix_rule);
+            }
+        }
+    }
+
     fn expression(&mut self) {
+        // The highest precedence
         self.parse_precedence(PRECEDENCE.assignment);
     }
 
@@ -92,7 +118,8 @@ impl<'a> Parser<'a> {
             let token_type = token.token_type;
 
             // Will emit the OpCode inside.
-            self.parse_precedence(PRECEDENCE.unary);
+            // So we have left ordering rather than right.
+            self.parse_precedence(PRECEDENCE.unary + 1);
 
             match token_type {
                 TokenType::Minus => self.emit_opcode(OpCode::OpNegate),
@@ -107,28 +134,6 @@ impl<'a> Parser<'a> {
             let idx = self.chunk.add_value(Value::Number(number));
             self.chunk
                 .write_code(OpCode::OpConstant(idx as u8), token.line);
-        }
-    }
-
-    fn parse_precedence(&mut self, prec: u8) {
-        self.advance();
-        if let Some(ref token) = self.previous {
-            let prefix = get_parse_rule(token.token_type);
-            if let None = prefix.prefix_rule {
-                self.error(token, "Expected Expression");
-                self.panic_error = true;
-                return;
-            }
-
-            self.call_rule(prefix.prefix_rule.unwrap());
-        }
-
-        while prec <= get_parse_rule(self.grab_curr_token().unwrap()).precedence {
-            self.advance();
-            let infix = get_parse_rule(self.grab_prev_token().unwrap());
-            if let Some(infix_rule) = infix.infix_rule {
-                self.call_rule(infix_rule);
-            }
         }
     }
 
@@ -160,6 +165,7 @@ impl<'a> Parser<'a> {
                     }
 
                     self.error(token, "You got some dogshit symbols");
+                    self.panic_error = true;
                     self.has_error = true;
                 }
             }
@@ -191,7 +197,6 @@ impl<'a> Parser<'a> {
         } else if token.token_type == TokenType::Error {
             // The message would be passed?
             // But don't we still want to display the Token??
-            // Or are we not going to store the token? when we get an error?
         } else {
             print!(" at {}", token);
         }
@@ -200,13 +205,10 @@ impl<'a> Parser<'a> {
     }
 
     fn call_rule(&mut self, parse_fn: ParseFn) {
-        // TODO Fix result types
         match parse_fn {
             ParseFn::Unary => self.unary(),
             ParseFn::Number => self.number(),
-            ParseFn::Grouping => {
-                self.group();
-            }
+            ParseFn::Grouping => self.group(),
             ParseFn::Expression => self.expression(),
             ParseFn::Binary => self.binary(),
         };
