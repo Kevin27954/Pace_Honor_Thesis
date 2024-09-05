@@ -5,7 +5,6 @@ use crate::{
     debug::disassemble_chunk,
     expr_prec::{get_parse_rule, ParseFn, PRECEDENCE},
     scanner::{Scanner, Token, TokenType},
-    vm::InterpretResult,
 };
 
 pub mod chunk;
@@ -47,10 +46,7 @@ impl<'a> Parser<'a> {
     //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
     pub fn compile(&mut self, source: String) -> bool {
         self.scanner = Some(Scanner::new(source));
-        let res = self.advance();
-        if let Err(_) = res {
-            self.has_error = true;
-        }
+        self.advance();
 
         self.expression();
 
@@ -86,10 +82,9 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn group(&mut self) -> Result<(), CompileError> {
+    fn group(&mut self) {
         self.expression();
-        self.consume(TokenType::RightParen, "Expected ) here.")?;
-        Ok(())
+        self.consume(TokenType::RightParen, "Expected ) here.");
     }
 
     fn unary(&mut self) {
@@ -124,7 +119,7 @@ impl<'a> Parser<'a> {
             let prefix = get_parse_rule(token.token_type);
             if let None = prefix.prefix_rule {
                 self.error(&self.previous, "Expected Expression");
-                return;
+                self.panic_error = true;
             }
 
             self.call_rule(prefix.prefix_rule.unwrap());
@@ -154,7 +149,8 @@ impl<'a> Parser<'a> {
     // The key is to ignore all errors afterwards, Not have a return error.
     // Thus result should work because it should ignore all later code due to an error and we can
     // just syncrhonize at the approiate place - (places where we are calling the parsing method
-    fn advance(&mut self) -> Result<(), CompileError> {
+    //fn advance(&mut self) -> Result<(), CompileError> {
+    fn advance(&mut self) {
         self.previous = self.current.take();
 
         loop {
@@ -167,26 +163,29 @@ impl<'a> Parser<'a> {
                 }
             }
 
-            self.has_error = true;
             // Catch it here potentially, instead of passing up.
-            self.error(&self.current, "You got some dogshit symbols")?
+            self.error(&self.current, "You got some dogshit symbols");
+            self.has_error = true;
         }
-
-        Ok(())
     }
 
-    fn consume(&mut self, token_type: TokenType, message: &str) -> Result<(), CompileError> {
+    //fn consume(&mut self, token_type: TokenType, message: &str) -> Result<(), CompileError> {
+    fn consume(&mut self, token_type: TokenType, message: &str) {
         if let Some(token) = &self.current {
             if token.token_type == token_type {
                 self.advance();
-                return Ok(());
             }
         }
 
-        self.error(&self.current, message)
+        self.error(&self.current, message);
+        self.panic_error = true;
     }
 
-    fn error(&self, opt_token: &Option<Token>, message: &str) -> Result<(), CompileError> {
+    //fn error(&self, opt_token: &Option<Token>, message: &str) -> Result<(), CompileError> {
+    fn error(&self, opt_token: &Option<Token>, message: &str) {
+        if self.panic_error {
+            return;
+        }
         if let Some(token) = opt_token {
             print!("[line {}] Error", token.line);
 
@@ -203,8 +202,6 @@ impl<'a> Parser<'a> {
 
             println!(": {message}");
         }
-
-        Err(CompileError::CompileError)
     }
 
     fn call_rule(&mut self, parse_fn: ParseFn) {
