@@ -6,7 +6,7 @@ use crate::{
         values::Value,
         Parser,
     },
-    debug::{disaseemble_code, disassemble_chunk},
+    debug::disaseemble_code,
 };
 
 const DEBUG: bool = true;

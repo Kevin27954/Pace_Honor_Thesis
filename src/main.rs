@@ -1,11 +1,6 @@
-use std::{env, fs, path::Path, process};
+use std::{env, fs, process};
 
-use compiler::{
-    chunk::{Chunk, OpCode},
-    values::Value,
-};
-use debug::disassemble_chunk;
-use scanner::Scanner;
+use compiler::chunk::Chunk;
 use vm::{InterpretResult, VM};
 
 mod compiler;
@@ -38,12 +33,10 @@ fn main() {
 }
 
 fn read_file(path: &String) {
-    let buffer =
+    let source_str =
         fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    let source_str = String::from("1 + 3 * 7 + ds + 33 + 2");
-    //let mut scanner = Scanner::new(source_str);
-    //println!("{}", scanner.scan_token());
+    //let source_str = String::from("1 + 3 * 7 + ds + 33 + 2");
 
     let mut vm = VM::new(Chunk::new());
     let result: InterpretResult = vm.interpret(source_str);

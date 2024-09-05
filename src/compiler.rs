@@ -11,9 +11,9 @@ pub mod chunk;
 pub mod common;
 pub mod values;
 
-enum CompileError {
-    CompileError,
-}
+//enum CompileError {
+//    CompileError,
+//}
 
 pub struct Parser<'a> {
     previous: Option<Token>,
@@ -91,9 +91,6 @@ impl<'a> Parser<'a> {
         if let Some(ref token) = self.previous {
             let token_type = token.token_type;
 
-            // It can be any type of number afterwards, so we choose to call expr instead, which
-            // returns us the number.
-
             // Will emit the OpCode inside.
             self.parse_precedence(PRECEDENCE.unary);
 
@@ -118,8 +115,9 @@ impl<'a> Parser<'a> {
         if let Some(ref token) = self.previous {
             let prefix = get_parse_rule(token.token_type);
             if let None = prefix.prefix_rule {
-                self.error(&self.previous, "Expected Expression");
+                self.error(token, "Expected Expression");
                 self.panic_error = true;
+                return;
             }
 
             self.call_rule(prefix.prefix_rule.unwrap());
@@ -146,9 +144,9 @@ impl<'a> Parser<'a> {
         self.emit_opcode(OpCode::OpReturn)
     }
 
-    // The key is to ignore all errors afterwards, Not have a return error.
-    // Thus result should work because it should ignore all later code due to an error and we can
-    // just syncrhonize at the approiate place - (places where we are calling the parsing method
+    // The key is to ignore errors resulting from the first error. We would do that but I don't
+    // want to risk messing things up so I won't add Result for now.
+
     //fn advance(&mut self) -> Result<(), CompileError> {
     fn advance(&mut self) {
         self.previous = self.current.take();
@@ -160,12 +158,11 @@ impl<'a> Parser<'a> {
                     if token.token_type != TokenType::Error {
                         break;
                     }
+
+                    self.error(token, "You got some dogshit symbols");
+                    self.has_error = true;
                 }
             }
-
-            // Catch it here potentially, instead of passing up.
-            self.error(&self.current, "You got some dogshit symbols");
-            self.has_error = true;
         }
     }
 
@@ -174,34 +171,32 @@ impl<'a> Parser<'a> {
         if let Some(token) = &self.current {
             if token.token_type == token_type {
                 self.advance();
+                return;
             }
-        }
 
-        self.error(&self.current, message);
-        self.panic_error = true;
+            self.error(token, message);
+            self.panic_error = true;
+        }
     }
 
     //fn error(&self, opt_token: &Option<Token>, message: &str) -> Result<(), CompileError> {
-    fn error(&self, opt_token: &Option<Token>, message: &str) {
+    fn error(&self, token: &Token, message: &str) {
         if self.panic_error {
             return;
         }
-        if let Some(token) = opt_token {
-            print!("[line {}] Error", token.line);
+        print!("[line {}] Error", token.line);
 
-            if token.token_type == TokenType::EOF {
-                print!(" at end of file");
-            } else if token.token_type == TokenType::Error {
-                // The message would be passed?
-                // But don't we still want to display the Token??
-                // Or are we not going to store the token? when we get an error?
-                println!("{}", token);
-            } else {
-                print!(" at {}", token);
-            }
-
-            println!(": {message}");
+        if token.token_type == TokenType::EOF {
+            print!(" at end of file");
+        } else if token.token_type == TokenType::Error {
+            // The message would be passed?
+            // But don't we still want to display the Token??
+            // Or are we not going to store the token? when we get an error?
+        } else {
+            print!(" at {}", token);
         }
+
+        println!(": {message}");
     }
 
     fn call_rule(&mut self, parse_fn: ParseFn) {
@@ -229,16 +224,5 @@ impl<'a> Parser<'a> {
             return Some(token.token_type);
         }
         None
-    }
-
-    // TODO Might be Useless Fn
-    fn current_chunk(&self) -> &Chunk {
-        self.chunk
-    }
-
-    // TODO Might be Useless Fn
-    fn emit_bytes(&mut self, byte1: OpCode, byte2: OpCode) {
-        self.emit_opcode(byte1);
-        self.emit_opcode(byte2);
     }
 }
