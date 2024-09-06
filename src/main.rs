@@ -1,7 +1,7 @@
 use std::{env, fs, process};
 
 use compiler::chunk::Chunk;
-use vm::{InterpretResult, VM};
+use vm::{InterpretError, VM};
 
 mod compiler;
 mod debug;
@@ -36,14 +36,15 @@ fn read_file(path: &String) {
     let source_str =
         fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    //let source_str = String::from("(-1 + 2) * 3 - -4 ");
+    //let source_str = String::from("(-1 + true) * 3 - -4 ");
+    let source_str = String::from("!(5 - 4 > true == !none)");
 
     let mut vm = VM::new(Chunk::new());
-    let result: InterpretResult = vm.interpret(source_str);
-
-    match result {
-        InterpretResult::CompileError => process::exit(65),
-        InterpretResult::RuntimeError => process::exit(70),
-        _ => {}
+    match vm.interpret(source_str) {
+        Ok(()) => {}
+        Err(err) => match err {
+            InterpretError::CompileError => process::exit(65),
+            InterpretError::RuntimeError => process::exit(70),
+        },
     }
 }

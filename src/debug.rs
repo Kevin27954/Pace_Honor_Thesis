@@ -19,25 +19,12 @@ pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
 
     let code = &chunk.code[offset];
     match code {
-        OpCode::OpAdd => {
-            println!("{}", chunk.code[offset]);
-        }
         OpCode::OpConstant(loc) => {
             println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
         }
-        OpCode::OpDivide => {
-            println!("{}", chunk.code[offset]);
-        }
-        OpCode::OpMultiply => {
-            println!("{}", chunk.code[offset]);
-        }
-        OpCode::OpNegate => {
-            println!("{}", chunk.code[offset]);
-        }
-        OpCode::OpReturn => {
-            println!("{}", chunk.code[offset]);
-        }
-        OpCode::OpSubtract => {
+
+        // Add individal codes here if you want to debug
+        _ => {
             println!("{}", chunk.code[offset]);
         }
     }

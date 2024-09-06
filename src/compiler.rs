@@ -103,7 +103,34 @@ impl<'a> Parser<'a> {
                 TokenType::Minus => self.emit_opcode(OpCode::OpSubtract),
                 TokenType::Star => self.emit_opcode(OpCode::OpMultiply),
                 TokenType::Slash => self.emit_opcode(OpCode::OpDivide),
+
+                TokenType::EqualEqual => self.emit_opcode(OpCode::OpEqual),
+                TokenType::BangEqual => {
+                    self.emit_opcode(OpCode::OpEqual);
+                    self.emit_opcode(OpCode::OpNot);
+                }
+                TokenType::Greater => self.emit_opcode(OpCode::OpGreater),
+                TokenType::GreaterEqual => {
+                    self.emit_opcode(OpCode::OpLess);
+                    self.emit_opcode(OpCode::OpNot);
+                }
+                TokenType::Less => self.emit_opcode(OpCode::OpLess),
+                TokenType::LessEqual => {
+                    self.emit_opcode(OpCode::OpGreater);
+                    self.emit_opcode(OpCode::OpNot);
+                }
                 _ => unreachable!(),
+            }
+        }
+    }
+
+    fn literal(&mut self) {
+        if let Some(ref token) = self.previous {
+            match token.token_type {
+                TokenType::False => self.emit_opcode(OpCode::OpFalse),
+                TokenType::True => self.emit_opcode(OpCode::OpTrue),
+                TokenType::None => self.emit_opcode(OpCode::OpNone),
+                _ => {}
             }
         }
     }
@@ -123,18 +150,22 @@ impl<'a> Parser<'a> {
 
             match token_type {
                 TokenType::Minus => self.emit_opcode(OpCode::OpNegate),
+                TokenType::Bang => self.emit_opcode(OpCode::OpNot),
                 _ => {}
             }
         }
     }
 
     fn number(&mut self) {
-        if let Some(token) = &self.previous {
+        if let Some(ref token) = self.previous {
             let number: f64 = token.lexeme.parse().expect("Not a number");
-            let idx = self.chunk.add_value(Value::Number(number));
-            self.chunk
-                .write_code(OpCode::OpConstant(idx as u8), token.line);
+            let idx = self.add_value(Value::Number(number));
+            self.emit_opcode(OpCode::OpConstant(idx as u8));
         }
+    }
+
+    fn add_value(&mut self, value: Value) -> usize {
+        self.chunk.add_value(value)
     }
 
     fn emit_opcode(&mut self, code: OpCode) {
@@ -211,6 +242,7 @@ impl<'a> Parser<'a> {
             ParseFn::Grouping => self.group(),
             ParseFn::Expression => self.expression(),
             ParseFn::Binary => self.binary(),
+            ParseFn::Literal => self.literal(),
         };
     }
 

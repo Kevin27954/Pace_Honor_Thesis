@@ -6,11 +6,22 @@ use super::values::Value;
 pub enum OpCode {
     OpReturn,
 
+    // Literal
+    OpTrue,
+    OpFalse,
+    OpNone,
+
+    // Equality
+    OpGreater,
+    OpLess,
+    OpEqual,
+
     // Primary
     OpConstant(u8),
 
     // Unary
     OpNegate,
+    OpNot,
 
     // Binary
     OpAdd,

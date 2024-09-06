@@ -1,10 +1,12 @@
 use std::fmt::Display;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum Value {
     // We can make this more efficent by making it f16 or f32 instead. However for simplicity we
     // won't do this
     Number(f64),
+    Boolean(bool),
+    None,
 }
 
 impl Display for Value {
@@ -14,6 +16,12 @@ impl Display for Value {
         let concat_str = match self {
             Self::Number(num) => {
                 format!("{}", num)
+            }
+            Self::Boolean(bool) => {
+                format!("{}", bool)
+            }
+            Self::None => {
+                format!("none")
             }
         };
 
