@@ -7,6 +7,7 @@ use std::fmt::Display;
 * Total = 16 Byte
 */
 
+// The size is 16 bytes: Enum: 4 byte, Padding: 4 Byte, Largest Type: 8 byte
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
     // We can make this more efficent by making it f16 or f32 instead. However for simplicity we
@@ -18,6 +19,7 @@ pub enum Value {
     ValueObj(ValueObj),
 }
 
+// This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
 pub enum ValueObj {
     String(Box<String>),

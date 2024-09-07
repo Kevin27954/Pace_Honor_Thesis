@@ -84,12 +84,14 @@ impl VM {
                 OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
                     (
                         Value::ValueObj(ValueObj::String(right_string)),
-                        Value::ValueObj(ValueObj::String(left_string)),
+                        Value::ValueObj(ValueObj::String(mut left_string)),
                     ) => {
-                        // Took control of the ownership of left_string
-                        let mut res = *left_string;
+                        // Modifies in place.
+                        let res = left_string.as_mut();
+                        // Reserves ahead of time.
+                        res.reserve(right_string.len());
                         res.push_str(right_string.as_str());
-                        self.push_stack(Value::ValueObj(ValueObj::String(Box::new(res))))
+                        self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
                         // Popped Box<String> are dropped after this loop is done.
                     }
                     (Value::Number(right_num), Value::Number(left_num)) => {

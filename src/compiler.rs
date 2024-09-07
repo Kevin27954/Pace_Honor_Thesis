@@ -169,6 +169,7 @@ impl<'a> Parser<'a> {
             // TODO consider using str if it doens't need to be mutated
             let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
             let idx = self.add_value(Value::ValueObj(ValueObj::String(Box::new(
+                // This clones the string when converting &str to String
                 clean_str.to_string(),
             ))));
 
