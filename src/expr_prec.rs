@@ -47,6 +47,7 @@ pub enum ParseFn {
     Binary,
 
     Literal,
+    String,
 }
 
 pub struct ParseRule {
@@ -184,7 +185,7 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
             precedence: get_precedence(token_type),
         },
         TokenType::String => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::String),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },

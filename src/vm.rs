@@ -3,10 +3,10 @@ use core::panic;
 use crate::{
     compiler::{
         chunk::{Chunk, OpCode},
-        values::Value,
+        values::{Value, ValueObj},
         Parser,
     },
-    debug::disaseemble_code,
+    debug::{disaseemble_code, disassemble_chunk},
 };
 
 static DEBUG: bool = true;
@@ -81,7 +81,26 @@ impl VM {
                         _ => {}
                     };
                 }
-                OpCode::OpAdd | OpCode::OpSubtract | OpCode::OpMultiply | OpCode::OpDivide => {
+                OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
+                    (
+                        Value::ValueObj(ValueObj::String(right_string)),
+                        Value::ValueObj(ValueObj::String(left_string)),
+                    ) => {
+                        // Took control of the ownership of left_string
+                        let mut res = *left_string;
+                        res.push_str(right_string.as_str());
+                        self.push_stack(Value::ValueObj(ValueObj::String(Box::new(res))))
+                        // Popped Box<String> are dropped after this loop is done.
+                    }
+                    (Value::Number(right_num), Value::Number(left_num)) => {
+                        self.push_stack(Value::Number(left_num + right_num))
+                    }
+                    _ => {
+                        self.runtime_error("Operands must be either 2 String or 2 Number");
+                        return Err(InterpretError::RuntimeError);
+                    }
+                },
+                OpCode::OpSubtract | OpCode::OpMultiply | OpCode::OpDivide => {
                     self.binary_operators(instruction)?
                 }
 
@@ -136,7 +155,16 @@ impl VM {
                 self.runtime_error(format!("{} not supported on none value", operator).as_str());
                 return Err(InterpretError::RuntimeError);
             }
+            Value::ValueObj(value_obj) => match value_obj {
+                ValueObj::String(string) => {
+                    self.runtime_error(
+                        format!("{} not supported on string value: {}", operator, string).as_str(),
+                    );
+                    return Err(InterpretError::RuntimeError);
+                }
+            },
         };
+
         let a = match self.pop_stack() {
             Value::Number(num) => num,
             Value::Boolean(bool) => {
@@ -149,10 +177,18 @@ impl VM {
                 self.runtime_error(format!("{} not supported on none value", operator).as_str());
                 return Err(InterpretError::RuntimeError);
             }
+            Value::ValueObj(value_obj) => match value_obj {
+                ValueObj::String(string) => {
+                    self.runtime_error(
+                        format!("{} not supported on string value: {}", operator, string).as_str(),
+                    );
+                    return Err(InterpretError::RuntimeError);
+                }
+            },
         };
 
         match operator {
-            OpCode::OpAdd => self.push_stack(Value::Number(a + b)),
+            //OpCode::OpAdd => self.push_stack(Value::Number(a + b)),
             OpCode::OpSubtract => self.push_stack(Value::Number(a - b)),
             OpCode::OpMultiply => self.push_stack(Value::Number(a * b)),
             OpCode::OpDivide => self.push_stack(Value::Number(a / b)),
@@ -188,7 +224,7 @@ impl VM {
     fn is_falsey(&self, value: Value) -> bool {
         match value {
             Value::None | Value::Boolean(false) => true,
-            Value::Boolean(true) | Value::Number(_) => false,
+            Value::Boolean(true) | Value::Number(_) | Value::ValueObj(_) => false,
         }
     }
 
@@ -213,7 +249,7 @@ impl VM {
     }
 
     fn peek_stack(&self, idx: usize) -> Value {
-        self.stack[self.stack.len() - 1 - idx]
+        self.stack[self.stack.len() - 1 - idx].clone()
     }
 
     fn pop_stack(&mut self) -> Value {

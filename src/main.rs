@@ -34,8 +34,10 @@ fn main() {
 }
 
 fn read_file(path: &String) {
-    let source_str =
-        fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
+    //let source_str =
+    //    fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
+
+    let source_str = String::from("\"str1🔥\" + \"123\"");
 
     let mut vm = VM::new(Chunk::new());
     match vm.interpret(source_str) {

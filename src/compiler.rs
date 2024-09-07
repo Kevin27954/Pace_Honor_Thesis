@@ -1,5 +1,5 @@
 use chunk::{Chunk, OpCode};
-use values::Value;
+use values::{Value, ValueObj};
 
 use crate::{
     debug::disassemble_chunk,
@@ -164,6 +164,18 @@ impl<'a> Parser<'a> {
         }
     }
 
+    fn string(&mut self) {
+        if let Some(ref token) = self.previous {
+            // TODO consider using str if it doens't need to be mutated
+            let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
+            let idx = self.add_value(Value::ValueObj(ValueObj::String(Box::new(
+                clean_str.to_string(),
+            ))));
+
+            self.emit_opcode(OpCode::OpConstant(idx as u8));
+        }
+    }
+
     fn add_value(&mut self, value: Value) -> usize {
         self.chunk.add_value(value)
     }
@@ -242,6 +254,7 @@ impl<'a> Parser<'a> {
             ParseFn::Grouping => self.group(),
             ParseFn::Binary => self.binary(),
             ParseFn::Literal => self.literal(),
+            ParseFn::String => self.string(),
         };
     }
 
