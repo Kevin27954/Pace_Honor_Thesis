@@ -8,7 +8,7 @@
 - [ ] Functions
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] (IP) Error messages
-- [ ] Type system
+- [ ] Support Types
 - [ ] Garbage Collector
 
 ## Custom Implementations -> Expect 2 Weeks
