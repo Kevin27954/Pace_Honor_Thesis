@@ -45,7 +45,6 @@ pub enum ParseFn {
     Grouping,
     Number,
     Binary,
-    Expression,
 
     Literal,
 }

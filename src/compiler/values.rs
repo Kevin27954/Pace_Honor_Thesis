@@ -4,6 +4,7 @@ use std::fmt::Display;
 pub enum Value {
     // We can make this more efficent by making it f16 or f32 instead. However for simplicity we
     // won't do this
+    //Obj()
     Number(f64),
     Boolean(bool),
     None,

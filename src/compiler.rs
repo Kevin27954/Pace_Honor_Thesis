@@ -240,7 +240,6 @@ impl<'a> Parser<'a> {
             ParseFn::Unary => self.unary(),
             ParseFn::Number => self.number(),
             ParseFn::Grouping => self.group(),
-            ParseFn::Expression => self.expression(),
             ParseFn::Binary => self.binary(),
             ParseFn::Literal => self.literal(),
         };

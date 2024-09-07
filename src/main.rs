@@ -7,6 +7,7 @@ mod compiler;
 mod debug;
 mod expr_prec;
 mod scanner;
+mod test;
 mod vm;
 
 fn main() {
@@ -36,12 +37,9 @@ fn read_file(path: &String) {
     let source_str =
         fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    //let source_str = String::from("(-1 + true) * 3 - -4 ");
-    let source_str = String::from("!(5 - 4 > true == !none)");
-
     let mut vm = VM::new(Chunk::new());
     match vm.interpret(source_str) {
-        Ok(()) => {}
+        Ok(_) => {}
         Err(err) => match err {
             InterpretError::CompileError => process::exit(65),
             InterpretError::RuntimeError => process::exit(70),

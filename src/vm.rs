@@ -34,7 +34,7 @@ impl VM {
         }
     }
 
-    pub fn interpret(&mut self, source: String) -> Result<(), InterpretError> {
+    pub fn interpret(&mut self, source: String) -> Result<Value, InterpretError> {
         // Idea: Given a source code, compile and run it.
         let mut chunk = Chunk::new();
 
@@ -48,7 +48,7 @@ impl VM {
         Ok(self.run()?)
     }
 
-    fn run(&mut self) -> Result<(), InterpretError> {
+    fn run(&mut self) -> Result<Value, InterpretError> {
         println!("\n=== VM ===");
         loop {
             if DEBUG {
@@ -60,8 +60,9 @@ impl VM {
             match instruction {
                 // For now this is the loop stopper
                 OpCode::OpReturn => {
-                    println!("{}", self.pop_stack());
-                    return Ok(());
+                    let value = self.pop_stack();
+                    println!("{}", value);
+                    return Ok(value);
                 }
                 OpCode::OpConstant(idx) => {
                     self.push_stack(self.chunk.get_const(idx));
@@ -109,7 +110,14 @@ impl VM {
                     let right = self.pop_stack();
                     let left = self.pop_stack();
 
-                    self.push_stack(Value::Boolean(!self.is_greater(left, right)?))
+                    let value: bool;
+                    if left == right {
+                        value = false
+                    } else {
+                        value = !self.is_greater(left, right)?;
+                    }
+
+                    self.push_stack(Value::Boolean(value))
                 }
             };
         }
@@ -160,7 +168,7 @@ impl VM {
     fn is_greater(&self, left: Value, right: Value) -> Result<bool, InterpretError> {
         match left {
             Value::Number(num_left) => match right {
-                Value::Number(num_right) => return Ok(num_left < num_right),
+                Value::Number(num_right) => return Ok(num_left > num_right),
                 _ => {}
             },
             _ => {}
