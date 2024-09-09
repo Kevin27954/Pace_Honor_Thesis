@@ -75,6 +75,7 @@ impl VM {
                         if let Value::ValueObj(ValueObj::String(var_name)) =
                             self.chunk.get_const(idx)
                         {
+                            // self.globals_vec.get(var_name.counter);
                             let value = self.pop_stack();
                             self.globals.insert(var_name.to_string(), value);
                         }
