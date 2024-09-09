@@ -1,4 +1,5 @@
 use core::panic;
+use std::collections::{hash_map::Entry, HashMap};
 
 use crate::{
     compiler::{
@@ -20,6 +21,8 @@ pub struct VM {
     chunk: Chunk,
     stack: Vec<Value>,
 
+    globals: HashMap<String, Value>,
+
     ic: usize,
 }
 
@@ -28,6 +31,8 @@ impl VM {
         VM {
             // Here just to have a field. Will be replaced in interpret
             chunk,
+
+            globals: HashMap::new(),
 
             stack: Vec::new(),
             ic: 0,
@@ -56,92 +61,140 @@ impl VM {
                 disaseemble_code(&self.chunk, self.ic);
             }
 
-            let instruction = self.get_op_code();
-            match instruction {
-                // For now this is the loop stopper
-                OpCode::OpReturn => {
-                    let value = self.pop_stack();
-                    println!("{}", value);
-                    return Ok(value);
-                }
-                OpCode::OpConstant(idx) => {
-                    self.push_stack(self.chunk.get_const(idx));
-                }
-                OpCode::OpNegate => {
-                    match self.peek_stack(0) {
-                        Value::Number(_) => {}
+            match self.get_op_code() {
+                Some(instruction) => match instruction {
+                    OpCode::OpReturn => {}
+                    OpCode::OpPop => {
+                        let value = self.pop_stack();
+                        println!("{}", value);
+                    }
+                    OpCode::OpConstant(idx) => {
+                        self.push_stack(self.chunk.get_const(idx));
+                    }
+                    OpCode::OpDefineGlobal(idx) => {
+                        if let Value::ValueObj(ValueObj::String(var_name)) =
+                            self.chunk.get_const(idx)
+                        {
+                            let value = self.pop_stack();
+                            self.globals.insert(var_name.to_string(), value);
+                        }
+                    }
+                    OpCode::OpGetGlobal(idx) => {
+                        if let Value::ValueObj(ValueObj::String(var_name)) =
+                            self.chunk.get_const(idx)
+                        {
+                            match self.globals.get(var_name.as_ref()) {
+                                Some(value) => {
+                                    self.push_stack(value.clone());
+                                }
+                                None => {
+                                    self.runtime_error(
+                                        format!("Undefined Variable {}", var_name).as_str(),
+                                    );
+                                    return Err(InterpretError::RuntimeError);
+                                }
+                            }
+                        }
+                    }
+                    OpCode::OpSetGlobal(idx) => {
+                        if let Value::ValueObj(ValueObj::String(var_name)) =
+                            self.chunk.get_const(idx)
+                        {
+                            if self.globals.contains_key(var_name.as_ref()) {
+                                self.globals
+                                    .insert(var_name.to_string(), self.peek_stack(0));
+                            } else {
+                                self.runtime_error(
+                                    format!("Undefined Variable {}", var_name).as_str(),
+                                );
+                                return Err(InterpretError::RuntimeError);
+                            }
+                        }
+                    }
+
+                    OpCode::OpNegate => {
+                        match self.peek_stack(0) {
+                            Value::Number(_) => {}
+                            _ => {
+                                self.runtime_error(
+                                    "Can't perform - (negate) operator on non number",
+                                );
+                                return Err(InterpretError::RuntimeError);
+                            }
+                        };
+
+                        match self.pop_stack() {
+                            Value::Number(number) => self.push_stack(Value::Number(-number)),
+                            _ => {}
+                        };
+                    }
+                    OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
+                        (
+                            Value::ValueObj(ValueObj::String(right_string)),
+                            Value::ValueObj(ValueObj::String(mut left_string)),
+                        ) => {
+                            // Modifies in place.
+                            let res = left_string.as_mut();
+                            // Reserves ahead of time.
+                            res.reserve(right_string.len());
+                            res.push_str(right_string.as_str());
+                            self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
+                            // Popped Box<String> are dropped after this loop is done.
+                        }
+                        (Value::Number(right_num), Value::Number(left_num)) => {
+                            self.push_stack(Value::Number(left_num + right_num))
+                        }
                         _ => {
-                            self.runtime_error("Can't perform - (negate) operator on non number");
+                            self.runtime_error("Operands must be either 2 String or 2 Number");
                             return Err(InterpretError::RuntimeError);
                         }
-                    };
+                    },
+                    OpCode::OpSubtract | OpCode::OpMultiply | OpCode::OpDivide => {
+                        self.binary_operators(instruction)?
+                    }
 
-                    match self.pop_stack() {
-                        Value::Number(number) => self.push_stack(Value::Number(-number)),
-                        _ => {}
-                    };
-                }
-                OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
-                    (
-                        Value::ValueObj(ValueObj::String(right_string)),
-                        Value::ValueObj(ValueObj::String(mut left_string)),
-                    ) => {
-                        // Modifies in place.
-                        let res = left_string.as_mut();
-                        // Reserves ahead of time.
-                        res.reserve(right_string.len());
-                        res.push_str(right_string.as_str());
-                        self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
-                        // Popped Box<String> are dropped after this loop is done.
+                    OpCode::OpTrue => self.push_stack(Value::Boolean(true)),
+                    OpCode::OpFalse => self.push_stack(Value::Boolean(false)),
+                    OpCode::OpNone => self.push_stack(Value::None),
+                    OpCode::OpNot => {
+                        let value = self.pop_stack();
+                        self.push_stack(Value::Boolean(self.is_falsey(value)));
                     }
-                    (Value::Number(right_num), Value::Number(left_num)) => {
-                        self.push_stack(Value::Number(left_num + right_num))
+
+                    OpCode::OpGreater => {
+                        let right = self.pop_stack();
+                        let left = self.pop_stack();
+
+                        self.push_stack(Value::Boolean(self.is_greater(left, right)?))
                     }
-                    _ => {
-                        self.runtime_error("Operands must be either 2 String or 2 Number");
-                        return Err(InterpretError::RuntimeError);
+                    OpCode::OpEqual => {
+                        let right = self.pop_stack();
+                        let left = self.pop_stack();
+
+                        let boolean = left == right;
+                        self.push_stack(Value::Boolean(boolean))
+                    }
+                    OpCode::OpLess => {
+                        let right = self.pop_stack();
+                        let left = self.pop_stack();
+
+                        let value: bool;
+                        if left == right {
+                            value = false
+                        } else {
+                            value = !self.is_greater(left, right)?;
+                        }
+                        self.push_stack(Value::Boolean(value))
                     }
                 },
-                OpCode::OpSubtract | OpCode::OpMultiply | OpCode::OpDivide => {
-                    self.binary_operators(instruction)?
+                // LOOP STOPPER
+                None => {
+                    break;
                 }
-
-                OpCode::OpTrue => self.push_stack(Value::Boolean(true)),
-                OpCode::OpFalse => self.push_stack(Value::Boolean(false)),
-                OpCode::OpNone => self.push_stack(Value::None),
-                OpCode::OpNot => {
-                    let value = self.pop_stack();
-                    self.push_stack(Value::Boolean(self.is_falsey(value)));
-                }
-
-                OpCode::OpGreater => {
-                    let right = self.pop_stack();
-                    let left = self.pop_stack();
-
-                    self.push_stack(Value::Boolean(self.is_greater(left, right)?))
-                }
-                OpCode::OpEqual => {
-                    let right = self.pop_stack();
-                    let left = self.pop_stack();
-
-                    let boolean = left == right;
-                    self.push_stack(Value::Boolean(boolean))
-                }
-                OpCode::OpLess => {
-                    let right = self.pop_stack();
-                    let left = self.pop_stack();
-
-                    let value: bool;
-                    if left == right {
-                        value = false
-                    } else {
-                        value = !self.is_greater(left, right)?;
-                    }
-
-                    self.push_stack(Value::Boolean(value))
-                }
-            };
+            }
         }
+
+        Ok(Value::None)
     }
 
     fn binary_operators(&mut self, operator: OpCode) -> Result<(), InterpretError> {
@@ -240,16 +293,21 @@ impl VM {
         eprintln!("[line {}]: {}", line, message);
     }
 
-    fn get_op_code(&mut self) -> OpCode {
+    fn get_op_code(&mut self) -> Option<OpCode> {
+        if self.ic >= self.chunk.code.len() {
+            return None;
+        }
+
         let code = self.chunk.code[self.ic];
         self.ic += 1;
-        code
+        Some(code)
     }
 
     fn push_stack(&mut self, value: Value) {
         self.stack.push(value);
     }
 
+    // TODO We might need a mut ref on one of them
     fn peek_stack(&self, idx: usize) -> Value {
         self.stack[self.stack.len() - 1 - idx].clone()
     }

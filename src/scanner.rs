@@ -84,6 +84,7 @@ impl Display for TokenType {
     }
 }
 
+#[derive(Clone)]
 pub struct Token {
     pub token_type: TokenType,
     pub lexeme: String,
@@ -179,10 +180,6 @@ impl Scanner {
             let char = self.peek();
             match char {
                 ' ' | '\r' | '\t' => {
-                    self.advance();
-                }
-                '\n' => {
-                    self.line += 1;
                     self.advance();
                 }
                 '/' => {
@@ -334,6 +331,11 @@ impl Scanner {
             '*' => return self.make_token(TokenType::Star),
             '/' => return self.make_token(TokenType::Slash),
             ';' => return self.make_token(TokenType::Semicolon),
+
+            '\n' => {
+                self.line += 1;
+                return self.make_token(TokenType::NewLine);
+            }
 
             '!' => {
                 if self.match_next('=') {

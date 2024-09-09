@@ -26,7 +26,7 @@ fn main() {
                 todo!("Should start the ASCII adventure");
             }
             _ => {
-                println!("Unknown command");
+                eprintln!("Unknown command");
                 process::exit(1);
             }
         }
@@ -37,7 +37,7 @@ fn read_file(path: &String) {
     let source_str =
         fs::read_to_string(path).unwrap_or_else(|_| panic!("Error Reading File. Path: {}", path));
 
-    let source_str = String::from("\"str1🔥\" == \"str1🔥\"");
+    //let source_str = String::from("\"str1🔥\" == \"str2🔥\"\n1 + 1");
 
     let mut vm = VM::new(Chunk::new());
     match vm.interpret(source_str) {

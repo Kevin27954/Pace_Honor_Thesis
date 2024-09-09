@@ -9,6 +9,10 @@ pub fn disassemble_chunk(chunk: &Chunk, name: String) {
 }
 
 pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
+    if chunk.code.len() <= offset {
+        return;
+    }
+
     print!("{:04} ", offset);
 
     if offset > 0 && chunk.line[offset] == chunk.line[offset - 1] {
@@ -20,6 +24,15 @@ pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
     let code = &chunk.code[offset];
     match code {
         OpCode::OpConstant(loc) => {
+            println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
+        }
+        OpCode::OpDefineGlobal(loc) => {
+            println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
+        }
+        OpCode::OpGetGlobal(loc) => {
+            println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
+        }
+        OpCode::OpSetGlobal(loc) => {
             println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
         }
 

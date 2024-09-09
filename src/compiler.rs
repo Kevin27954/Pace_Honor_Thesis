@@ -48,11 +48,15 @@ impl<'a> Parser<'a> {
         self.scanner = Some(Scanner::new(source));
 
         self.advance();
-        self.expression();
 
-        self.consume(TokenType::EOF, "End of File");
+        while !self.match_token_type(TokenType::EOF) {
+            // Because we use '\n' as the terminator, we need to care extra about empty random new
+            // lines.
+            self.skip_empty_line();
+            self.declaration();
+            self.skip_empty_line();
+        }
 
-        self.emit_return();
         if self.has_error {
             disassemble_chunk(self.chunk, "Parser Errors".to_string());
         }
@@ -60,27 +64,80 @@ impl<'a> Parser<'a> {
         !self.has_error
     }
 
+    fn declaration(&mut self) {
+        if self.match_token_type(TokenType::Let) {
+            self.var_decl();
+        } else {
+            self.statement();
+        }
+
+        if self.panic_error {
+            self.synchronize();
+        }
+    }
+
+    // ****************************     Delcarations     ***************************
+
+    fn var_decl(&mut self) {
+        let idx = self.parse_variable();
+
+        if self.match_token_type(TokenType::Equal) {
+            self.expression();
+        } else {
+            self.emit_opcode(OpCode::OpNone);
+        }
+
+        self.consume(TokenType::NewLine, "Expected New Line after Expression");
+
+        self.define_var(idx);
+    }
+
+    fn statement(&mut self) {
+        self.expression_stmt();
+    }
+
+    // ****************************     Statements     ***************************
+
+    fn expression_stmt(&mut self) {
+        self.expression();
+        self.consume(TokenType::NewLine, "Expected New Line after Expression");
+        // Pop afterwards cause no one is able to use when it finishes computing. No one SHOULD be
+        // ablt to use it either.
+        self.emit_opcode(OpCode::OpPop);
+    }
+
     fn parse_precedence(&mut self, prec: u8) {
         self.advance();
+        let can_assign = prec <= PRECEDENCE.assignment;
+        let mut temp_token: Option<Token> = None;
+
         if let Some(ref token) = self.previous {
             let prefix = get_parse_rule(token.token_type);
             if let None = prefix.prefix_rule {
                 self.error(token, "Expected Expression");
                 self.panic_error = true;
+                self.has_error = true;
                 return;
             }
 
+            temp_token = Some(token.clone());
             // Only used for this instance, so it is fine to unwrap.
-            self.call_rule(prefix.prefix_rule.unwrap());
+            self.call_rule(prefix.prefix_rule.unwrap(), can_assign);
         }
 
-        // grab_<>_token() is to handle borrow checker
+        if let Some(token) = temp_token {
+            if can_assign && self.match_token_type(TokenType::Equal) {
+                self.error(&token.clone(), "Invalid Assignemnt");
+            }
+        }
+
+        // grab_<>_token_type() is to handle borrow checker
         // I can't take thw values as the rules will need to use them.
-        while prec <= get_parse_rule(self.grab_curr_token().unwrap()).precedence {
+        while prec <= get_parse_rule(self.grab_curr_token_type().unwrap()).precedence {
             self.advance();
-            let infix = get_parse_rule(self.grab_prev_token().unwrap());
+            let infix = get_parse_rule(self.grab_prev_token_type().unwrap());
             if let Some(infix_rule) = infix.infix_rule {
-                self.call_rule(infix_rule);
+                self.call_rule(infix_rule, can_assign);
             }
         }
     }
@@ -177,6 +234,42 @@ impl<'a> Parser<'a> {
         }
     }
 
+    fn variable(&mut self, can_assign: bool) {
+        self.name_variable(can_assign);
+    }
+
+    // ****************************     Helpers     ***************************
+
+    fn name_variable(&mut self, can_assign: bool) {
+        if let Some(ref token) = self.previous {
+            let idx = self.make_identifier_constant(token.clone());
+
+            if can_assign && self.match_token_type(TokenType::Equal) {
+                self.expression();
+                self.emit_opcode(OpCode::OpSetGlobal(idx as u8));
+            } else {
+                self.emit_opcode(OpCode::OpGetGlobal(idx as u8));
+            }
+        }
+    }
+
+    fn define_var(&mut self, idx: usize) {
+        self.emit_opcode(OpCode::OpDefineGlobal(idx as u8))
+    }
+
+    // TODO Look into a way to return usize without doing clone().unwrap()?
+    fn parse_variable(&mut self) -> usize {
+        self.consume(TokenType::Identifier, "Expected an Identifier name here");
+
+        let token = self.previous.clone().unwrap();
+        self.make_identifier_constant(token)
+    }
+
+    fn make_identifier_constant(&mut self, token: Token) -> usize {
+        //let token = self.previous.take().unwrap();
+        self.add_value(Value::ValueObj(ValueObj::String(Box::new(token.lexeme))))
+    }
+
     fn add_value(&mut self, value: Value) -> usize {
         self.chunk.add_value(value)
     }
@@ -226,6 +319,7 @@ impl<'a> Parser<'a> {
 
             self.error(token, message);
             self.panic_error = true;
+            self.has_error = true;
         }
     }
 
@@ -248,7 +342,30 @@ impl<'a> Parser<'a> {
         println!(": {message}");
     }
 
-    fn call_rule(&mut self, parse_fn: ParseFn) {
+    fn synchronize(&mut self) {
+        self.panic_error = false;
+
+        while self.grab_curr_token_type().unwrap() != TokenType::EOF {
+            if self.grab_prev_token_type().unwrap() == TokenType::NewLine {
+                return;
+            }
+
+            match self.grab_curr_token_type().unwrap() {
+                TokenType::If
+                | TokenType::Let
+                | TokenType::Function
+                | TokenType::Struct
+                | TokenType::Return
+                | TokenType::For
+                | TokenType::While => return,
+                _ => {}
+            }
+
+            self.advance();
+        }
+    }
+
+    fn call_rule(&mut self, parse_fn: ParseFn, can_assign: bool) {
         match parse_fn {
             ParseFn::Unary => self.unary(),
             ParseFn::Number => self.number(),
@@ -256,20 +373,37 @@ impl<'a> Parser<'a> {
             ParseFn::Binary => self.binary(),
             ParseFn::Literal => self.literal(),
             ParseFn::String => self.string(),
+            ParseFn::Variable => self.variable(can_assign),
         };
     }
 
-    fn grab_curr_token(&self) -> Option<TokenType> {
+    fn match_token_type(&mut self, token_type: TokenType) -> bool {
+        if self.grab_curr_token_type().unwrap() != token_type {
+            return false;
+        }
+        self.advance();
+        true
+    }
+
+    fn grab_curr_token_type(&self) -> Option<TokenType> {
         if let Some(ref token) = self.current {
             return Some(token.token_type);
         }
         None
     }
 
-    fn grab_prev_token(&self) -> Option<TokenType> {
+    fn grab_prev_token_type(&self) -> Option<TokenType> {
         if let Some(ref token) = self.previous {
             return Some(token.token_type);
         }
         None
+    }
+
+    fn skip_empty_line(&mut self) {
+        // We look at curr instead of prev because the functions will advance() later. So curr will
+        // be the token that we start parsing on.
+        while self.grab_curr_token_type().unwrap() == TokenType::NewLine {
+            self.advance();
+        }
     }
 }

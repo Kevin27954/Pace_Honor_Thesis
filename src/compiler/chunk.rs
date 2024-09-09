@@ -5,6 +5,7 @@ use super::values::Value;
 #[derive(Debug, Clone, Copy)]
 pub enum OpCode {
     OpReturn,
+    OpPop,
 
     // Literal
     OpTrue,
@@ -18,6 +19,9 @@ pub enum OpCode {
 
     // Primary
     OpConstant(u8),
+    OpDefineGlobal(u8),
+    OpGetGlobal(u8),
+    OpSetGlobal(u8),
 
     // Unary
     OpNegate,

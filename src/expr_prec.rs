@@ -46,6 +46,7 @@ pub enum ParseFn {
     Number,
     Binary,
 
+    Variable,
     Literal,
     String,
 }
@@ -180,7 +181,7 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
 
         // Litearls
         TokenType::Identifier => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::Variable),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },

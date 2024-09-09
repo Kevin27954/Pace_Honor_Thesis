@@ -25,6 +25,12 @@ pub enum ValueObj {
     String(Box<String>),
 }
 
+// For when I want to optimize Global Variables
+pub struct GlobalVar {
+    var_name: String,
+    global_idx: u8,
+}
+
 impl Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut str = String::new();
