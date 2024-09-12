@@ -15,9 +15,40 @@ pub mod values;
 //    CompileError,
 //}
 
+struct Local {
+    name: Token,
+    depth: LocalState,
+}
+
+#[derive(PartialEq)]
+enum LocalState {
+    Uninit,
+    // The depth
+    Init(usize),
+}
+
+struct Compiler {
+    locals: Vec<Local>,
+    local_count: usize,
+    scope_depth: usize,
+}
+
+impl Compiler {
+    fn new() -> Self {
+        Compiler {
+            locals: Vec::new(),
+            local_count: 0,
+            scope_depth: 0,
+        }
+    }
+}
+
 pub struct Parser<'a> {
     previous: Option<Token>,
     current: Option<Token>,
+
+    // Resolves the variables scope
+    compiler: Compiler,
 
     chunk: &'a mut Chunk,
     scanner: Option<Scanner>,
@@ -35,6 +66,8 @@ impl<'a> Parser<'a> {
             previous: None,
             current: None,
 
+            compiler: Compiler::new(),
+
             chunk,
             scanner: None,
 
@@ -49,10 +82,10 @@ impl<'a> Parser<'a> {
 
         self.advance();
 
+        self.skip_empty_line();
         while !self.match_token_type(TokenType::EOF) {
             // Because we use '\n' as the terminator, we need to care extra about empty random new
             // lines.
-            self.skip_empty_line();
             self.declaration();
             self.skip_empty_line();
         }
@@ -67,6 +100,10 @@ impl<'a> Parser<'a> {
     fn declaration(&mut self) {
         if self.match_token_type(TokenType::Let) {
             self.var_decl();
+        } else if self.match_token_type(TokenType::Do) {
+            self.begin_scope();
+            self.block();
+            self.end_scope();
         } else {
             self.statement();
         }
@@ -77,6 +114,18 @@ impl<'a> Parser<'a> {
     }
 
     // ****************************     Delcarations     ***************************
+
+    fn block(&mut self) {
+        let mut curr_token_type = self.grab_curr_token_type().unwrap();
+        self.skip_empty_line();
+        while curr_token_type != TokenType::End && curr_token_type != TokenType::EOF {
+            self.declaration();
+            self.skip_empty_line();
+            curr_token_type = self.grab_curr_token_type().unwrap();
+        }
+
+        self.consume(TokenType::End, "Expected Closing End keyword here");
+    }
 
     fn var_decl(&mut self) {
         let idx = self.parse_variable();
@@ -242,24 +291,47 @@ impl<'a> Parser<'a> {
 
     fn name_variable(&mut self, can_assign: bool) {
         if let Some(ref token) = self.previous {
-            let idx = self.make_identifier_constant(token.clone());
+            let op_get_code: OpCode;
+            let op_set_code: OpCode;
+
+            let idx = self.resolve_local(token);
+            // Global
+            if idx == -1 {
+                let idx = self.make_identifier_constant(token.clone());
+                op_get_code = OpCode::OpGetGlobal(idx as u8);
+                op_set_code = OpCode::OpSetGlobal(idx as u8);
+            } else {
+                op_get_code = OpCode::OpGetLocal(idx as u8);
+                op_set_code = OpCode::OpSetLocal(idx as u8);
+            }
 
             if can_assign && self.match_token_type(TokenType::Equal) {
                 self.expression();
-                self.emit_opcode(OpCode::OpSetGlobal(idx as u8));
+                self.emit_opcode(op_set_code);
             } else {
-                self.emit_opcode(OpCode::OpGetGlobal(idx as u8));
+                self.emit_opcode(op_get_code);
             }
         }
     }
 
     fn define_var(&mut self, idx: usize) {
+        if self.compiler.scope_depth > 0 {
+            self.compiler.locals[self.compiler.local_count - 1].depth =
+                LocalState::Init(self.compiler.scope_depth);
+            return;
+        }
+
         self.emit_opcode(OpCode::OpDefineGlobal(idx as u8))
     }
 
     // TODO Look into a way to return usize without doing clone().unwrap()?
     fn parse_variable(&mut self) -> usize {
         self.consume(TokenType::Identifier, "Expected an Identifier name here");
+
+        self.declare_var();
+        if self.compiler.scope_depth > 0 {
+            return 0;
+        }
 
         let token = self.previous.clone().unwrap();
         self.make_identifier_constant(token)
@@ -268,6 +340,64 @@ impl<'a> Parser<'a> {
     fn make_identifier_constant(&mut self, token: Token) -> usize {
         //let token = self.previous.take().unwrap();
         self.add_value(Value::ValueObj(ValueObj::String(Box::new(token.lexeme))))
+    }
+
+    // Only for local varables
+    fn declare_var(&mut self) {
+        if self.compiler.scope_depth == 0 {
+            return;
+        }
+
+        if let Some(ref token) = self.previous {
+            for i in (0..self.compiler.locals.len()).rev() {
+                let local = &self.compiler.locals[i];
+                match local.depth {
+                    LocalState::Init(depth)
+                        if local.depth != LocalState::Uninit
+                            && depth < self.compiler.scope_depth =>
+                    {
+                        break
+                    }
+                    _ => {}
+                }
+                //if local.depth != State::Uninit && local.depth < self.compiler.scope_depth {
+                //    return;
+                //}
+
+                if self.is_eq_token_name(token, &local.name) {
+                    self.error(
+                        token,
+                        format!("Variable {} already exist in this scope", token.lexeme).as_str(),
+                    )
+                }
+            }
+
+            self.add_local(token.clone());
+        }
+    }
+
+    fn resolve_local(&self, name: &Token) -> i32 {
+        for i in (0..self.compiler.locals.len()).rev() {
+            let local = &self.compiler.locals[i];
+            if self.is_eq_token_name(name, &local.name) {
+                if local.depth == LocalState::Uninit {
+                    self.error(name, "Can't read local variable in it's own init field.");
+                }
+                return i as i32;
+            }
+        }
+
+        -1
+    }
+
+    fn add_local(&mut self, token: Token) {
+        let local = Local {
+            name: token,
+            depth: LocalState::Uninit,
+        };
+
+        self.compiler.local_count += 1;
+        self.compiler.locals.push(local);
     }
 
     fn add_value(&mut self, value: Value) -> usize {
@@ -284,6 +414,28 @@ impl<'a> Parser<'a> {
 
     fn emit_return(&mut self) {
         self.emit_opcode(OpCode::OpReturn)
+    }
+
+    fn begin_scope(&mut self) {
+        self.compiler.scope_depth += 1;
+    }
+
+    fn end_scope(&mut self) {
+        self.compiler.scope_depth -= 1;
+
+        while let Some(local) = self.compiler.locals.last() {
+            //if local.depth <= self.compiler.scope_depth {
+            //    break;
+            //}
+            match local.depth {
+                LocalState::Init(depth) if depth <= self.compiler.scope_depth => break,
+                _ => {}
+            }
+
+            self.compiler.locals.pop();
+            self.emit_opcode(OpCode::OpPop);
+            self.compiler.local_count -= 1;
+        }
     }
 
     // The key is to ignore errors resulting from the first error. We would do that but I don't
@@ -383,6 +535,14 @@ impl<'a> Parser<'a> {
         }
         self.advance();
         true
+    }
+
+    fn is_eq_token_name(&self, left: &Token, right: &Token) -> bool {
+        if left.lexeme.len() != right.lexeme.len() {
+            return false;
+        }
+
+        left.lexeme == right.lexeme
     }
 
     fn grab_curr_token_type(&self) -> Option<TokenType> {

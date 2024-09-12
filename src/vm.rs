@@ -112,6 +112,13 @@ impl VM {
                             }
                         }
                     }
+                    OpCode::OpGetLocal(idx) => {
+                        let value = self.stack[idx as usize].clone();
+                        self.push_stack(value);
+                    }
+                    OpCode::OpSetLocal(idx) => {
+                        self.stack[idx as usize] = self.peek_stack(0);
+                    }
 
                     OpCode::OpNegate => {
                         match self.peek_stack(0) {

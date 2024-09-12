@@ -22,6 +22,8 @@ pub enum OpCode {
     OpDefineGlobal(u8),
     OpGetGlobal(u8),
     OpSetGlobal(u8),
+    OpGetLocal(u8),
+    OpSetLocal(u8),
 
     // Unary
     OpNegate,
