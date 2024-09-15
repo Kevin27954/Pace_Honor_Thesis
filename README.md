@@ -12,11 +12,16 @@
 	- [ ] While
 	- [ ] For
 - [ ] Functions
+    - [ ] clock
+    - [ ] print
+    - [ ] length
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] (IP) Error messages
 - [x] Type system
     - [ ] String
     - [ ] Numbers (Floats (and Int?))
+    - [ ] Arrays
+    - [ ] HashMaps (Future)
 - [ ] Garbage Collector
 
 ## Custom Implementations -> Expect 2 Weeks
