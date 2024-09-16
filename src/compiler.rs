@@ -169,12 +169,29 @@ impl<'a> Parser<'a> {
             self.begin_scope();
             self.block();
             self.end_scope();
+        } else if self.match_token_type(TokenType::While) {
+            self.while_stmt();
         } else {
             self.expression_stmt();
         }
     }
 
     // ****************************     Statements     ***************************
+
+    fn while_stmt(&mut self) {
+        let loop_start = self.chunk.code.len();
+        self.expression();
+
+        let offset = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
+        self.emit_opcode(OpCode::OpPop);
+
+        self.statement();
+        let loop_offset = self.chunk.code.len() - loop_start + 1;
+        self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
+
+        self.patch_jump_code(offset);
+        self.emit_opcode(OpCode::OpPop);
+    }
 
     fn if_stmt(&mut self) {
         self.expression();

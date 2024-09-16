@@ -1,5 +1,5 @@
 use core::panic;
-use std::collections::{hash_map::Entry, HashMap};
+use std::collections::HashMap;
 
 use crate::{
     compiler::{
@@ -7,7 +7,7 @@ use crate::{
         values::{Value, ValueObj},
         Parser,
     },
-    debug::{disaseemble_code, disassemble_chunk},
+    debug::disaseemble_code,
 };
 
 static DEBUG: bool = true;
@@ -76,6 +76,9 @@ impl VM {
                     }
                     OpCode::OpJump(jump) => {
                         self.ic += jump as usize;
+                    }
+                    OpCode::OpLoop(loop_start) => {
+                        self.ic -= loop_start as usize;
                     }
 
                     OpCode::OpConstant(idx) => {
