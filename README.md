@@ -7,19 +7,18 @@
 - [x] Variable declarations
     - [x] Global
     - [x] Local
-- [ ] (IP) If statements 
-- [ ] Loops
-	- [ ] While
+- [x] If statements 
+- [ ] (IP) Loops
+	- [x] While
 	- [ ] For
 - [ ] Functions
     - [ ] clock
     - [ ] print
-    - [ ] length
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] (IP) Error messages
-- [x] Type system
-    - [ ] String
-    - [ ] Numbers (Floats (and Int?))
+- [ ] (IP) Type system
+    - [x] String
+    - [x] Numbers (Floats (and Int?))
     - [ ] Arrays
     - [ ] HashMaps (Future)
 - [ ] Garbage Collector
