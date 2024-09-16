@@ -32,6 +32,12 @@ pub fn get_precedence(token_type: TokenType) -> u8 {
     match token_type {
         TokenType::Minus | TokenType::Plus => PRECEDENCE.term,
         TokenType::Slash | TokenType::Star => PRECEDENCE.factor,
+        TokenType::BangEqual | TokenType::EqualEqual => PRECEDENCE.equality,
+        TokenType::Greater | TokenType::GreaterEqual | TokenType::Less | TokenType::LessEqual => {
+            PRECEDENCE.comparison
+        }
+        TokenType::And => PRECEDENCE.and,
+        TokenType::Or => PRECEDENCE.or,
         _ => PRECEDENCE.none,
     }
 }
@@ -41,7 +47,13 @@ pub enum ParseFn {
     Grouping,
     Number,
     Binary,
-    Expression,
+
+    And,
+    Or,
+
+    Variable,
+    Literal,
+    String,
 }
 
 pub struct ParseRule {
@@ -118,13 +130,13 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
 
         // Equality Operator
         TokenType::Bang => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::Unary),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },
         TokenType::BangEqual => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Binary),
             precedence: get_precedence(token_type),
         },
         TokenType::Equal => ParseRule {
@@ -134,52 +146,52 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
         },
         TokenType::EqualEqual => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Binary),
             precedence: get_precedence(token_type),
         },
 
         // Equality Operators
         TokenType::Greater => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Binary),
             precedence: get_precedence(token_type),
         },
         TokenType::GreaterEqual => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Binary),
             precedence: get_precedence(token_type),
         },
         TokenType::Less => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Binary),
             precedence: get_precedence(token_type),
         },
         TokenType::LessEqual => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Binary),
             precedence: get_precedence(token_type),
         },
 
         // Comparison
         TokenType::And => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::And),
             precedence: get_precedence(token_type),
         },
         TokenType::Or => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Or),
             precedence: get_precedence(token_type),
         },
 
         // Litearls
         TokenType::Identifier => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::Variable),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },
         TokenType::String => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::String),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },
@@ -191,17 +203,17 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
 
         // Boolean values
         TokenType::True => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::Literal),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },
         TokenType::False => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::Literal),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },
         TokenType::None => ParseRule {
-            prefix_rule: None,
+            prefix_rule: Some(ParseFn::Literal),
             infix_rule: None,
             precedence: get_precedence(token_type),
         },

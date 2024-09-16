@@ -9,6 +9,10 @@ pub fn disassemble_chunk(chunk: &Chunk, name: String) {
 }
 
 pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
+    if chunk.code.len() <= offset {
+        return;
+    }
+
     print!("{:04} ", offset);
 
     if offset > 0 && chunk.line[offset] == chunk.line[offset - 1] {
@@ -19,25 +23,33 @@ pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
 
     let code = &chunk.code[offset];
     match code {
-        OpCode::OpAdd => {
-            println!("{}", chunk.code[offset]);
-        }
         OpCode::OpConstant(loc) => {
             println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
         }
-        OpCode::OpDivide => {
-            println!("{}", chunk.code[offset]);
+        OpCode::OpDefineGlobal(loc) => {
+            println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
         }
-        OpCode::OpMultiply => {
-            println!("{}", chunk.code[offset]);
+        OpCode::OpGetGlobal(loc) => {
+            println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
         }
-        OpCode::OpNegate => {
-            println!("{}", chunk.code[offset]);
+        OpCode::OpSetGlobal(loc) => {
+            println!("{} {:10} {}", code, loc, chunk.values[*loc as usize]);
         }
-        OpCode::OpReturn => {
-            println!("{}", chunk.code[offset]);
+        OpCode::OpGetLocal(loc) => {
+            println!("{} {:10} ", code, loc);
         }
-        OpCode::OpSubtract => {
+        OpCode::OpSetLocal(loc) => {
+            println!("{} {:10} ", code, loc);
+        }
+        OpCode::OpJumpIfFalse(loc) => {
+            println!("{} {:10} ", code, loc);
+        }
+        OpCode::OpLoop(loc) => {
+            println!("{} {:10} ", code, loc);
+        }
+
+        // Add individal codes here if you want to debug
+        _ => {
             println!("{}", chunk.code[offset]);
         }
     }

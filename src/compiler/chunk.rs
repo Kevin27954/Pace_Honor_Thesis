@@ -5,12 +5,33 @@ use super::values::Value;
 #[derive(Debug, Clone, Copy)]
 pub enum OpCode {
     OpReturn,
+    OpPop,
+
+    OpJumpIfFalse(u8),
+    OpJump(u8),
+    OpLoop(u8),
+
+    // Literal
+    OpTrue,
+    OpFalse,
+    OpNone,
+
+    // Equality
+    OpGreater,
+    OpLess,
+    OpEqual,
 
     // Primary
     OpConstant(u8),
+    OpDefineGlobal(u8),
+    OpGetGlobal(u8),
+    OpSetGlobal(u8),
+    OpGetLocal(u8),
+    OpSetLocal(u8),
 
     // Unary
     OpNegate,
+    OpNot,
 
     // Binary
     OpAdd,
@@ -52,6 +73,6 @@ impl Chunk {
     }
 
     pub fn get_const(&self, idx: u8) -> Value {
-        self.values[idx as usize]
+        self.values[idx as usize].clone()
     }
 }
