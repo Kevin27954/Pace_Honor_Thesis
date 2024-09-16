@@ -231,6 +231,7 @@ impl<'a> Parser<'a> {
 
         // grab_<>_token_type() is to handle borrow checker
         // I can't take thw values as the rules will need to use them.
+
         while prec <= get_parse_rule(self.grab_curr_token_type().unwrap()).precedence {
             self.advance();
             let infix = get_parse_rule(self.grab_prev_token_type().unwrap());
@@ -277,6 +278,25 @@ impl<'a> Parser<'a> {
                 _ => unreachable!(),
             }
         }
+    }
+
+    fn parse_and(&mut self) {
+        let and_jump = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
+        self.emit_opcode(OpCode::OpPop);
+        self.parse_precedence(PRECEDENCE.and);
+
+        self.patch_jump_code(and_jump);
+    }
+
+    fn parse_or(&mut self) {
+        let if_jump = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
+        let else_jump = self.emit_jump_code(OpCode::OpJump(255));
+
+        self.patch_jump_code(if_jump);
+        self.emit_opcode(OpCode::OpPop);
+
+        self.parse_precedence(PRECEDENCE.or);
+        self.patch_jump_code(else_jump);
     }
 
     fn literal(&mut self) {
@@ -603,6 +623,8 @@ impl<'a> Parser<'a> {
             ParseFn::Literal => self.literal(),
             ParseFn::String => self.string(),
             ParseFn::Variable => self.variable(can_assign),
+            ParseFn::And => self.parse_and(),
+            ParseFn::Or => self.parse_or(),
         };
     }
 

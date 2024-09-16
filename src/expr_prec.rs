@@ -36,6 +36,8 @@ pub fn get_precedence(token_type: TokenType) -> u8 {
         TokenType::Greater | TokenType::GreaterEqual | TokenType::Less | TokenType::LessEqual => {
             PRECEDENCE.comparison
         }
+        TokenType::And => PRECEDENCE.and,
+        TokenType::Or => PRECEDENCE.or,
         _ => PRECEDENCE.none,
     }
 }
@@ -45,6 +47,9 @@ pub enum ParseFn {
     Grouping,
     Number,
     Binary,
+
+    And,
+    Or,
 
     Variable,
     Literal,
@@ -170,12 +175,12 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
         // Comparison
         TokenType::And => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::And),
             precedence: get_precedence(token_type),
         },
         TokenType::Or => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Or),
             precedence: get_precedence(token_type),
         },
 
