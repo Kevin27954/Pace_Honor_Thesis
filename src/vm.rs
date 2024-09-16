@@ -68,6 +68,16 @@ impl VM {
                         let value = self.pop_stack();
                         println!("{}", value);
                     }
+
+                    OpCode::OpJumpIfFalse(jump) => {
+                        if self.is_falsey(self.peek_stack(0)) {
+                            self.ic += jump as usize;
+                        }
+                    }
+                    OpCode::OpJump(jump) => {
+                        self.ic += jump as usize;
+                    }
+
                     OpCode::OpConstant(idx) => {
                         self.push_stack(self.chunk.get_const(idx));
                     }

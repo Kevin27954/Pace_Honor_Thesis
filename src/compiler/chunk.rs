@@ -7,6 +7,9 @@ pub enum OpCode {
     OpReturn,
     OpPop,
 
+    OpJumpIfFalse(u8),
+    OpJump(u8),
+
     // Literal
     OpTrue,
     OpFalse,

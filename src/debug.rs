@@ -41,6 +41,9 @@ pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
         OpCode::OpSetLocal(loc) => {
             println!("{} {:10} ", code, loc);
         }
+        OpCode::OpJumpIfFalse(loc) => {
+            println!("{} {:10} ", code, loc);
+        }
 
         // Add individal codes here if you want to debug
         _ => {

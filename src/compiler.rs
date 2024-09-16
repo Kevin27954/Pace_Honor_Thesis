@@ -100,10 +100,6 @@ impl<'a> Parser<'a> {
     fn declaration(&mut self) {
         if self.match_token_type(TokenType::Let) {
             self.var_decl();
-        } else if self.match_token_type(TokenType::Do) {
-            self.begin_scope();
-            self.block();
-            self.end_scope();
         } else {
             self.statement();
         }
@@ -127,6 +123,31 @@ impl<'a> Parser<'a> {
         self.consume(TokenType::End, "Expected Closing End keyword here");
     }
 
+    fn if_block(&mut self) {
+        self.skip_empty_line();
+
+        let mut curr_token_type = self.grab_curr_token_type().unwrap();
+        self.skip_empty_line();
+        while curr_token_type != TokenType::End
+            && curr_token_type != TokenType::Else
+            && curr_token_type != TokenType::EOF
+        {
+            self.declaration();
+            self.skip_empty_line();
+            curr_token_type = self.grab_curr_token_type().unwrap();
+        }
+
+        match curr_token_type {
+            TokenType::Else => {}
+            TokenType::End => {
+                self.advance();
+            }
+            _ => {
+                self.consume(TokenType::End, "Expected Closing End keyword here");
+            }
+        }
+    }
+
     fn var_decl(&mut self) {
         let idx = self.parse_variable();
 
@@ -142,10 +163,38 @@ impl<'a> Parser<'a> {
     }
 
     fn statement(&mut self) {
-        self.expression_stmt();
+        if self.match_token_type(TokenType::If) {
+            self.if_stmt();
+        } else if self.match_token_type(TokenType::Do) {
+            self.begin_scope();
+            self.block();
+            self.end_scope();
+        } else {
+            self.expression_stmt();
+        }
     }
 
     // ****************************     Statements     ***************************
+
+    fn if_stmt(&mut self) {
+        self.expression();
+        self.consume(TokenType::Then, "Expected then after the condition");
+
+        let if_jump = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
+        self.emit_opcode(OpCode::OpPop);
+
+        self.parse_if_blocks();
+
+        let else_jump = self.emit_jump_code(OpCode::OpJump(255));
+
+        self.patch_jump_code(if_jump);
+        self.emit_opcode(OpCode::OpPop);
+
+        if self.match_token_type(TokenType::Else) {
+            self.parse_if_blocks();
+        }
+        self.patch_jump_code(else_jump);
+    }
 
     fn expression_stmt(&mut self) {
         self.expression();
@@ -289,6 +338,12 @@ impl<'a> Parser<'a> {
 
     // ****************************     Helpers     ***************************
 
+    fn parse_if_blocks(&mut self) {
+        self.begin_scope();
+        self.if_block();
+        self.end_scope();
+    }
+
     fn name_variable(&mut self, can_assign: bool) {
         if let Some(ref token) = self.previous {
             let op_get_code: OpCode;
@@ -409,6 +464,28 @@ impl<'a> Parser<'a> {
             // Potential Error in the future here, I'm referencing self.chunk rather than getting
             // chunk, is there a potential error? Self.chunk is current chunk...
             self.chunk.write_code(code, token.line);
+        }
+    }
+
+    fn emit_jump_code(&mut self, code: OpCode) -> usize {
+        self.emit_opcode(code);
+        self.chunk.code.len() - 1
+    }
+
+    fn patch_jump_code(&mut self, offset: usize) {
+        let jumps = self.chunk.code.len() - offset - 1;
+
+        match self.chunk.code.get_mut(offset) {
+            Some(code) => match code {
+                OpCode::OpJump(jump) => {
+                    *jump = jumps as u8;
+                }
+                OpCode::OpJumpIfFalse(jump) => {
+                    *jump = jumps as u8;
+                }
+                _ => {}
+            },
+            None => {}
         }
     }
 
