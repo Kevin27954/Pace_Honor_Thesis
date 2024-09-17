@@ -171,12 +171,75 @@ impl<'a> Parser<'a> {
             self.end_scope();
         } else if self.match_token_type(TokenType::While) {
             self.while_stmt();
+        } else if self.match_token_type(TokenType::For) {
+            self.for_stmt();
         } else {
             self.expression_stmt();
         }
     }
 
     // ****************************     Statements     ***************************
+
+    fn for_stmt(&mut self) {
+        self.begin_scope();
+
+        if self.match_token_type(TokenType::Comma) {
+        } else if self.match_token_type(TokenType::Let) {
+            let idx = self.parse_variable();
+            if self.match_token_type(TokenType::Equal) {
+                self.expression();
+            } else {
+                self.emit_opcode(OpCode::OpNone);
+            }
+
+            self.consume(TokenType::Comma, "Expected Comma seperator here");
+            self.define_var(idx);
+        } else {
+            self.expression();
+            self.consume(TokenType::Comma, "Expected Comma seperator here");
+        }
+
+        let mut loop_start = self.chunk.code.len();
+
+        // 0 should be fine since there shouldn't be a possibliity that emit_jump_code returns a
+        //   number equal to 0
+        let mut jumps = 0;
+        // The Condition
+        if !self.match_token_type(TokenType::Comma) {
+            self.expression();
+            self.consume(TokenType::Comma, "Expected Comma serperator here");
+
+            jumps = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
+            self.emit_opcode(OpCode::OpPop);
+        }
+
+        // The Increment
+        let curr_token_type = self.grab_curr_token_type().unwrap();
+        if curr_token_type != TokenType::Do {
+            let body_jump = self.emit_jump_code(OpCode::OpJump(255));
+            let increment_start = self.chunk.code.len();
+            self.expression();
+            self.emit_opcode(OpCode::OpPop);
+
+            let loop_offset = self.chunk.code.len() - loop_start + 1;
+            self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
+
+            loop_start = increment_start;
+            self.patch_jump_code(body_jump);
+        }
+
+        self.statement();
+
+        let loop_offset = self.chunk.code.len() - loop_start + 1;
+        self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
+
+        if jumps != 0 {
+            self.patch_jump_code(jumps);
+            self.emit_opcode(OpCode::OpPop);
+        }
+
+        self.end_scope();
+    }
 
     fn while_stmt(&mut self) {
         let loop_start = self.chunk.code.len();
@@ -612,9 +675,13 @@ impl<'a> Parser<'a> {
         self.panic_error = false;
 
         while self.grab_curr_token_type().unwrap() != TokenType::EOF {
-            if self.grab_prev_token_type().unwrap() == TokenType::NewLine {
-                return;
-            }
+            // This might not be wanted since Newline is considered a terminator. But it is also a
+            // token that we can randomly have. This makes it difficult when it comes to
+            // syncrhonization blocks of code, like Structs
+            //
+            //if self.grab_prev_token_type().unwrap() == TokenType::NewLine {
+            //    return;
+            //}
 
             match self.grab_curr_token_type().unwrap() {
                 TokenType::If
