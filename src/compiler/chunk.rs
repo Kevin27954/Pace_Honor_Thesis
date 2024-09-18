@@ -2,7 +2,7 @@ use std::fmt::Display;
 
 use super::values::Value;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OpCode {
     OpReturn,
     OpPop,
@@ -46,6 +46,7 @@ impl Display for OpCode {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Chunk {
     pub code: Vec<OpCode>,
     pub line: Vec<usize>,

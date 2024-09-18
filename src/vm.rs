@@ -4,7 +4,7 @@ use std::collections::HashMap;
 use crate::{
     compiler::{
         chunk::{Chunk, OpCode},
-        values::{Value, ValueObj},
+        values::{FunctionObj, Value, ValueObj},
         Parser,
     },
     debug::disaseemble_code,
@@ -17,25 +17,37 @@ pub enum InterpretError {
     RuntimeError,
 }
 
+pub struct CallFrame {
+    // Might want this to be a ref, we won't be modifying it
+    function: FunctionObj,
+    ic: usize,
+    // This is just an index
+    slots: usize,
+}
+
 pub struct VM {
-    chunk: Chunk,
+    frame: Vec<CallFrame>,
+    frame_count: usize,
+
+    //chunk: Chunk,
     stack: Vec<Value>,
 
     globals: HashMap<String, Value>,
-
-    ic: usize,
+    //ic: usize,
 }
 
 impl VM {
     pub fn new(chunk: Chunk) -> Self {
         VM {
             // Here just to have a field. Will be replaced in interpret
-            chunk,
+            //chunk,
+            frame: Vec::new(),
+            frame_count: 0,
 
             globals: HashMap::new(),
 
             stack: Vec::new(),
-            ic: 0,
+            //ic: 0,
         }
     }
 
@@ -44,21 +56,51 @@ impl VM {
         let mut chunk = Chunk::new();
 
         let mut parser = Parser::new(&mut chunk);
-        if !parser.compile(source) {
+        let parser_res = parser.compile(source);
+
+        if let Some(function_obj) = parser_res {
+            //
+            // Consider without clone also.
+            //
+            self.stack.push(Value::ValueObj(ValueObj::Function(Box::new(
+                function_obj.clone(),
+            ))));
+
+            let frame = CallFrame {
+                function: function_obj.clone(),
+                ic: 0,
+                slots: 0,
+            };
+
+            self.frame.push(frame);
+            self.frame_count += 1;
+        } else {
             return Err(InterpretError::CompileError);
         }
 
-        self.chunk = chunk;
-
         Ok(self.run()?)
+    }
+
+    fn get_mut_frame(&mut self) -> &mut CallFrame {
+        &mut self.frame[self.frame_count - 1]
+    }
+
+    fn get_frame(&self) -> &CallFrame {
+        &self.frame[self.frame_count - 1]
     }
 
     fn run(&mut self) -> Result<Value, InterpretError> {
         println!("\n=== VM ===");
         loop {
             if DEBUG {
-                println!("Stack:       {:?}", self.stack);
-                disaseemble_code(&self.chunk, self.ic);
+                print!("Stack:       [");
+                for value in &self.stack {
+                    print!("{}, ", value);
+                }
+                println!("]");
+                let frame = self.get_frame();
+                //let ic = frame.ic - frame.function.chunk.code.len();
+                disaseemble_code(&frame.function.chunk, frame.ic);
             }
 
             match self.get_op_code() {
@@ -70,23 +112,31 @@ impl VM {
                     }
 
                     OpCode::OpJumpIfFalse(jump) => {
+                        //if self.is_falsey(self.peek_stack(0)) {
                         if self.is_falsey(self.peek_stack(0)) {
-                            self.ic += jump as usize;
+                            let frame = self.get_mut_frame();
+                            frame.ic += jump as usize;
                         }
                     }
                     OpCode::OpJump(jump) => {
-                        self.ic += jump as usize;
+                        let frame = self.get_mut_frame();
+                        frame.ic += jump as usize;
+                        //self.ic += jump as usize;
                     }
                     OpCode::OpLoop(loop_start) => {
-                        self.ic -= loop_start as usize;
+                        //self.ic -= loop_start as usize;
+                        let frame = self.get_mut_frame();
+                        frame.ic -= loop_start as usize;
                     }
 
                     OpCode::OpConstant(idx) => {
-                        self.push_stack(self.chunk.get_const(idx));
+                        let frame = self.get_frame();
+                        self.push_stack(frame.function.chunk.get_const(idx));
                     }
                     OpCode::OpDefineGlobal(idx) => {
+                        let frame = self.get_frame();
                         if let Value::ValueObj(ValueObj::String(var_name)) =
-                            self.chunk.get_const(idx)
+                            frame.function.chunk.get_const(idx)
                         {
                             // self.globals_vec.get(var_name.counter);
                             let value = self.pop_stack();
@@ -94,8 +144,9 @@ impl VM {
                         }
                     }
                     OpCode::OpGetGlobal(idx) => {
+                        let frame = self.get_frame();
                         if let Value::ValueObj(ValueObj::String(var_name)) =
-                            self.chunk.get_const(idx)
+                            frame.function.chunk.get_const(idx)
                         {
                             match self.globals.get(var_name.as_ref()) {
                                 Some(value) => {
@@ -111,8 +162,9 @@ impl VM {
                         }
                     }
                     OpCode::OpSetGlobal(idx) => {
+                        let frame = self.get_frame();
                         if let Value::ValueObj(ValueObj::String(var_name)) =
-                            self.chunk.get_const(idx)
+                            frame.function.chunk.get_const(idx)
                         {
                             if self.globals.contains_key(var_name.as_ref()) {
                                 self.globals
@@ -126,11 +178,18 @@ impl VM {
                         }
                     }
                     OpCode::OpGetLocal(idx) => {
-                        let value = self.stack[idx as usize].clone();
+                        //let value = self.stack[idx as usize].clone();
+                        let frame = self.get_frame();
+                        let maybe = idx as usize + frame.ic;
+                        //let value = frame.slots[idx as usize];
+                        let value = self.stack[maybe].clone();
                         self.push_stack(value);
                     }
                     OpCode::OpSetLocal(idx) => {
-                        self.stack[idx as usize] = self.peek_stack(0);
+                        //self.stack[idx as usize] = self.peek_stack(0);
+                        let frame = self.get_frame();
+                        let maybe = idx as usize + frame.ic;
+                        self.stack[maybe] = self.peek_stack(0);
                     }
 
                     OpCode::OpNegate => {
@@ -238,6 +297,9 @@ impl VM {
                     );
                     return Err(InterpretError::RuntimeError);
                 }
+                ValueObj::Function(function) => {
+                    unimplemented!("Function not implemented yet");
+                }
             },
         };
 
@@ -259,6 +321,9 @@ impl VM {
                         format!("{} not supported on string value: {}", operator, string).as_str(),
                     );
                     return Err(InterpretError::RuntimeError);
+                }
+                ValueObj::Function(function) => {
+                    unimplemented!("Function not implemented yet");
                 }
             },
         };
@@ -307,21 +372,29 @@ impl VM {
     fn runtime_error(&self, message: &str) {
         // Get's the instruction index
         //let instruction = self.ic - self.chunk.code.len() - 1;
-        let instruction = self.ic - 1;
+
+        let frame = &self.frame[self.frame_count - 1];
+
+        let instruction = frame.ic - frame.function.chunk.code.len();
         // Calls the corresponding line array for the instruction
-        let line = &self.chunk.line[instruction];
+        let line = &frame.function.chunk.line[instruction];
         //eprintln!("[line {}]: {}", line, message);
         eprintln!("[line {}]: {}", line, message);
     }
 
     fn get_op_code(&mut self) -> Option<OpCode> {
-        if self.ic >= self.chunk.code.len() {
-            return None;
+        //let frame = &mut self.frame[self.frame_count - 1];
+        if let Some(frame) = self.frame.get_mut(self.frame_count - 1) {
+            if frame.ic >= frame.function.chunk.code.len() {
+                return None;
+            }
+
+            let code = frame.function.chunk.code[frame.ic];
+            frame.ic += 1;
+            return Some(code);
         }
 
-        let code = self.chunk.code[self.ic];
-        self.ic += 1;
-        Some(code)
+        None
     }
 
     fn push_stack(&mut self, value: Value) {

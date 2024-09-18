@@ -1,5 +1,7 @@
 use std::fmt::Display;
 
+use super::chunk::Chunk;
+
 /*
 * Enum is 4 byte (Number, Boolean, None - each one is a TAG represented by int (u32) )
 * Current max memory is f64 -> 8 bytes
@@ -19,16 +21,45 @@ pub enum Value {
     ValueObj(ValueObj),
 }
 
-// This is only 8 bytes max: Enum (4byte) + Box (8byte)
-#[derive(Debug, PartialEq, Clone)]
-pub enum ValueObj {
-    String(Box<String>),
-}
-
 // For when I want to optimize Global Variables
 pub struct GlobalVar {
     var_name: String,
     global_idx: u8,
+}
+
+// This is only 8 bytes max: Enum (4byte) + Box (8byte)
+#[derive(Debug, PartialEq, Clone)]
+pub enum ValueObj {
+    String(Box<String>),
+    Function(Box<FunctionObj>),
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct FunctionObj {
+    pub arity: u8,
+    pub chunk: Chunk,
+    pub name: Option<String>,
+}
+
+impl FunctionObj {
+    pub fn new() -> Self {
+        FunctionObj {
+            arity: 0,
+            chunk: Chunk::new(),
+            // Consider doing &str
+            name: None,
+        }
+    }
+}
+
+impl Display for FunctionObj {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if let Some(ref name) = self.name {
+            write!(f, "<fn {}>", name)
+        } else {
+            write!(f, "<script>")
+        }
+    }
 }
 
 impl Display for Value {
@@ -48,6 +79,9 @@ impl Display for Value {
             Self::ValueObj(value_obj) => match value_obj {
                 ValueObj::String(string) => {
                     format!("{}", string)
+                }
+                ValueObj::Function(function) => {
+                    format!("{}", function)
                 }
             },
         };

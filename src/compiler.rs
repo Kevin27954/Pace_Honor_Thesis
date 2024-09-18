@@ -1,5 +1,5 @@
 use chunk::{Chunk, OpCode};
-use values::{Value, ValueObj};
+use values::{FunctionObj, Value, ValueObj};
 
 use crate::{
     debug::disassemble_chunk,
@@ -27,7 +27,15 @@ enum LocalState {
     Init(usize),
 }
 
+enum FunctionType {
+    FunctionType,
+    ScriptType,
+}
+
 struct Compiler {
+    function: FunctionObj,
+    function_type: FunctionType,
+
     locals: Vec<Local>,
     local_count: usize,
     scope_depth: usize,
@@ -36,6 +44,11 @@ struct Compiler {
 impl Compiler {
     fn new() -> Self {
         Compiler {
+            function: FunctionObj::new(),
+            function_type: FunctionType::ScriptType,
+
+            // TODO: Come back here later
+            // We might need the vec to have the first index be reserved for the main()
             locals: Vec::new(),
             local_count: 0,
             scope_depth: 0,
@@ -77,7 +90,7 @@ impl<'a> Parser<'a> {
     }
 
     //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
-    pub fn compile(&mut self, source: String) -> bool {
+    pub fn compile(&mut self, source: String) -> Option<FunctionObj> {
         self.scanner = Some(Scanner::new(source));
 
         self.advance();
@@ -91,10 +104,18 @@ impl<'a> Parser<'a> {
         }
 
         if self.has_error {
-            disassemble_chunk(self.chunk, "Parser Errors".to_string());
+            // From here on out, we will treat the global scope as "main()"
+            if let Some(function_name) = self.compiler.function.name.clone() {
+                disassemble_chunk(self.current_chunk(), function_name);
+            } else {
+                disassemble_chunk(self.current_chunk(), "<script>".to_string());
+            }
         }
 
-        !self.has_error
+        match self.has_error {
+            true => None,
+            false => Some(self.compiler.function.clone()),
+        }
     }
 
     fn declaration(&mut self) {
@@ -199,7 +220,7 @@ impl<'a> Parser<'a> {
             self.consume(TokenType::Comma, "Expected Comma seperator here");
         }
 
-        let mut loop_start = self.chunk.code.len();
+        let mut loop_start = self.current_chunk().code.len();
 
         // 0 should be fine since there shouldn't be a possibliity that emit_jump_code returns a
         //   number equal to 0
@@ -217,11 +238,11 @@ impl<'a> Parser<'a> {
         let curr_token_type = self.grab_curr_token_type().unwrap();
         if curr_token_type != TokenType::Do {
             let body_jump = self.emit_jump_code(OpCode::OpJump(255));
-            let increment_start = self.chunk.code.len();
+            let increment_start = self.current_chunk().code.len();
             self.expression();
             self.emit_opcode(OpCode::OpPop);
 
-            let loop_offset = self.chunk.code.len() - loop_start + 1;
+            let loop_offset = self.current_chunk().code.len() - loop_start + 1;
             self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
 
             loop_start = increment_start;
@@ -230,7 +251,7 @@ impl<'a> Parser<'a> {
 
         self.statement();
 
-        let loop_offset = self.chunk.code.len() - loop_start + 1;
+        let loop_offset = self.current_chunk().code.len() - loop_start + 1;
         self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
 
         if jumps != 0 {
@@ -242,14 +263,14 @@ impl<'a> Parser<'a> {
     }
 
     fn while_stmt(&mut self) {
-        let loop_start = self.chunk.code.len();
+        let loop_start = self.current_chunk().code.len();
         self.expression();
 
         let offset = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
         self.emit_opcode(OpCode::OpPop);
 
         self.statement();
-        let loop_offset = self.chunk.code.len() - loop_start + 1;
+        let loop_offset = self.current_chunk().code.len() - loop_start + 1;
         self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
 
         self.patch_jump_code(offset);
@@ -556,26 +577,26 @@ impl<'a> Parser<'a> {
     }
 
     fn add_value(&mut self, value: Value) -> usize {
-        self.chunk.add_value(value)
+        self.current_chunk().add_value(value)
     }
 
     fn emit_opcode(&mut self, code: OpCode) {
-        if let Some(ref token) = self.previous {
+        if let Some(ref token) = self.previous.clone() {
             // Potential Error in the future here, I'm referencing self.chunk rather than getting
             // chunk, is there a potential error? Self.chunk is current chunk...
-            self.chunk.write_code(code, token.line);
+            self.current_chunk().write_code(code, token.line);
         }
     }
 
     fn emit_jump_code(&mut self, code: OpCode) -> usize {
         self.emit_opcode(code);
-        self.chunk.code.len() - 1
+        self.current_chunk().code.len() - 1
     }
 
     fn patch_jump_code(&mut self, offset: usize) {
-        let jumps = self.chunk.code.len() - offset - 1;
+        let jumps = self.current_chunk().code.len() - offset - 1;
 
-        match self.chunk.code.get_mut(offset) {
+        match self.current_chunk().code.get_mut(offset) {
             Some(code) => match code {
                 OpCode::OpJump(jump) => {
                     *jump = jumps as u8;
@@ -726,6 +747,11 @@ impl<'a> Parser<'a> {
         }
 
         left.lexeme == right.lexeme
+    }
+
+    fn current_chunk(&mut self) -> &mut Chunk {
+        &mut self.compiler.function.chunk
+        //self.chunk
     }
 
     fn grab_curr_token_type(&self) -> Option<TokenType> {
