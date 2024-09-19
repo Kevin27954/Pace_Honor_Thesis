@@ -43,14 +43,26 @@ struct Compiler {
 
 impl Compiler {
     fn new() -> Self {
+        let first_idx_holder = Local {
+            name: Token {
+                line: 0,
+                lexeme: "".to_string(),
+                token_type: TokenType::None,
+            },
+            depth: LocalState::Init(0),
+        };
+
+        let mut locals: Vec<Local> = Vec::new();
+        locals.push(first_idx_holder);
+
         Compiler {
             function: FunctionObj::new(),
             function_type: FunctionType::ScriptType,
 
             // TODO: Come back here later
             // We might need the vec to have the first index be reserved for the main()
-            locals: Vec::new(),
-            local_count: 0,
+            locals,
+            local_count: 1,
             scope_depth: 0,
         }
     }
@@ -471,8 +483,8 @@ impl<'a> Parser<'a> {
             let op_set_code: OpCode;
 
             let idx = self.resolve_local(token);
-            // Global
             if idx == -1 {
+                // Global
                 let idx = self.make_identifier_constant(token.clone());
                 op_get_code = OpCode::OpGetGlobal(idx as usize);
                 op_set_code = OpCode::OpSetGlobal(idx as usize);
@@ -500,11 +512,12 @@ impl<'a> Parser<'a> {
         self.emit_opcode(OpCode::OpDefineGlobal(idx))
     }
 
-    // TODO Look into a way to return usize without doing clone().unwrap()?
     fn parse_variable(&mut self) -> usize {
         self.consume(TokenType::Identifier, "Expected an Identifier name here");
 
+        // Defines the Local Variable here
         self.declare_var();
+
         if self.compiler.scope_depth > 0 {
             return 0;
         }
@@ -514,7 +527,6 @@ impl<'a> Parser<'a> {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        //let token = self.previous.take().unwrap();
         self.add_value(Value::ValueObj(ValueObj::String(Box::new(token.lexeme))))
     }
 

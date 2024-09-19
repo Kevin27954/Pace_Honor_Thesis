@@ -42,6 +42,7 @@ pub fn get_precedence(token_type: TokenType) -> u8 {
     }
 }
 
+#[derive(Debug)]
 pub enum ParseFn {
     Unary,
     Grouping,
