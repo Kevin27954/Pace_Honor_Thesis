@@ -1,4 +1,4 @@
-use std::fmt::Display;
+use std::{fmt::Display, rc::Rc};
 
 use super::chunk::Chunk;
 
@@ -31,7 +31,7 @@ pub struct GlobalVar {
 #[derive(Debug, PartialEq, Clone)]
 pub enum ValueObj {
     String(Box<String>),
-    Function(Box<FunctionObj>),
+    Function(Rc<FunctionObj>),
 }
 
 #[derive(Debug, PartialEq, Clone)]

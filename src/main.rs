@@ -1,6 +1,5 @@
 use std::{env, fs, process};
 
-use compiler::chunk::Chunk;
 use vm::{InterpretError, VM};
 
 mod compiler;
@@ -39,7 +38,7 @@ fn read_file(path: &String) {
 
     //let source_str = String::from("\"str1🔥\" == \"str2🔥\"\n1 + 1");
 
-    let mut vm = VM::new(Chunk::new());
+    let mut vm = VM::new();
     match vm.interpret(source_str) {
         Ok(_) => {}
         Err(err) => match err {

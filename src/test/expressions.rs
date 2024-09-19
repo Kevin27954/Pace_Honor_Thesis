@@ -1,10 +1,7 @@
-use crate::{
-    compiler::{chunk::Chunk, values::Value},
-    vm::VM,
-};
+use crate::{compiler::values::Value, vm::VM};
 
 fn assert_eq_value(source_str: String, expected_value: Value) {
-    let mut vm = VM::new(Chunk::new());
+    let mut vm = VM::new();
     match vm.interpret(source_str) {
         Ok(value) => {
             assert_eq!(value, expected_value)

@@ -90,7 +90,7 @@ impl<'a> Parser<'a> {
     }
 
     //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
-    pub fn compile(&mut self, source: String) -> Option<FunctionObj> {
+    pub fn compile(&mut self, source: String) -> Option<&FunctionObj> {
         self.scanner = Some(Scanner::new(source));
 
         self.advance();
@@ -114,7 +114,7 @@ impl<'a> Parser<'a> {
 
         match self.has_error {
             true => None,
-            false => Some(self.compiler.function.clone()),
+            false => Some(&self.compiler.function),
         }
     }
 
@@ -436,7 +436,7 @@ impl<'a> Parser<'a> {
         if let Some(ref token) = self.previous {
             let number: f64 = token.lexeme.parse().expect("Not a number");
             let idx = self.add_value(Value::Number(number));
-            self.emit_opcode(OpCode::OpConstant(idx as u8));
+            self.emit_opcode(OpCode::OpConstant(idx));
         }
     }
 
@@ -449,7 +449,7 @@ impl<'a> Parser<'a> {
                 clean_str.to_string(),
             ))));
 
-            self.emit_opcode(OpCode::OpConstant(idx as u8));
+            self.emit_opcode(OpCode::OpConstant(idx));
         }
     }
 
@@ -474,11 +474,11 @@ impl<'a> Parser<'a> {
             // Global
             if idx == -1 {
                 let idx = self.make_identifier_constant(token.clone());
-                op_get_code = OpCode::OpGetGlobal(idx as u8);
-                op_set_code = OpCode::OpSetGlobal(idx as u8);
+                op_get_code = OpCode::OpGetGlobal(idx as usize);
+                op_set_code = OpCode::OpSetGlobal(idx as usize);
             } else {
-                op_get_code = OpCode::OpGetLocal(idx as u8);
-                op_set_code = OpCode::OpSetLocal(idx as u8);
+                op_get_code = OpCode::OpGetLocal(idx as usize);
+                op_set_code = OpCode::OpSetLocal(idx as usize);
             }
 
             if can_assign && self.match_token_type(TokenType::Equal) {
@@ -497,7 +497,7 @@ impl<'a> Parser<'a> {
             return;
         }
 
-        self.emit_opcode(OpCode::OpDefineGlobal(idx as u8))
+        self.emit_opcode(OpCode::OpDefineGlobal(idx))
     }
 
     // TODO Look into a way to return usize without doing clone().unwrap()?

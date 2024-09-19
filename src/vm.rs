@@ -1,5 +1,5 @@
 use core::panic;
-use std::collections::HashMap;
+use std::{collections::HashMap, rc::Rc};
 
 use crate::{
     compiler::{
@@ -18,8 +18,8 @@ pub enum InterpretError {
 }
 
 pub struct CallFrame {
-    // Might want this to be a ref, we won't be modifying it
-    function: FunctionObj,
+    // Rc cause 2 places need this value, but non modify it
+    function: Rc<FunctionObj>,
     ic: usize,
     // This is just an index
     slots: usize,
@@ -29,45 +29,39 @@ pub struct VM {
     frame: Vec<CallFrame>,
     frame_count: usize,
 
-    //chunk: Chunk,
     stack: Vec<Value>,
 
     globals: HashMap<String, Value>,
-    //ic: usize,
 }
 
 impl VM {
-    pub fn new(chunk: Chunk) -> Self {
+    pub fn new() -> Self {
         VM {
             // Here just to have a field. Will be replaced in interpret
-            //chunk,
             frame: Vec::new(),
             frame_count: 0,
 
             globals: HashMap::new(),
 
             stack: Vec::new(),
-            //ic: 0,
         }
     }
 
     pub fn interpret(&mut self, source: String) -> Result<Value, InterpretError> {
-        // Idea: Given a source code, compile and run it.
         let mut chunk = Chunk::new();
 
         let mut parser = Parser::new(&mut chunk);
         let parser_res = parser.compile(source);
 
         if let Some(function_obj) = parser_res {
-            //
-            // Consider without clone also.
-            //
-            self.stack.push(Value::ValueObj(ValueObj::Function(Box::new(
-                function_obj.clone(),
-            ))));
+            // The only clone needed, whereas in previous it would have needed two.
+            let function = Rc::new(function_obj.clone());
+
+            self.stack
+                .push(Value::ValueObj(ValueObj::Function(Rc::clone(&function))));
 
             let frame = CallFrame {
-                function: function_obj.clone(),
+                function: Rc::clone(&function),
                 ic: 0,
                 slots: 0,
             };
@@ -94,12 +88,12 @@ impl VM {
         loop {
             if DEBUG {
                 print!("Stack:       [");
-                for value in &self.stack {
-                    print!("{}, ", value);
+                for i in 0..self.stack.len() - 1 {
+                    print!("{}, ", self.stack[i]);
                 }
+                print!("{}", self.stack[self.stack.len() - 1]);
                 println!("]");
                 let frame = self.get_frame();
-                //let ic = frame.ic - frame.function.chunk.code.len();
                 disaseemble_code(&frame.function.chunk, frame.ic);
             }
 
@@ -112,7 +106,6 @@ impl VM {
                     }
 
                     OpCode::OpJumpIfFalse(jump) => {
-                        //if self.is_falsey(self.peek_stack(0)) {
                         if self.is_falsey(self.peek_stack(0)) {
                             let frame = self.get_mut_frame();
                             frame.ic += jump as usize;
@@ -121,10 +114,8 @@ impl VM {
                     OpCode::OpJump(jump) => {
                         let frame = self.get_mut_frame();
                         frame.ic += jump as usize;
-                        //self.ic += jump as usize;
                     }
                     OpCode::OpLoop(loop_start) => {
-                        //self.ic -= loop_start as usize;
                         let frame = self.get_mut_frame();
                         frame.ic -= loop_start as usize;
                     }
@@ -138,7 +129,6 @@ impl VM {
                         if let Value::ValueObj(ValueObj::String(var_name)) =
                             frame.function.chunk.get_const(idx)
                         {
-                            // self.globals_vec.get(var_name.counter);
                             let value = self.pop_stack();
                             self.globals.insert(var_name.to_string(), value);
                         }
@@ -178,18 +168,23 @@ impl VM {
                         }
                     }
                     OpCode::OpGetLocal(idx) => {
-                        //let value = self.stack[idx as usize].clone();
                         let frame = self.get_frame();
-                        let maybe = idx as usize + frame.ic;
-                        //let value = frame.slots[idx as usize];
-                        let value = self.stack[maybe].clone();
+                        let frame_stack_idx = match self.frame_count {
+                            1 => idx, // This is the main() / global case
+                            _ => idx + frame.ic,
+                        };
+
+                        let value = self.stack[frame_stack_idx].clone();
                         self.push_stack(value);
                     }
                     OpCode::OpSetLocal(idx) => {
-                        //self.stack[idx as usize] = self.peek_stack(0);
                         let frame = self.get_frame();
-                        let maybe = idx as usize + frame.ic;
-                        self.stack[maybe] = self.peek_stack(0);
+                        let frame_stack_idx = match self.frame_count {
+                            1 => idx, // This is the main() / global case
+                            _ => idx + frame.ic,
+                        };
+
+                        self.stack[frame_stack_idx] = self.peek_stack(0);
                     }
 
                     OpCode::OpNegate => {
@@ -297,7 +292,7 @@ impl VM {
                     );
                     return Err(InterpretError::RuntimeError);
                 }
-                ValueObj::Function(function) => {
+                ValueObj::Function(_function) => {
                     unimplemented!("Function not implemented yet");
                 }
             },
@@ -322,14 +317,13 @@ impl VM {
                     );
                     return Err(InterpretError::RuntimeError);
                 }
-                ValueObj::Function(function) => {
+                ValueObj::Function(_function) => {
                     unimplemented!("Function not implemented yet");
                 }
             },
         };
 
         match operator {
-            //OpCode::OpAdd => self.push_stack(Value::Number(a + b)),
             OpCode::OpSubtract => self.push_stack(Value::Number(a - b)),
             OpCode::OpMultiply => self.push_stack(Value::Number(a * b)),
             OpCode::OpDivide => self.push_stack(Value::Number(a / b)),
@@ -370,15 +364,13 @@ impl VM {
     }
 
     fn runtime_error(&self, message: &str) {
-        // Get's the instruction index
-        //let instruction = self.ic - self.chunk.code.len() - 1;
-
         let frame = &self.frame[self.frame_count - 1];
 
-        let instruction = frame.ic - frame.function.chunk.code.len();
+        // frame.ic can be larger or chunk.code.len() can be bigger, so we use abs()
+        // idk why
+        let instruction = frame.ic.abs_diff(frame.function.chunk.code.len());
         // Calls the corresponding line array for the instruction
         let line = &frame.function.chunk.line[instruction];
-        //eprintln!("[line {}]: {}", line, message);
         eprintln!("[line {}]: {}", line, message);
     }
 
