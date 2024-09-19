@@ -366,16 +366,13 @@ impl VM {
     fn runtime_error(&self, message: &str) {
         let frame = &self.frame[self.frame_count - 1];
 
-        // frame.ic can be larger or chunk.code.len() can be bigger, so we use abs()
-        // idk why
-        let instruction = frame.ic.abs_diff(frame.function.chunk.code.len());
+        let instruction = frame.ic - 1;
         // Calls the corresponding line array for the instruction
         let line = &frame.function.chunk.line[instruction];
         eprintln!("[line {}]: {}", line, message);
     }
 
     fn get_op_code(&mut self) -> Option<OpCode> {
-        //let frame = &mut self.frame[self.frame_count - 1];
         if let Some(frame) = self.frame.get_mut(self.frame_count - 1) {
             if frame.ic >= frame.function.chunk.code.len() {
                 return None;
