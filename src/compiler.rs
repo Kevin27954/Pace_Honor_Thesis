@@ -59,8 +59,6 @@ impl Compiler {
             function: FunctionObj::new(),
             function_type: FunctionType::ScriptType,
 
-            // TODO: Come back here later
-            // We might need the vec to have the first index be reserved for the main()
             locals,
             local_count: 1,
             scope_depth: 0,
