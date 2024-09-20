@@ -1,5 +1,7 @@
+use std::{mem, rc::Rc};
+
 use chunk::{Chunk, OpCode};
-use values::{Value, ValueObj};
+use values::{FunctionObj, Value, ValueObj};
 
 use crate::{
     debug::disassemble_chunk,
@@ -27,30 +29,52 @@ enum LocalState {
     Init(usize),
 }
 
+enum FunctionType {
+    FunctionType,
+    ScriptType,
+}
+
 struct Compiler {
+    function: FunctionObj,
+    function_type: FunctionType,
+
     locals: Vec<Local>,
     local_count: usize,
     scope_depth: usize,
 }
 
 impl Compiler {
-    fn new() -> Self {
+    fn new(function_type: FunctionType) -> Self {
+        let first_idx_holder = Local {
+            name: Token {
+                line: 0,
+                lexeme: "".to_string(),
+                token_type: TokenType::None,
+            },
+            depth: LocalState::Init(0),
+        };
+
+        let mut locals: Vec<Local> = Vec::new();
+        locals.push(first_idx_holder);
+
         Compiler {
-            locals: Vec::new(),
-            local_count: 0,
+            function: FunctionObj::new(),
+            function_type,
+
+            locals,
+            local_count: 1,
             scope_depth: 0,
         }
     }
 }
 
-pub struct Parser<'a> {
+pub struct Parser {
     previous: Option<Token>,
     current: Option<Token>,
 
     // Resolves the variables scope
     compiler: Compiler,
 
-    chunk: &'a mut Chunk,
     scanner: Option<Scanner>,
 
     pub has_error: bool,
@@ -58,17 +82,16 @@ pub struct Parser<'a> {
     panic_error: bool,
 }
 
-impl<'a> Parser<'a> {
-    pub fn new(chunk: &'a mut Chunk) -> Self {
+impl Parser {
+    pub fn new() -> Self {
         Parser {
             // Inital state is None, All subsequent values are not null.
             // Current and Peek/Next, makes more sense so far
             previous: None,
             current: None,
 
-            compiler: Compiler::new(),
+            compiler: Compiler::new(FunctionType::ScriptType),
 
-            chunk,
             scanner: None,
 
             has_error: false,
@@ -77,7 +100,7 @@ impl<'a> Parser<'a> {
     }
 
     //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
-    pub fn compile(&mut self, source: String) -> bool {
+    pub fn compile(&mut self, source: String) -> Option<FunctionObj> {
         self.scanner = Some(Scanner::new(source));
 
         self.advance();
@@ -91,14 +114,37 @@ impl<'a> Parser<'a> {
         }
 
         if self.has_error {
-            disassemble_chunk(self.chunk, "Parser Errors".to_string());
+            // From here on out, we will treat the global scope as "main()"
+            if let Some(function_name) = self.compiler.function.name.clone() {
+                disassemble_chunk(self.current_chunk(), function_name);
+            } else {
+                disassemble_chunk(self.current_chunk(), "<script>".to_string());
+            }
         }
 
-        !self.has_error
+        self.emit_opcode(OpCode::OpNone);
+        self.emit_opcode(OpCode::OpReturn);
+
+        // Now inside vm.interpret, we no longer need to .clone(). Saves computation and memory
+        let function_obj = mem::replace(
+            &mut self.compiler.function,
+            FunctionObj {
+                arity: 0,
+                chunk: Chunk::new(),
+                name: Some(String::new()),
+            },
+        );
+
+        match self.has_error {
+            true => None,
+            false => Some(function_obj),
+        }
     }
 
     fn declaration(&mut self) {
-        if self.match_token_type(TokenType::Let) {
+        if self.match_token_type(TokenType::Function) {
+            self.fn_decl();
+        } else if self.match_token_type(TokenType::Let) {
             self.var_decl();
         } else {
             self.statement();
@@ -111,9 +157,24 @@ impl<'a> Parser<'a> {
 
     // ****************************     Delcarations     ***************************
 
+    fn fn_decl(&mut self) {
+        let idx = self.parse_variable();
+        let fn_name = self.previous.clone().unwrap();
+
+        if self.compiler.scope_depth > 0 {
+            self.compiler.locals[self.compiler.local_count - 1].depth =
+                LocalState::Init(self.compiler.scope_depth);
+        }
+
+        self.function(FunctionType::FunctionType, fn_name.lexeme);
+
+        self.define_var(idx);
+    }
+
     fn block(&mut self) {
         let mut curr_token_type = self.grab_curr_token_type().unwrap();
         self.skip_empty_line();
+
         while curr_token_type != TokenType::End && curr_token_type != TokenType::EOF {
             self.declaration();
             self.skip_empty_line();
@@ -121,6 +182,55 @@ impl<'a> Parser<'a> {
         }
 
         self.consume(TokenType::End, "Expected Closing End keyword here");
+    }
+
+    fn function(&mut self, function_type: FunctionType, fn_name: String) {
+        let user_fn_obj = FunctionObj {
+            arity: 0,
+            chunk: Chunk::new(),
+            name: Some(fn_name),
+        };
+
+        let mut func_compiler = Compiler::new(function_type);
+        func_compiler.function = user_fn_obj;
+
+        // Stores the original Compiler, and sets a new compiler to fill.
+        let main_fn_compiler = mem::replace(&mut self.compiler, func_compiler);
+        self.begin_scope();
+
+        self.consume(TokenType::LeftParen, "Expected '(' after function name");
+
+        let curr_token_type = self.grab_curr_token_type().unwrap();
+        if curr_token_type != TokenType::RightParen {
+            loop {
+                self.compiler.function.arity += 1;
+
+                let idx = self.parse_variable();
+                self.define_var(idx);
+
+                if !self.match_token_type(TokenType::Comma) {
+                    break;
+                }
+            }
+        }
+
+        self.consume(TokenType::RightParen, "Expected ')' after parameters");
+        self.consume(TokenType::Do, "Expected 'do' before function body");
+
+        self.block();
+
+        // Why don't we need to end scope?
+        // Because the compiler ends it's own scope once it gets removed from parser.
+
+        self.emit_opcode(OpCode::OpNone);
+        self.emit_opcode(OpCode::OpReturn);
+
+        // Stores the Function Compiler, and sets originl back in place.
+        let user_fn_obj = mem::replace(&mut self.compiler, main_fn_compiler);
+        let user_fn = Value::ValueObj(ValueObj::Function(Rc::new(user_fn_obj.function)));
+
+        let idx = self.add_value(user_fn);
+        self.emit_opcode(OpCode::OpConstant(idx));
     }
 
     fn if_block(&mut self) {
@@ -169,8 +279,12 @@ impl<'a> Parser<'a> {
             self.begin_scope();
             self.block();
             self.end_scope();
+        } else if self.match_token_type(TokenType::Return) {
+            self.return_stmt();
         } else if self.match_token_type(TokenType::While) {
             self.while_stmt();
+        } else if self.match_token_type(TokenType::For) {
+            self.for_stmt();
         } else {
             self.expression_stmt();
         }
@@ -178,15 +292,95 @@ impl<'a> Parser<'a> {
 
     // ****************************     Statements     ***************************
 
+    fn return_stmt(&mut self) {
+        match self.compiler.function_type {
+            FunctionType::ScriptType => match self.previous {
+                Some(ref token) => self.error(token, "Can't have return values at top level"),
+                _ => {}
+            },
+            _ => {}
+        }
+
+        if self.match_token_type(TokenType::NewLine) {
+            self.emit_opcode(OpCode::OpNone);
+            self.emit_opcode(OpCode::OpReturn);
+        } else {
+            self.expression();
+            self.consume(TokenType::NewLine, "Expected New Line after Return Value");
+            self.emit_opcode(OpCode::OpReturn);
+        }
+    }
+
+    fn for_stmt(&mut self) {
+        self.begin_scope();
+
+        if self.match_token_type(TokenType::Comma) {
+        } else if self.match_token_type(TokenType::Let) {
+            let idx = self.parse_variable();
+            if self.match_token_type(TokenType::Equal) {
+                self.expression();
+            } else {
+                self.emit_opcode(OpCode::OpNone);
+            }
+
+            self.consume(TokenType::Comma, "Expected Comma seperator here");
+            self.define_var(idx);
+        } else {
+            self.expression();
+            self.consume(TokenType::Comma, "Expected Comma seperator here");
+        }
+
+        let mut loop_start = self.current_chunk().code.len();
+
+        // 0 should be fine since there shouldn't be a possibliity that emit_jump_code returns a
+        //   number equal to 0
+        let mut jumps = 0;
+        // The Condition
+        if !self.match_token_type(TokenType::Comma) {
+            self.expression();
+            self.consume(TokenType::Comma, "Expected Comma serperator here");
+
+            jumps = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
+            self.emit_opcode(OpCode::OpPop);
+        }
+
+        // The Increment
+        let curr_token_type = self.grab_curr_token_type().unwrap();
+        if curr_token_type != TokenType::Do {
+            let body_jump = self.emit_jump_code(OpCode::OpJump(255));
+            let increment_start = self.current_chunk().code.len();
+            self.expression();
+            self.emit_opcode(OpCode::OpPop);
+
+            let loop_offset = self.current_chunk().code.len() - loop_start + 1;
+            self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
+
+            loop_start = increment_start;
+            self.patch_jump_code(body_jump);
+        }
+
+        self.statement();
+
+        let loop_offset = self.current_chunk().code.len() - loop_start + 1;
+        self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
+
+        if jumps != 0 {
+            self.patch_jump_code(jumps);
+            self.emit_opcode(OpCode::OpPop);
+        }
+
+        self.end_scope();
+    }
+
     fn while_stmt(&mut self) {
-        let loop_start = self.chunk.code.len();
+        let loop_start = self.current_chunk().code.len();
         self.expression();
 
         let offset = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
         self.emit_opcode(OpCode::OpPop);
 
         self.statement();
-        let loop_offset = self.chunk.code.len() - loop_start + 1;
+        let loop_offset = self.current_chunk().code.len() - loop_start + 1;
         self.emit_opcode(OpCode::OpLoop(loop_offset as u8));
 
         self.patch_jump_code(offset);
@@ -297,6 +491,11 @@ impl<'a> Parser<'a> {
         }
     }
 
+    fn call(&mut self, _can_assign: bool) {
+        let arg_count = self.argument_list();
+        self.emit_opcode(OpCode::OpCall(arg_count));
+    }
+
     fn parse_and(&mut self) {
         let and_jump = self.emit_jump_code(OpCode::OpJumpIfFalse(255));
         self.emit_opcode(OpCode::OpPop);
@@ -352,7 +551,7 @@ impl<'a> Parser<'a> {
         if let Some(ref token) = self.previous {
             let number: f64 = token.lexeme.parse().expect("Not a number");
             let idx = self.add_value(Value::Number(number));
-            self.emit_opcode(OpCode::OpConstant(idx as u8));
+            self.emit_opcode(OpCode::OpConstant(idx));
         }
     }
 
@@ -365,7 +564,7 @@ impl<'a> Parser<'a> {
                 clean_str.to_string(),
             ))));
 
-            self.emit_opcode(OpCode::OpConstant(idx as u8));
+            self.emit_opcode(OpCode::OpConstant(idx));
         }
     }
 
@@ -374,6 +573,32 @@ impl<'a> Parser<'a> {
     }
 
     // ****************************     Helpers     ***************************
+
+    fn argument_list(&mut self) -> u8 {
+        let mut arg_count: u8 = 0;
+
+        let curr_token_type = self.grab_curr_token_type().unwrap();
+        if curr_token_type != TokenType::RightParen {
+            loop {
+                self.expression();
+
+                if arg_count == 255 {
+                    if let Some(ref token) = self.previous {
+                        self.error(token, "Can't have more than 255 arguments");
+                    }
+                }
+
+                arg_count += 1;
+
+                if !self.match_token_type(TokenType::Comma) {
+                    break;
+                }
+            }
+        }
+        self.consume(TokenType::RightParen, "Expected ')' after arguments");
+
+        arg_count
+    }
 
     fn parse_if_blocks(&mut self) {
         self.begin_scope();
@@ -387,14 +612,14 @@ impl<'a> Parser<'a> {
             let op_set_code: OpCode;
 
             let idx = self.resolve_local(token);
-            // Global
             if idx == -1 {
+                // Global
                 let idx = self.make_identifier_constant(token.clone());
-                op_get_code = OpCode::OpGetGlobal(idx as u8);
-                op_set_code = OpCode::OpSetGlobal(idx as u8);
+                op_get_code = OpCode::OpGetGlobal(idx as usize);
+                op_set_code = OpCode::OpSetGlobal(idx as usize);
             } else {
-                op_get_code = OpCode::OpGetLocal(idx as u8);
-                op_set_code = OpCode::OpSetLocal(idx as u8);
+                op_get_code = OpCode::OpGetLocal(idx as usize);
+                op_set_code = OpCode::OpSetLocal(idx as usize);
             }
 
             if can_assign && self.match_token_type(TokenType::Equal) {
@@ -413,14 +638,15 @@ impl<'a> Parser<'a> {
             return;
         }
 
-        self.emit_opcode(OpCode::OpDefineGlobal(idx as u8))
+        self.emit_opcode(OpCode::OpDefineGlobal(idx))
     }
 
-    // TODO Look into a way to return usize without doing clone().unwrap()?
     fn parse_variable(&mut self) -> usize {
         self.consume(TokenType::Identifier, "Expected an Identifier name here");
 
+        // Defines the Local Variable here
         self.declare_var();
+
         if self.compiler.scope_depth > 0 {
             return 0;
         }
@@ -430,7 +656,6 @@ impl<'a> Parser<'a> {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        //let token = self.previous.take().unwrap();
         self.add_value(Value::ValueObj(ValueObj::String(Box::new(token.lexeme))))
     }
 
@@ -452,9 +677,6 @@ impl<'a> Parser<'a> {
                     }
                     _ => {}
                 }
-                //if local.depth != State::Uninit && local.depth < self.compiler.scope_depth {
-                //    return;
-                //}
 
                 if self.is_eq_token_name(token, &local.name) {
                     self.error(
@@ -493,26 +715,26 @@ impl<'a> Parser<'a> {
     }
 
     fn add_value(&mut self, value: Value) -> usize {
-        self.chunk.add_value(value)
+        self.current_chunk().add_value(value)
     }
 
     fn emit_opcode(&mut self, code: OpCode) {
-        if let Some(ref token) = self.previous {
+        if let Some(ref token) = self.previous.clone() {
             // Potential Error in the future here, I'm referencing self.chunk rather than getting
             // chunk, is there a potential error? Self.chunk is current chunk...
-            self.chunk.write_code(code, token.line);
+            self.current_chunk().write_code(code, token.line);
         }
     }
 
     fn emit_jump_code(&mut self, code: OpCode) -> usize {
         self.emit_opcode(code);
-        self.chunk.code.len() - 1
+        self.current_chunk().code.len() - 1
     }
 
     fn patch_jump_code(&mut self, offset: usize) {
-        let jumps = self.chunk.code.len() - offset - 1;
+        let jumps = self.current_chunk().code.len() - offset - 1;
 
-        match self.chunk.code.get_mut(offset) {
+        match self.current_chunk().code.get_mut(offset) {
             Some(code) => match code {
                 OpCode::OpJump(jump) => {
                     *jump = jumps as u8;
@@ -526,10 +748,6 @@ impl<'a> Parser<'a> {
         }
     }
 
-    fn emit_return(&mut self) {
-        self.emit_opcode(OpCode::OpReturn)
-    }
-
     fn begin_scope(&mut self) {
         self.compiler.scope_depth += 1;
     }
@@ -538,9 +756,6 @@ impl<'a> Parser<'a> {
         self.compiler.scope_depth -= 1;
 
         while let Some(local) = self.compiler.locals.last() {
-            //if local.depth <= self.compiler.scope_depth {
-            //    break;
-            //}
             match local.depth {
                 LocalState::Init(depth) if depth <= self.compiler.scope_depth => break,
                 _ => {}
@@ -612,9 +827,13 @@ impl<'a> Parser<'a> {
         self.panic_error = false;
 
         while self.grab_curr_token_type().unwrap() != TokenType::EOF {
-            if self.grab_prev_token_type().unwrap() == TokenType::NewLine {
-                return;
-            }
+            // This might not be wanted since Newline is considered a terminator. But it is also a
+            // token that we can randomly have. This makes it difficult when it comes to
+            // syncrhonization blocks of code, like Structs
+            //
+            //if self.grab_prev_token_type().unwrap() == TokenType::NewLine {
+            //    return;
+            //}
 
             match self.grab_curr_token_type().unwrap() {
                 TokenType::If
@@ -642,6 +861,7 @@ impl<'a> Parser<'a> {
             ParseFn::Variable => self.variable(can_assign),
             ParseFn::And => self.parse_and(),
             ParseFn::Or => self.parse_or(),
+            ParseFn::Call => self.call(can_assign),
         };
     }
 
@@ -659,6 +879,10 @@ impl<'a> Parser<'a> {
         }
 
         left.lexeme == right.lexeme
+    }
+
+    fn current_chunk(&mut self) -> &mut Chunk {
+        &mut self.compiler.function.chunk
     }
 
     fn grab_curr_token_type(&self) -> Option<TokenType> {

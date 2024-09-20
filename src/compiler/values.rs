@@ -1,4 +1,6 @@
-use std::fmt::Display;
+use std::{fmt::Display, rc::Rc};
+
+use super::chunk::Chunk;
 
 /*
 * Enum is 4 byte (Number, Boolean, None - each one is a TAG represented by int (u32) )
@@ -19,16 +21,60 @@ pub enum Value {
     ValueObj(ValueObj),
 }
 
+// For when I want to optimize Global Variables
+
+pub struct GlobalVar {
+    var_name: String,
+    global_idx: u8,
+}
+
 // This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
 pub enum ValueObj {
     String(Box<String>),
+    Function(Rc<FunctionObj>),
+    NativeFn(Box<NativeFn>),
 }
 
-// For when I want to optimize Global Variables
-pub struct GlobalVar {
-    var_name: String,
-    global_idx: u8,
+#[derive(Debug, PartialEq, Clone)]
+pub struct FunctionObj {
+    pub arity: u8,
+    pub chunk: Chunk,
+    pub name: Option<String>,
+}
+
+impl FunctionObj {
+    pub fn new() -> Self {
+        FunctionObj {
+            arity: 0,
+            chunk: Chunk::new(),
+            // Consider doing &str
+            name: None,
+        }
+    }
+}
+
+impl Display for FunctionObj {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if let Some(ref name) = self.name {
+            write!(f, "<fn {}>", name)
+        } else {
+            write!(f, "<script>")
+        }
+    }
+}
+
+#[derive(Debug, PartialEq, Clone)]
+pub struct NativeFn {
+    pub name: String,
+    pub arity: u8,
+    pub native_fn: fn(usize, &[Value]) -> Result<Value, &str>,
+}
+
+impl Display for NativeFn {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<native fn {}>", self.name)
+    }
 }
 
 impl Display for Value {
@@ -48,6 +94,12 @@ impl Display for Value {
             Self::ValueObj(value_obj) => match value_obj {
                 ValueObj::String(string) => {
                     format!("{}", string)
+                }
+                ValueObj::Function(function) => {
+                    format!("{}", function)
+                }
+                ValueObj::NativeFn(function) => {
+                    format!("{}", function)
                 }
             },
         };

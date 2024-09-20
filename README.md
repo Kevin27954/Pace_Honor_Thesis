@@ -8,9 +8,9 @@
     - [x] Global
     - [x] Local
 - [x] If statements 
-- [ ] (IP) Loops
+- [x] Loops
 	- [x] While
-	- [ ] For
+	- [x] For
 - [ ] Functions
     - [ ] clock
     - [ ] print

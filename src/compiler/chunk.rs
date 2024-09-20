@@ -2,10 +2,11 @@ use std::fmt::Display;
 
 use super::values::Value;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OpCode {
     OpReturn,
     OpPop,
+    OpCall(u8),
 
     OpJumpIfFalse(u8),
     OpJump(u8),
@@ -22,12 +23,12 @@ pub enum OpCode {
     OpEqual,
 
     // Primary
-    OpConstant(u8),
-    OpDefineGlobal(u8),
-    OpGetGlobal(u8),
-    OpSetGlobal(u8),
-    OpGetLocal(u8),
-    OpSetLocal(u8),
+    OpConstant(usize),
+    OpDefineGlobal(usize),
+    OpGetGlobal(usize),
+    OpSetGlobal(usize),
+    OpGetLocal(usize),
+    OpSetLocal(usize),
 
     // Unary
     OpNegate,
@@ -46,6 +47,7 @@ impl Display for OpCode {
     }
 }
 
+#[derive(Debug, Clone, PartialEq)]
 pub struct Chunk {
     pub code: Vec<OpCode>,
     pub line: Vec<usize>,
@@ -72,7 +74,7 @@ impl Chunk {
         self.values.len() - 1
     }
 
-    pub fn get_const(&self, idx: u8) -> Value {
+    pub fn get_const(&self, idx: usize) -> Value {
         self.values[idx as usize].clone()
     }
 }
