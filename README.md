@@ -11,12 +11,12 @@
 - [x] Loops
 	- [x] While
 	- [x] For
-- [ ] Functions
-    - [ ] clock
-    - [ ] print
+- [x] Functions
+    - [x] clock
+    - [x] print
 - [ ] Structs - From rust (Objects but smaller)
 - [ ] (IP) Error messages
-- [ ] (IP) Type system
+- [ ] (IP) Type system (Future)
     - [x] String
     - [x] Numbers (Floats (and Int?))
     - [ ] Arrays
