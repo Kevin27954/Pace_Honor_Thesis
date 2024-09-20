@@ -22,6 +22,7 @@ pub enum Value {
 }
 
 // For when I want to optimize Global Variables
+
 pub struct GlobalVar {
     var_name: String,
     global_idx: u8,
@@ -32,6 +33,7 @@ pub struct GlobalVar {
 pub enum ValueObj {
     String(Box<String>),
     Function(Rc<FunctionObj>),
+    NativeFn(Box<NativeFn>),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -62,6 +64,19 @@ impl Display for FunctionObj {
     }
 }
 
+#[derive(Debug, PartialEq, Clone)]
+pub struct NativeFn {
+    pub name: String,
+    pub arity: u8,
+    pub native_fn: fn(usize, &[Value]) -> Result<Value, &str>,
+}
+
+impl Display for NativeFn {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "<native fn {}>", self.name)
+    }
+}
+
 impl Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let mut str = String::new();
@@ -81,6 +96,9 @@ impl Display for Value {
                     format!("{}", string)
                 }
                 ValueObj::Function(function) => {
+                    format!("{}", function)
+                }
+                ValueObj::NativeFn(function) => {
                     format!("{}", function)
                 }
             },

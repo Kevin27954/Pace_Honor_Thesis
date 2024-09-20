@@ -3,14 +3,15 @@ use std::{collections::HashMap, rc::Rc};
 
 use crate::{
     compiler::{
-        chunk::{Chunk, OpCode},
-        values::{FunctionObj, Value, ValueObj},
+        chunk::OpCode,
+        values::{FunctionObj, NativeFn, Value, ValueObj},
         Parser,
     },
     debug::disaseemble_code,
+    native_functions::get_all_natives,
 };
 
-static DEBUG: bool = true;
+static DEBUG: bool = false;
 
 pub enum InterpretError {
     CompileError,
@@ -36,38 +37,31 @@ pub struct VM {
 
 impl VM {
     pub fn new() -> Self {
-        VM {
-            // Here just to have a field. Will be replaced in interpret
+        let mut vm = VM {
             frame: Vec::new(),
             frame_count: 0,
 
             globals: HashMap::new(),
 
             stack: Vec::new(),
-        }
+        };
+
+        vm.insert_natives(get_all_natives());
+
+        vm
     }
 
     pub fn interpret(&mut self, source: String) -> Result<Value, InterpretError> {
-        let mut chunk = Chunk::new();
-
-        let mut parser = Parser::new(&mut chunk);
+        let mut parser = Parser::new();
         let parser_res = parser.compile(source);
 
         if let Some(function_obj) = parser_res {
-            // The only clone needed, whereas in previous it would have needed two.
-            let function = Rc::new(function_obj.clone());
+            let function = Rc::new(function_obj);
 
             self.stack
                 .push(Value::ValueObj(ValueObj::Function(Rc::clone(&function))));
 
-            let frame = CallFrame {
-                function: Rc::clone(&function),
-                ic: 0,
-                slots: 0,
-            };
-
-            self.frame.push(frame);
-            self.frame_count += 1;
+            self.add_call_frame(function, 0);
         } else {
             return Err(InterpretError::CompileError);
         }
@@ -96,53 +90,137 @@ impl VM {
                 let frame = self.get_frame();
                 disaseemble_code(&frame.function.chunk, frame.ic);
             }
-
             match self.get_op_code() {
-                Some(instruction) => match instruction {
-                    OpCode::OpReturn => {}
-                    OpCode::OpPop => {
-                        let value = self.pop_stack();
-                        println!("{}", value);
-                    }
+                Some(instruction) => {
+                    match instruction {
+                        OpCode::OpReturn => {
+                            let value = self.pop_stack();
 
-                    OpCode::OpJumpIfFalse(jump) => {
-                        if self.is_falsey(self.peek_stack(0)) {
+                            match value {
+                                // Doesn't Support closures
+                                Value::ValueObj(ValueObj::Function(_)) => {
+                                    self.runtime_error("Can't return functions");
+                                    return Err(InterpretError::RuntimeError);
+                                }
+                                _ => {}
+                            };
+
+                            if self.frame_count == 1 {
+                                while self.stack.len() > self.get_frame().slots {
+                                    self.pop_stack();
+                                }
+                                if DEBUG {
+                                    println!("Stack:       {:?}", self.stack);
+                                }
+                                return Ok(Value::None);
+                            }
+
+                            while self.stack.len() > self.get_frame().slots {
+                                self.pop_stack();
+                            }
+
+                            self.frame.pop();
+                            self.frame_count -= 1;
+                            self.push_stack(value);
+                        }
+                        OpCode::OpPop => {
+                            self.pop_stack();
+                        }
+                        OpCode::OpCall(args_count) => match self.peek_stack(args_count as usize) {
+                            Value::ValueObj(ValueObj::Function(func)) => {
+                                self.add_call_frame(func, args_count as usize);
+                            }
+                            Value::ValueObj(ValueObj::NativeFn(func)) => {
+                                let start = self.stack.len() - args_count as usize;
+
+                                if &func.name != "print" && func.arity != args_count {
+                                    self.runtime_error(
+                                        format!(
+                                            "{} Expected {} arguments but got {}",
+                                            func.name, func.arity, args_count
+                                        )
+                                        .as_str(),
+                                    );
+
+                                    return Err(InterpretError::RuntimeError);
+                                }
+
+                                let args: Vec<Value> = self.stack.drain(start..).collect();
+
+                                let value_res = (func.native_fn)(args_count as usize, &args);
+
+                                // Pops the function out from the stack
+                                self.pop_stack();
+
+                                match value_res {
+                                    Ok(value) => self.push_stack(value),
+                                    Err(msg) => {
+                                        self.runtime_error(msg);
+                                        return Err(InterpretError::RuntimeError);
+                                    }
+                                }
+                            }
+                            _ => {
+                                self.runtime_error("Can only call Functions");
+                                return Err(InterpretError::RuntimeError);
+                            }
+                        },
+
+                        OpCode::OpJumpIfFalse(jump) => {
+                            if self.is_falsey(self.peek_stack(0)) {
+                                let frame = self.get_mut_frame();
+                                frame.ic += jump as usize;
+                            }
+                        }
+                        OpCode::OpJump(jump) => {
                             let frame = self.get_mut_frame();
                             frame.ic += jump as usize;
                         }
-                    }
-                    OpCode::OpJump(jump) => {
-                        let frame = self.get_mut_frame();
-                        frame.ic += jump as usize;
-                    }
-                    OpCode::OpLoop(loop_start) => {
-                        let frame = self.get_mut_frame();
-                        frame.ic -= loop_start as usize;
-                    }
-
-                    OpCode::OpConstant(idx) => {
-                        let frame = self.get_frame();
-                        self.push_stack(frame.function.chunk.get_const(idx));
-                    }
-                    OpCode::OpDefineGlobal(idx) => {
-                        let frame = self.get_frame();
-                        if let Value::ValueObj(ValueObj::String(var_name)) =
-                            frame.function.chunk.get_const(idx)
-                        {
-                            let value = self.pop_stack();
-                            self.globals.insert(var_name.to_string(), value);
+                        OpCode::OpLoop(loop_start) => {
+                            let frame = self.get_mut_frame();
+                            frame.ic -= loop_start as usize;
                         }
-                    }
-                    OpCode::OpGetGlobal(idx) => {
-                        let frame = self.get_frame();
-                        if let Value::ValueObj(ValueObj::String(var_name)) =
-                            frame.function.chunk.get_const(idx)
-                        {
-                            match self.globals.get(var_name.as_ref()) {
-                                Some(value) => {
-                                    self.push_stack(value.clone());
+
+                        OpCode::OpConstant(idx) => {
+                            let frame = self.get_frame();
+                            self.push_stack(frame.function.chunk.get_const(idx));
+                        }
+                        OpCode::OpDefineGlobal(idx) => {
+                            let frame = self.get_frame();
+                            if let Value::ValueObj(ValueObj::String(var_name)) =
+                                frame.function.chunk.get_const(idx)
+                            {
+                                let value = self.pop_stack();
+                                self.globals.insert(var_name.to_string(), value);
+                            }
+                        }
+                        OpCode::OpGetGlobal(idx) => {
+                            let frame = self.get_frame();
+                            if let Value::ValueObj(ValueObj::String(var_name)) =
+                                frame.function.chunk.get_const(idx)
+                            {
+                                match self.globals.get(var_name.as_ref()) {
+                                    Some(value) => {
+                                        self.push_stack(value.clone());
+                                    }
+                                    None => {
+                                        self.runtime_error(
+                                            format!("Undefined Variable {}", var_name).as_str(),
+                                        );
+                                        return Err(InterpretError::RuntimeError);
+                                    }
                                 }
-                                None => {
+                            }
+                        }
+                        OpCode::OpSetGlobal(idx) => {
+                            let frame = self.get_frame();
+                            if let Value::ValueObj(ValueObj::String(var_name)) =
+                                frame.function.chunk.get_const(idx)
+                            {
+                                if self.globals.contains_key(var_name.as_ref()) {
+                                    self.globals
+                                        .insert(var_name.to_string(), self.peek_stack(0));
+                                } else {
                                     self.runtime_error(
                                         format!("Undefined Variable {}", var_name).as_str(),
                                     );
@@ -150,118 +228,96 @@ impl VM {
                                 }
                             }
                         }
-                    }
-                    OpCode::OpSetGlobal(idx) => {
-                        let frame = self.get_frame();
-                        if let Value::ValueObj(ValueObj::String(var_name)) =
-                            frame.function.chunk.get_const(idx)
-                        {
-                            if self.globals.contains_key(var_name.as_ref()) {
-                                self.globals
-                                    .insert(var_name.to_string(), self.peek_stack(0));
-                            } else {
-                                self.runtime_error(
-                                    format!("Undefined Variable {}", var_name).as_str(),
-                                );
-                                return Err(InterpretError::RuntimeError);
-                            }
+                        OpCode::OpGetLocal(idx) => {
+                            let frame = self.get_frame();
+                            let frame_stack_idx = frame.slots + idx;
+
+                            let value = self.stack[frame_stack_idx].clone();
+                            self.push_stack(value);
                         }
-                    }
-                    OpCode::OpGetLocal(idx) => {
-                        let frame = self.get_frame();
-                        let frame_stack_idx = match self.frame_count {
-                            1 => idx, // This is the main() / global case
-                            _ => idx + frame.ic,
-                        };
+                        OpCode::OpSetLocal(idx) => {
+                            let frame = self.get_frame();
+                            let frame_stack_idx = frame.slots + idx;
 
-                        let value = self.stack[frame_stack_idx].clone();
-                        self.push_stack(value);
-                    }
-                    OpCode::OpSetLocal(idx) => {
-                        let frame = self.get_frame();
-                        let frame_stack_idx = match self.frame_count {
-                            1 => idx, // This is the main() / global case
-                            _ => idx + frame.ic,
-                        };
+                            self.stack[frame_stack_idx] = self.peek_stack(0);
+                        }
 
-                        self.stack[frame_stack_idx] = self.peek_stack(0);
-                    }
+                        OpCode::OpNegate => {
+                            match self.peek_stack(0) {
+                                Value::Number(_) => {}
+                                _ => {
+                                    self.runtime_error(
+                                        "Can't perform - (negate) operator on non number",
+                                    );
+                                    return Err(InterpretError::RuntimeError);
+                                }
+                            };
 
-                    OpCode::OpNegate => {
-                        match self.peek_stack(0) {
-                            Value::Number(_) => {}
+                            match self.pop_stack() {
+                                Value::Number(number) => self.push_stack(Value::Number(-number)),
+                                _ => {}
+                            };
+                        }
+                        OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
+                            (
+                                Value::ValueObj(ValueObj::String(right_string)),
+                                Value::ValueObj(ValueObj::String(mut left_string)),
+                            ) => {
+                                // Modifies in place.
+                                let res = left_string.as_mut();
+                                // Reserves ahead of time.
+                                res.reserve(right_string.len());
+                                res.push_str(right_string.as_str());
+                                self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
+                                // Popped Box<String> are dropped after this loop is done.
+                            }
+                            (Value::Number(right_num), Value::Number(left_num)) => {
+                                self.push_stack(Value::Number(left_num + right_num))
+                            }
                             _ => {
-                                self.runtime_error(
-                                    "Can't perform - (negate) operator on non number",
-                                );
+                                self.runtime_error("Operands must be either 2 String or 2 Number");
                                 return Err(InterpretError::RuntimeError);
                             }
-                        };
-
-                        match self.pop_stack() {
-                            Value::Number(number) => self.push_stack(Value::Number(-number)),
-                            _ => {}
-                        };
-                    }
-                    OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
-                        (
-                            Value::ValueObj(ValueObj::String(right_string)),
-                            Value::ValueObj(ValueObj::String(mut left_string)),
-                        ) => {
-                            // Modifies in place.
-                            let res = left_string.as_mut();
-                            // Reserves ahead of time.
-                            res.reserve(right_string.len());
-                            res.push_str(right_string.as_str());
-                            self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
-                            // Popped Box<String> are dropped after this loop is done.
+                        },
+                        OpCode::OpSubtract | OpCode::OpMultiply | OpCode::OpDivide => {
+                            self.binary_operators(instruction)?
                         }
-                        (Value::Number(right_num), Value::Number(left_num)) => {
-                            self.push_stack(Value::Number(left_num + right_num))
+
+                        OpCode::OpTrue => self.push_stack(Value::Boolean(true)),
+                        OpCode::OpFalse => self.push_stack(Value::Boolean(false)),
+                        OpCode::OpNone => self.push_stack(Value::None),
+                        OpCode::OpNot => {
+                            let value = self.pop_stack();
+                            self.push_stack(Value::Boolean(self.is_falsey(value)));
                         }
-                        _ => {
-                            self.runtime_error("Operands must be either 2 String or 2 Number");
-                            return Err(InterpretError::RuntimeError);
+
+                        OpCode::OpGreater => {
+                            let right = self.pop_stack();
+                            let left = self.pop_stack();
+
+                            self.push_stack(Value::Boolean(self.is_greater(left, right)?))
                         }
-                    },
-                    OpCode::OpSubtract | OpCode::OpMultiply | OpCode::OpDivide => {
-                        self.binary_operators(instruction)?
-                    }
+                        OpCode::OpEqual => {
+                            let right = self.pop_stack();
+                            let left = self.pop_stack();
 
-                    OpCode::OpTrue => self.push_stack(Value::Boolean(true)),
-                    OpCode::OpFalse => self.push_stack(Value::Boolean(false)),
-                    OpCode::OpNone => self.push_stack(Value::None),
-                    OpCode::OpNot => {
-                        let value = self.pop_stack();
-                        self.push_stack(Value::Boolean(self.is_falsey(value)));
-                    }
-
-                    OpCode::OpGreater => {
-                        let right = self.pop_stack();
-                        let left = self.pop_stack();
-
-                        self.push_stack(Value::Boolean(self.is_greater(left, right)?))
-                    }
-                    OpCode::OpEqual => {
-                        let right = self.pop_stack();
-                        let left = self.pop_stack();
-
-                        let boolean = left == right;
-                        self.push_stack(Value::Boolean(boolean))
-                    }
-                    OpCode::OpLess => {
-                        let right = self.pop_stack();
-                        let left = self.pop_stack();
-
-                        let value: bool;
-                        if left == right {
-                            value = false
-                        } else {
-                            value = !self.is_greater(left, right)?;
+                            let boolean = left == right;
+                            self.push_stack(Value::Boolean(boolean))
                         }
-                        self.push_stack(Value::Boolean(value))
+                        OpCode::OpLess => {
+                            let right = self.pop_stack();
+                            let left = self.pop_stack();
+
+                            let value: bool;
+                            if left == right {
+                                value = false
+                            } else {
+                                value = !self.is_greater(left, right)?;
+                            }
+                            self.push_stack(Value::Boolean(value))
+                        }
                     }
-                },
+                }
                 // LOOP STOPPER
                 None => {
                     break;
@@ -292,8 +348,9 @@ impl VM {
                     );
                     return Err(InterpretError::RuntimeError);
                 }
-                ValueObj::Function(_function) => {
-                    unimplemented!("Function not implemented yet");
+                _ => {
+                    self.runtime_error("{} not supported on Functions");
+                    return Err(InterpretError::RuntimeError);
                 }
             },
         };
@@ -317,8 +374,9 @@ impl VM {
                     );
                     return Err(InterpretError::RuntimeError);
                 }
-                ValueObj::Function(_function) => {
-                    unimplemented!("Function not implemented yet");
+                _ => {
+                    self.runtime_error("{} not supported on Functions");
+                    return Err(InterpretError::RuntimeError);
                 }
             },
         };
@@ -363,13 +421,66 @@ impl VM {
         }
     }
 
-    fn runtime_error(&self, message: &str) {
-        let frame = &self.frame[self.frame_count - 1];
+    fn add_call_frame(&mut self, function_obj: Rc<FunctionObj>, arg_count: usize) {
+        let temp_func_obj = function_obj.as_ref();
 
-        let instruction = frame.ic - 1;
-        // Calls the corresponding line array for the instruction
-        let line = &frame.function.chunk.line[instruction];
-        eprintln!("[line {}]: {}", line, message);
+        if arg_count != temp_func_obj.arity as usize {
+            self.runtime_error(
+                format!(
+                    "Expected {} arguments but got {}",
+                    temp_func_obj.arity, arg_count
+                )
+                .as_str(),
+            );
+            return;
+        }
+
+        let callframe = CallFrame {
+            function: function_obj,
+            ic: 0,
+            slots: self.stack.len() - arg_count - 1,
+        };
+
+        self.frame.push(callframe);
+        self.frame_count += 1;
+    }
+
+    fn runtime_error(&self, message: &str) {
+        eprintln!("> Program Start");
+        for i in 0..self.frame_count - 1 {
+            let instruction = self.frame[i].ic - 1;
+            eprint!(
+                "| [line {}] in ",
+                self.frame[i].function.chunk.line[instruction]
+            );
+
+            eprintln!("{}", self.frame[i].function);
+        }
+
+        let instruction = self.frame[self.frame_count - 1].ic - 1;
+        eprintln!("> Error Occured Here:");
+        eprint!(
+            "| [line {}] in ",
+            self.frame[self.frame_count - 1].function.chunk.line[instruction]
+        );
+
+        eprint!("{}: ", self.frame[self.frame_count - 1].function);
+        eprintln!("{}\n", message);
+    }
+
+    fn insert_natives(&mut self, natives: Vec<NativeFn>) {
+        for native_fn in natives {
+            self.define_native_fn(native_fn);
+        }
+    }
+
+    fn define_native_fn(&mut self, native_fn: NativeFn) {
+        let native_fn_name = native_fn.name.clone();
+        let native_fn_val = Value::ValueObj(ValueObj::NativeFn(Box::new(native_fn)));
+        self.push_stack(native_fn_val);
+
+        let native_fn_val = self.pop_stack();
+        self.globals.insert(native_fn_name, native_fn_val);
     }
 
     fn get_op_code(&mut self) -> Option<OpCode> {
@@ -400,9 +511,5 @@ impl VM {
             Some(val) => val,
             None => panic!("Attempted to pop empty stack."),
         }
-    }
-
-    fn reset_stack(&mut self) {
-        self.stack = Vec::new();
     }
 }

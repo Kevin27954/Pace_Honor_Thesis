@@ -38,6 +38,7 @@ pub fn get_precedence(token_type: TokenType) -> u8 {
         }
         TokenType::And => PRECEDENCE.and,
         TokenType::Or => PRECEDENCE.or,
+        TokenType::LeftParen => PRECEDENCE.call,
         _ => PRECEDENCE.none,
     }
 }
@@ -55,6 +56,8 @@ pub enum ParseFn {
     Variable,
     Literal,
     String,
+
+    Call,
 }
 
 pub struct ParseRule {
@@ -68,7 +71,7 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
         // Parenthesis
         TokenType::LeftParen => ParseRule {
             prefix_rule: Some(ParseFn::Grouping),
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Call),
             precedence: get_precedence(token_type),
         },
         TokenType::RightParen => ParseRule {

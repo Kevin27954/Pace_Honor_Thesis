@@ -6,6 +6,7 @@ use super::values::Value;
 pub enum OpCode {
     OpReturn,
     OpPop,
+    OpCall(u8),
 
     OpJumpIfFalse(u8),
     OpJump(u8),

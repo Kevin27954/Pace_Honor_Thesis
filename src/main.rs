@@ -5,6 +5,7 @@ use vm::{InterpretError, VM};
 mod compiler;
 mod debug;
 mod expr_prec;
+mod native_functions;
 mod scanner;
 mod test;
 mod vm;
