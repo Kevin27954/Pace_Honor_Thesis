@@ -31,9 +31,9 @@ pub struct GlobalVar {
 // This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
 pub enum ValueObj {
-    String(Box<String>),
+    String(String),
     Function(Rc<FunctionObj>),
-    NativeFn(Box<NativeFn>),
+    NativeFn(NativeFn),
 }
 
 #[derive(Debug, PartialEq, Clone)]

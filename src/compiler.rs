@@ -45,6 +45,7 @@ struct Compiler {
 
 impl Compiler {
     fn new(function_type: FunctionType) -> Self {
+        // Holds the function
         let first_idx_holder = Local {
             name: Token {
                 line: 0,
@@ -559,10 +560,10 @@ impl Parser {
         if let Some(ref token) = self.previous {
             // TODO consider using str if it doens't need to be mutated
             let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
-            let idx = self.add_value(Value::ValueObj(ValueObj::String(Box::new(
+            let idx = self.add_value(Value::ValueObj(ValueObj::String(
                 // This clones the string when converting &str to String
                 clean_str.to_string(),
-            ))));
+            )));
 
             self.emit_opcode(OpCode::OpConstant(idx));
         }
@@ -656,7 +657,7 @@ impl Parser {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        self.add_value(Value::ValueObj(ValueObj::String(Box::new(token.lexeme))))
+        self.add_value(Value::ValueObj(ValueObj::String(token.lexeme)))
     }
 
     // Only for local varables

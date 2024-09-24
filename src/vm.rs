@@ -1,4 +1,3 @@
-use core::panic;
 use std::{collections::HashMap, rc::Rc};
 
 use crate::{
@@ -199,7 +198,7 @@ impl VM {
                             if let Value::ValueObj(ValueObj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
-                                match self.globals.get(var_name.as_ref()) {
+                                match self.globals.get(&var_name) {
                                     Some(value) => {
                                         self.push_stack(value.clone());
                                     }
@@ -217,7 +216,7 @@ impl VM {
                             if let Value::ValueObj(ValueObj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
-                                if self.globals.contains_key(var_name.as_ref()) {
+                                if self.globals.contains_key(&var_name) {
                                     self.globals
                                         .insert(var_name.to_string(), self.peek_stack(0));
                                 } else {
@@ -264,10 +263,9 @@ impl VM {
                                 Value::ValueObj(ValueObj::String(mut left_string)),
                             ) => {
                                 // Modifies in place.
-                                let res = left_string.as_mut();
                                 // Reserves ahead of time.
-                                res.reserve(right_string.len());
-                                res.push_str(right_string.as_str());
+                                left_string.reserve(right_string.len());
+                                left_string.push_str(right_string.as_str());
                                 self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
                                 // Popped Box<String> are dropped after this loop is done.
                             }
@@ -476,7 +474,7 @@ impl VM {
 
     fn define_native_fn(&mut self, native_fn: NativeFn) {
         let native_fn_name = native_fn.name.clone();
-        let native_fn_val = Value::ValueObj(ValueObj::NativeFn(Box::new(native_fn)));
+        let native_fn_val = Value::ValueObj(ValueObj::NativeFn(native_fn));
         self.push_stack(native_fn_val);
 
         let native_fn_val = self.pop_stack();
