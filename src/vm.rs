@@ -1,4 +1,4 @@
-use std::{collections::HashMap, rc::Rc};
+use std::{borrow::Borrow, cell::RefCell, collections::HashMap, rc::Rc};
 
 use crate::{
     compiler::{
@@ -190,7 +190,9 @@ impl VM {
                                 frame.function.chunk.get_const(idx)
                             {
                                 let value = self.pop_stack();
-                                self.globals.insert(var_name.to_string(), value);
+                                let borrow_var_name: &RefCell<String> = var_name.borrow();
+                                let name: String = borrow_var_name.borrow().to_string();
+                                self.globals.insert(name, value);
                             }
                         }
                         OpCode::OpGetGlobal(idx) => {
@@ -198,13 +200,15 @@ impl VM {
                             if let Value::Obj(Obj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
-                                match self.globals.get(&var_name) {
+                                let borrow_var_name: &RefCell<String> = var_name.borrow();
+                                let name: &String = &borrow_var_name.borrow();
+                                match self.globals.get(name) {
                                     Some(value) => {
                                         self.push_stack(value.clone());
                                     }
                                     None => {
                                         self.runtime_error(
-                                            format!("Undefined Variable {}", var_name).as_str(),
+                                            format!("Undefined Variable {}", name).as_str(),
                                         );
                                         return Err(InterpretError::RuntimeError);
                                     }
@@ -216,12 +220,13 @@ impl VM {
                             if let Value::Obj(Obj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
-                                if self.globals.contains_key(&var_name) {
-                                    self.globals
-                                        .insert(var_name.to_string(), self.peek_stack(0));
+                                let borrow_var_name: &RefCell<String> = var_name.borrow();
+                                let name: &String = &borrow_var_name.borrow();
+                                if self.globals.contains_key(name) {
+                                    self.globals.insert(name.to_string(), self.peek_stack(0));
                                 } else {
                                     self.runtime_error(
-                                        format!("Undefined Variable {}", var_name).as_str(),
+                                        format!("Undefined Variable {}", name).as_str(),
                                     );
                                     return Err(InterpretError::RuntimeError);
                                 }
@@ -258,16 +263,36 @@ impl VM {
                             };
                         }
                         OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
+                            //(
+                            //    Value::Obj(Obj::String(right_string)),
+                            //    Value::Obj(Obj::String(left_string)),
+                            //) => {
+                            //    // Modifies in place.
+                            //    // Reserves ahead of time.
+                            //    let refcell_left_string: &RefCell<String> = left_string.borrow();
+                            //    let mut mut_left_string = refcell_left_string.borrow_mut();
+                            //    let refcell_right_string: &RefCell<String> = right_string.borrow();
+                            //    let right_string = refcell_right_string.borrow();
+                            //
+                            //    mut_left_string.reserve(right_string.borrow().len());
+                            //    mut_left_string.push_str(right_string.as_str());
+                            //    self.push_stack(Value::Obj(Obj::String(left_string.clone())))
+                            //    // Popped Box<String> are dropped after this loop is done.
+                            //}
+                            //use std::rc::Rc;
+                            //use std::cell::RefCell;
                             (
-                                Value::Obj(Obj::String(right_string)),
-                                Value::Obj(Obj::String(mut left_string)),
+                                Value::Obj(Obj::String(right_rc)),
+                                Value::Obj(Obj::String(left_rc)),
                             ) => {
-                                // Modifies in place.
-                                // Reserves ahead of time.
-                                left_string.reserve(right_string.len());
-                                left_string.push_str(right_string.as_str());
-                                self.push_stack(Value::Obj(Obj::String(left_string)))
-                                // Popped Box<String> are dropped after this loop is done.
+                                let mut left_string = left_rc.borrow_mut();
+
+                                let right_string: &RefCell<String> = right_rc.borrow();
+
+                                left_string.reserve(right_string.borrow().len());
+                                left_string.push_str(&right_string.borrow());
+
+                                self.push_stack(Value::Obj(Obj::String(left_rc.clone())))
                             }
                             (Value::Number(right_num), Value::Number(left_num)) => {
                                 self.push_stack(Value::Number(left_num + right_num))
@@ -341,8 +366,14 @@ impl VM {
             }
             Value::Obj(value_obj) => match value_obj {
                 Obj::String(string) => {
+                    let str: &RefCell<String> = string.borrow();
                     self.runtime_error(
-                        format!("{} not supported on string value: {}", operator, string).as_str(),
+                        format!(
+                            "{} not supported on string value: {}",
+                            operator,
+                            str.borrow()
+                        )
+                        .as_str(),
                     );
                     return Err(InterpretError::RuntimeError);
                 }
@@ -367,8 +398,14 @@ impl VM {
             }
             Value::Obj(value_obj) => match value_obj {
                 Obj::String(string) => {
+                    let str: &RefCell<String> = string.borrow();
                     self.runtime_error(
-                        format!("{} not supported on string value: {}", operator, string).as_str(),
+                        format!(
+                            "{} not supported on string value: {}",
+                            operator,
+                            str.borrow()
+                        )
+                        .as_str(),
                     );
                     return Err(InterpretError::RuntimeError);
                 }

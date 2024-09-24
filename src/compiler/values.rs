@@ -1,4 +1,4 @@
-use std::{fmt::Display, rc::Rc};
+use std::{cell::RefCell, fmt::Display, rc::Rc};
 
 use super::chunk::Chunk;
 
@@ -31,7 +31,7 @@ pub struct GlobalVar {
 // This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
 pub enum Obj {
-    String(String),
+    String(Rc<RefCell<String>>),
     Function(Rc<FunctionObj>),
     NativeFn(NativeFn),
 }
@@ -93,7 +93,7 @@ impl Display for Value {
             }
             Self::Obj(value_obj) => match value_obj {
                 Obj::String(string) => {
-                    format!("{}", string)
+                    format!("{}", string.borrow())
                 }
                 Obj::Function(function) => {
                     format!("{}", function)

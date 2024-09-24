@@ -1,4 +1,4 @@
-use std::{mem, rc::Rc};
+use std::{cell::RefCell, mem, rc::Rc};
 
 use chunk::{Chunk, OpCode};
 use values::{FunctionObj, Obj, Value};
@@ -562,7 +562,7 @@ impl Parser {
             let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
             let idx = self.add_value(Value::Obj(Obj::String(
                 // This clones the string when converting &str to String
-                clean_str.to_string(),
+                Rc::new(RefCell::new(clean_str.to_string())),
             )));
 
             self.emit_opcode(OpCode::OpConstant(idx));
@@ -657,7 +657,7 @@ impl Parser {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        self.add_value(Value::Obj(Obj::String(token.lexeme)))
+        self.add_value(Value::Obj(Obj::String(Rc::new(RefCell::new(token.lexeme)))))
     }
 
     // Only for local varables
