@@ -3,7 +3,7 @@ use std::{collections::HashMap, rc::Rc};
 use crate::{
     compiler::{
         chunk::OpCode,
-        values::{FunctionObj, NativeFn, Value, ValueObj},
+        values::{FunctionObj, NativeFn, Obj, Value},
         Parser,
     },
     debug::disaseemble_code,
@@ -58,7 +58,7 @@ impl VM {
             let function = Rc::new(function_obj);
 
             self.stack
-                .push(Value::ValueObj(ValueObj::Function(Rc::clone(&function))));
+                .push(Value::Obj(Obj::Function(Rc::clone(&function))));
 
             self.add_call_frame(function, 0);
         } else {
@@ -97,7 +97,7 @@ impl VM {
 
                             match value {
                                 // Doesn't Support closures
-                                Value::ValueObj(ValueObj::Function(_)) => {
+                                Value::Obj(Obj::Function(_)) => {
                                     self.runtime_error("Can't return functions");
                                     return Err(InterpretError::RuntimeError);
                                 }
@@ -126,10 +126,10 @@ impl VM {
                             self.pop_stack();
                         }
                         OpCode::OpCall(args_count) => match self.peek_stack(args_count as usize) {
-                            Value::ValueObj(ValueObj::Function(func)) => {
+                            Value::Obj(Obj::Function(func)) => {
                                 self.add_call_frame(func, args_count as usize);
                             }
-                            Value::ValueObj(ValueObj::NativeFn(func)) => {
+                            Value::Obj(Obj::NativeFn(func)) => {
                                 let start = self.stack.len() - args_count as usize;
 
                                 if &func.name != "print" && func.arity != args_count {
@@ -186,7 +186,7 @@ impl VM {
                         }
                         OpCode::OpDefineGlobal(idx) => {
                             let frame = self.get_frame();
-                            if let Value::ValueObj(ValueObj::String(var_name)) =
+                            if let Value::Obj(Obj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
                                 let value = self.pop_stack();
@@ -195,7 +195,7 @@ impl VM {
                         }
                         OpCode::OpGetGlobal(idx) => {
                             let frame = self.get_frame();
-                            if let Value::ValueObj(ValueObj::String(var_name)) =
+                            if let Value::Obj(Obj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
                                 match self.globals.get(&var_name) {
@@ -213,7 +213,7 @@ impl VM {
                         }
                         OpCode::OpSetGlobal(idx) => {
                             let frame = self.get_frame();
-                            if let Value::ValueObj(ValueObj::String(var_name)) =
+                            if let Value::Obj(Obj::String(var_name)) =
                                 frame.function.chunk.get_const(idx)
                             {
                                 if self.globals.contains_key(&var_name) {
@@ -259,14 +259,14 @@ impl VM {
                         }
                         OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
                             (
-                                Value::ValueObj(ValueObj::String(right_string)),
-                                Value::ValueObj(ValueObj::String(mut left_string)),
+                                Value::Obj(Obj::String(right_string)),
+                                Value::Obj(Obj::String(mut left_string)),
                             ) => {
                                 // Modifies in place.
                                 // Reserves ahead of time.
                                 left_string.reserve(right_string.len());
                                 left_string.push_str(right_string.as_str());
-                                self.push_stack(Value::ValueObj(ValueObj::String(left_string)))
+                                self.push_stack(Value::Obj(Obj::String(left_string)))
                                 // Popped Box<String> are dropped after this loop is done.
                             }
                             (Value::Number(right_num), Value::Number(left_num)) => {
@@ -339,8 +339,8 @@ impl VM {
                 self.runtime_error(format!("{} not supported on none value", operator).as_str());
                 return Err(InterpretError::RuntimeError);
             }
-            Value::ValueObj(value_obj) => match value_obj {
-                ValueObj::String(string) => {
+            Value::Obj(value_obj) => match value_obj {
+                Obj::String(string) => {
                     self.runtime_error(
                         format!("{} not supported on string value: {}", operator, string).as_str(),
                     );
@@ -365,8 +365,8 @@ impl VM {
                 self.runtime_error(format!("{} not supported on none value", operator).as_str());
                 return Err(InterpretError::RuntimeError);
             }
-            Value::ValueObj(value_obj) => match value_obj {
-                ValueObj::String(string) => {
+            Value::Obj(value_obj) => match value_obj {
+                Obj::String(string) => {
                     self.runtime_error(
                         format!("{} not supported on string value: {}", operator, string).as_str(),
                     );
@@ -415,7 +415,7 @@ impl VM {
     fn is_falsey(&self, value: Value) -> bool {
         match value {
             Value::None | Value::Boolean(false) => true,
-            Value::Boolean(true) | Value::Number(_) | Value::ValueObj(_) => false,
+            Value::Boolean(true) | Value::Number(_) | Value::Obj(_) => false,
         }
     }
 
@@ -474,7 +474,7 @@ impl VM {
 
     fn define_native_fn(&mut self, native_fn: NativeFn) {
         let native_fn_name = native_fn.name.clone();
-        let native_fn_val = Value::ValueObj(ValueObj::NativeFn(native_fn));
+        let native_fn_val = Value::Obj(Obj::NativeFn(native_fn));
         self.push_stack(native_fn_val);
 
         let native_fn_val = self.pop_stack();

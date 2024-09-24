@@ -1,7 +1,7 @@
 use std::{mem, rc::Rc};
 
 use chunk::{Chunk, OpCode};
-use values::{FunctionObj, Value, ValueObj};
+use values::{FunctionObj, Obj, Value};
 
 use crate::{
     debug::disassemble_chunk,
@@ -228,7 +228,7 @@ impl Parser {
 
         // Stores the Function Compiler, and sets originl back in place.
         let user_fn_obj = mem::replace(&mut self.compiler, main_fn_compiler);
-        let user_fn = Value::ValueObj(ValueObj::Function(Rc::new(user_fn_obj.function)));
+        let user_fn = Value::Obj(Obj::Function(Rc::new(user_fn_obj.function)));
 
         let idx = self.add_value(user_fn);
         self.emit_opcode(OpCode::OpConstant(idx));
@@ -560,7 +560,7 @@ impl Parser {
         if let Some(ref token) = self.previous {
             // TODO consider using str if it doens't need to be mutated
             let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
-            let idx = self.add_value(Value::ValueObj(ValueObj::String(
+            let idx = self.add_value(Value::Obj(Obj::String(
                 // This clones the string when converting &str to String
                 clean_str.to_string(),
             )));
@@ -657,7 +657,7 @@ impl Parser {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        self.add_value(Value::ValueObj(ValueObj::String(token.lexeme)))
+        self.add_value(Value::Obj(Obj::String(token.lexeme)))
     }
 
     // Only for local varables

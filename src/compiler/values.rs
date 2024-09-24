@@ -18,7 +18,7 @@ pub enum Value {
     Boolean(bool),
     None,
     //String(String),
-    ValueObj(ValueObj),
+    Obj(Obj),
 }
 
 // For when I want to optimize Global Variables
@@ -30,7 +30,7 @@ pub struct GlobalVar {
 
 // This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
-pub enum ValueObj {
+pub enum Obj {
     String(String),
     Function(Rc<FunctionObj>),
     NativeFn(NativeFn),
@@ -91,14 +91,14 @@ impl Display for Value {
             Self::None => {
                 format!("none")
             }
-            Self::ValueObj(value_obj) => match value_obj {
-                ValueObj::String(string) => {
+            Self::Obj(value_obj) => match value_obj {
+                Obj::String(string) => {
                     format!("{}", string)
                 }
-                ValueObj::Function(function) => {
+                Obj::Function(function) => {
                     format!("{}", function)
                 }
-                ValueObj::NativeFn(function) => {
+                Obj::NativeFn(function) => {
                     format!("{}", function)
                 }
             },
