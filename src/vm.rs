@@ -265,24 +265,6 @@ impl VM {
                             };
                         }
                         OpCode::OpAdd => match (self.pop_stack(), self.pop_stack()) {
-                            //(
-                            //    Value::Obj(Obj::String(right_string)),
-                            //    Value::Obj(Obj::String(left_string)),
-                            //) => {
-                            //    // Modifies in place.
-                            //    // Reserves ahead of time.
-                            //    let refcell_left_string: &RefCell<String> = left_string.borrow();
-                            //    let mut mut_left_string = refcell_left_string.borrow_mut();
-                            //    let refcell_right_string: &RefCell<String> = right_string.borrow();
-                            //    let right_string = refcell_right_string.borrow();
-                            //
-                            //    mut_left_string.reserve(right_string.borrow().len());
-                            //    mut_left_string.push_str(right_string.as_str());
-                            //    self.push_stack(Value::Obj(Obj::String(left_string.clone())))
-                            //    // Popped Box<String> are dropped after this loop is done.
-                            //}
-                            //use std::rc::Rc;
-                            //use std::cell::RefCell;
                             (
                                 Value::Obj(Obj::String(right_rc)),
                                 Value::Obj(Obj::String(left_rc)),
