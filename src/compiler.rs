@@ -192,12 +192,23 @@ impl Parser {
             name: Some(fn_name),
         };
 
+        if self.compiler.scope_depth >= 1 {
+            println!("There is a function declared in a local scope");
+        }
+
         let mut func_compiler = Compiler::new(function_type);
         func_compiler.function = user_fn_obj;
 
         // Stores the original Compiler, and sets a new compiler to fill.
         let main_fn_compiler = mem::replace(&mut self.compiler, func_compiler);
+
         self.begin_scope();
+
+        if let Some(ref fn_name) = main_fn_compiler.function.name {
+            if fn_name.len() != 0 {
+                println!("There is a function declared in a local scope");
+            }
+        }
 
         self.consume(TokenType::LeftParen, "Expected '(' after function name");
 

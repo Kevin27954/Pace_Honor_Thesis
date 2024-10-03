@@ -55,6 +55,7 @@ impl VM {
         let parser_res = parser.compile(source);
 
         if let Some(function_obj) = parser_res {
+            //println!("{}", function_obj.chunk.code.len());
             let function = Rc::new(function_obj);
 
             self.stack
@@ -89,6 +90,7 @@ impl VM {
                 let frame = self.get_frame();
                 disaseemble_code(&frame.function.chunk, frame.ic);
             }
+
             match self.get_op_code() {
                 Some(instruction) => {
                     match instruction {
