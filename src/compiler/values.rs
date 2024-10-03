@@ -1,4 +1,4 @@
-use std::{fmt::Display, rc::Rc};
+use std::{cell::RefCell, fmt::Display, rc::Rc};
 
 use super::chunk::Chunk;
 
@@ -18,7 +18,7 @@ pub enum Value {
     Boolean(bool),
     None,
     //String(String),
-    ValueObj(ValueObj),
+    Obj(Obj),
 }
 
 // For when I want to optimize Global Variables
@@ -30,10 +30,10 @@ pub struct GlobalVar {
 
 // This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
-pub enum ValueObj {
-    String(Box<String>),
+pub enum Obj {
+    String(Rc<RefCell<String>>),
     Function(Rc<FunctionObj>),
-    NativeFn(Box<NativeFn>),
+    NativeFn(NativeFn),
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -91,14 +91,14 @@ impl Display for Value {
             Self::None => {
                 format!("none")
             }
-            Self::ValueObj(value_obj) => match value_obj {
-                ValueObj::String(string) => {
-                    format!("{}", string)
+            Self::Obj(value_obj) => match value_obj {
+                Obj::String(string) => {
+                    format!("{}", string.borrow())
                 }
-                ValueObj::Function(function) => {
+                Obj::Function(function) => {
                     format!("{}", function)
                 }
-                ValueObj::NativeFn(function) => {
+                Obj::NativeFn(function) => {
                     format!("{}", function)
                 }
             },

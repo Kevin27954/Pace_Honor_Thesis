@@ -1,7 +1,7 @@
-use std::{mem, rc::Rc};
+use std::{cell::RefCell, mem, rc::Rc};
 
 use chunk::{Chunk, OpCode};
-use values::{FunctionObj, Value, ValueObj};
+use values::{FunctionObj, Obj, Value};
 
 use crate::{
     debug::disassemble_chunk,
@@ -45,6 +45,7 @@ struct Compiler {
 
 impl Compiler {
     fn new(function_type: FunctionType) -> Self {
+        // Holds the function
         let first_idx_holder = Local {
             name: Token {
                 line: 0,
@@ -191,12 +192,23 @@ impl Parser {
             name: Some(fn_name),
         };
 
+        if self.compiler.scope_depth >= 1 {
+            println!("There is a function declared in a local scope");
+        }
+
         let mut func_compiler = Compiler::new(function_type);
         func_compiler.function = user_fn_obj;
 
         // Stores the original Compiler, and sets a new compiler to fill.
         let main_fn_compiler = mem::replace(&mut self.compiler, func_compiler);
+
         self.begin_scope();
+
+        if let Some(ref fn_name) = main_fn_compiler.function.name {
+            if fn_name.len() != 0 {
+                println!("There is a function declared in a local scope");
+            }
+        }
 
         self.consume(TokenType::LeftParen, "Expected '(' after function name");
 
@@ -227,7 +239,7 @@ impl Parser {
 
         // Stores the Function Compiler, and sets originl back in place.
         let user_fn_obj = mem::replace(&mut self.compiler, main_fn_compiler);
-        let user_fn = Value::ValueObj(ValueObj::Function(Rc::new(user_fn_obj.function)));
+        let user_fn = Value::Obj(Obj::Function(Rc::new(user_fn_obj.function)));
 
         let idx = self.add_value(user_fn);
         self.emit_opcode(OpCode::OpConstant(idx));
@@ -559,10 +571,10 @@ impl Parser {
         if let Some(ref token) = self.previous {
             // TODO consider using str if it doens't need to be mutated
             let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
-            let idx = self.add_value(Value::ValueObj(ValueObj::String(Box::new(
+            let idx = self.add_value(Value::Obj(Obj::String(
                 // This clones the string when converting &str to String
-                clean_str.to_string(),
-            ))));
+                Rc::new(RefCell::new(clean_str.to_string())),
+            )));
 
             self.emit_opcode(OpCode::OpConstant(idx));
         }
@@ -656,7 +668,7 @@ impl Parser {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        self.add_value(Value::ValueObj(ValueObj::String(Box::new(token.lexeme))))
+        self.add_value(Value::Obj(Obj::String(Rc::new(RefCell::new(token.lexeme)))))
     }
 
     // Only for local varables
