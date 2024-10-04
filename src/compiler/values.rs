@@ -22,7 +22,8 @@ pub enum Value {
 }
 
 // For when I want to optimize Global Variables
-
+// TODO use after done
+#[allow(dead_code)]
 pub struct GlobalVar {
     var_name: String,
     global_idx: u8,

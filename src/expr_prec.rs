@@ -11,7 +11,6 @@ pub struct Precdence {
     pub factor: u8,
     pub unary: u8,
     pub call: u8,
-    pub primary: u8,
 }
 
 pub const PRECEDENCE: Precdence = Precdence {
@@ -25,7 +24,6 @@ pub const PRECEDENCE: Precdence = Precdence {
     factor: 7,
     unary: 8,
     call: 9,
-    primary: 10,
 };
 
 pub fn get_precedence(token_type: TokenType) -> u8 {
