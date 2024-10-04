@@ -100,7 +100,6 @@ impl Parser {
         }
     }
 
-    //pub fn compile(&mut self, source: String, chunk: &Chunk) -> bool {
     pub fn compile(&mut self, source: String) -> Option<FunctionObj> {
         self.scanner = Some(Scanner::new(source));
 

@@ -336,823 +336,819 @@
 <text text-anchor="" x="1090.00" y="24" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="search" onmouseover="searchover()" onmouseout="searchout()" onclick="search_prompt()" style="opacity:0.1;cursor:pointer" >Search</text>
 <text text-anchor="" x="1090.00" y="421" font-size="12" font-family="Verdana" fill="rgb(0,0,0)" id="matched" > </text>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::get_frame::h6eed74fb947ee22d (8,897 samples, 5.10%)</title><rect x="259.2" y="197" width="60.2" height="15.0" fill="rgb(233,0,44)" rx="2" ry="2" />
-<text text-anchor="" x="262.21" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis..</text>
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::pop::ha84bbe015a141d73 (7,536 samples, 3.63%)</title><rect x="718.0" y="181" width="42.8" height="15.0" fill="rgb(229,81,50)" rx="2" ry="2" />
+<text text-anchor="" x="721.02" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Obj$u20$as$u20$core..clone..Clone$GT$::clone::h91404a570782ae0b (975 samples, 0.56%)</title><rect x="178.3" y="165" width="6.6" height="15.0" fill="rgb(243,217,1)" rx="2" ry="2" />
-<text text-anchor="" x="181.29" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::push::h81e0c7be95da9d50 (289 samples, 0.14%)</title><rect x="252.9" y="165" width="1.6" height="15.0" fill="rgb(218,38,15)" rx="2" ry="2" />
+<text text-anchor="" x="255.86" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::compiler::chunk::Chunk::get_const::h3b287c3160c1779d (9,456 samples, 5.42%)</title><rect x="167.4" y="197" width="63.9" height="15.0" fill="rgb(219,67,25)" rx="2" ry="2" />
-<text text-anchor="" x="170.38" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`..</text>
+<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Value$GT$::h69408c76b956c6c2 (424 samples, 0.20%)</title><rect x="657.4" y="181" width="2.4" height="15.0" fill="rgb(233,25,1)" rx="2" ry="2" />
+<text text-anchor="" x="660.37" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::binary_operators::h3c86464ea32c65de (3,743 samples, 2.14%)</title><rect x="233.9" y="197" width="25.3" height="15.0" fill="rgb(224,169,0)" rx="2" ry="2" />
-<text text-anchor="" x="236.90" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`hashbrown::map::equivalent_key::_$u7b$$u7b$closure$u7d$$u7d$::ha94c911a574c7700 (2,545 samples, 1.46%)</title><rect x="1121.6" y="133" width="17.2" height="15.0" fill="rgb(234,42,15)" rx="2" ry="2" />
-<text text-anchor="" x="1124.57" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (801 samples, 0.46%)</title><rect x="201.2" y="165" width="5.5" height="15.0" fill="rgb(226,219,34)" rx="2" ry="2" />
-<text text-anchor="" x="204.25" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::pop::ha84bbe015a141d73 (1,175 samples, 0.67%)</title><rect x="238.8" y="165" width="8.0" height="15.0" fill="rgb(243,125,46)" rx="2" ry="2" />
-<text text-anchor="" x="241.81" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::cmp::min_by::hec9846c765d95b36 (768 samples, 0.44%)</title><rect x="1072.5" y="69" width="5.2" height="15.0" fill="rgb(246,89,14)" rx="2" ry="2" />
-<text text-anchor="" x="1075.51" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::h6920b5eadf9f45e2 (246 samples, 0.14%)</title><rect x="970.0" y="197" width="1.7" height="15.0" fill="rgb(237,119,24)" rx="2" ry="2" />
-<text text-anchor="" x="973.05" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (516 samples, 0.30%)</title><rect x="696.4" y="165" width="3.5" height="15.0" fill="rgb(236,131,9)" rx="2" ry="2" />
-<text text-anchor="" x="699.42" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::push_stack::h2f5009e33ef8bf11 (679 samples, 0.39%)</title><rect x="251.8" y="181" width="4.6" height="15.0" fill="rgb(217,108,12)" rx="2" ry="2" />
-<text text-anchor="" x="254.79" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..clone..Clone$GT$::clone::h2ed088dfab147257 (2,135 samples, 1.22%)</title><rect x="170.4" y="181" width="14.5" height="15.0" fill="rgb(225,1,53)" rx="2" ry="2" />
-<text text-anchor="" x="173.45" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (1,440 samples, 0.83%)</title><rect x="981.7" y="181" width="9.7" height="15.0" fill="rgb(238,75,30)" rx="2" ry="2" />
-<text text-anchor="" x="984.68" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`std::rt::lang_start_internal::hdd117cb81a316264 (54 samples, 0.03%)</title><rect x="1189.6" y="341" width="0.3" height="15.0" fill="rgb(242,51,4)" rx="2" ry="2" />
-<text text-anchor="" x="1192.58" y="351.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::len::h8fa6b764aa5855bb (137 samples, 0.08%)</title><rect x="1002.0" y="197" width="1.0" height="15.0" fill="rgb(249,169,32)" rx="2" ry="2" />
-<text text-anchor="" x="1005.04" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (117 samples, 0.07%)</title><rect x="690.0" y="117" width="0.8" height="15.0" fill="rgb(213,116,0)" rx="2" ry="2" />
-<text text-anchor="" x="692.98" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::h6920b5eadf9f45e2 (7,272 samples, 4.17%)</title><rect x="269.9" y="181" width="49.2" height="15.0" fill="rgb(210,218,53)" rx="2" ry="2" />
-<text text-anchor="" x="272.88" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::cmp::impls::_$LT$impl$u20$core..cmp..PartialEq$u20$for$u20$f64$GT$::eq::h4a4643ba7f12c95c (28 samples, 0.02%)</title><rect x="969.4" y="181" width="0.2" height="15.0" fill="rgb(217,201,38)" rx="2" ry="2" />
-<text text-anchor="" x="972.44" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (364 samples, 0.21%)</title><rect x="1023.9" y="149" width="2.5" height="15.0" fill="rgb(232,218,50)" rx="2" ry="2" />
-<text text-anchor="" x="1026.91" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (2,200 samples, 1.26%)</title><rect x="1174.7" y="213" width="14.9" height="15.0" fill="rgb(209,39,11)" rx="2" ry="2" />
-<text text-anchor="" x="1177.70" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::h814925668f1ffd2f (961 samples, 0.55%)</title><rect x="684.4" y="149" width="6.5" height="15.0" fill="rgb(249,224,29)" rx="2" ry="2" />
-<text text-anchor="" x="687.43" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..clone..Clone$GT$::clone::h2ed088dfab147257 (2,589 samples, 1.48%)</title><rect x="949.7" y="197" width="17.5" height="15.0" fill="rgb(235,65,50)" rx="2" ry="2" />
-<text text-anchor="" x="952.67" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..string..String$u20$as$u20$core..cmp..PartialEq$GT$::eq::h1da8d620b659b6a1 (2,331 samples, 1.34%)</title><rect x="1122.8" y="101" width="15.7" height="15.0" fill="rgb(228,99,38)" rx="2" ry="2" />
-<text text-anchor="" x="1125.76" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::get_unchecked::precondition_check::h1d07109b92f78efb (123 samples, 0.07%)</title><rect x="1082.8" y="53" width="0.9" height="15.0" fill="rgb(217,98,43)" rx="2" ry="2" />
-<text text-anchor="" x="1085.83" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..result..Result$LT$T$C$E$GT$$u20$as$u20$core..ops..try_trait..Try$GT$::branch::h9f796f53edae2e1a (76 samples, 0.04%)</title><rect x="1172.4" y="213" width="0.5" height="15.0" fill="rgb(236,37,32)" rx="2" ry="2" />
-<text text-anchor="" x="1175.43" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (745 samples, 0.43%)</title><rect x="246.8" y="165" width="5.0" height="15.0" fill="rgb(217,48,49)" rx="2" ry="2" />
-<text text-anchor="" x="249.75" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::h367809c056cd2707 (23,113 samples, 13.25%)</title><rect x="471.5" y="181" width="156.2" height="15.0" fill="rgb(235,86,50)" rx="2" ry="2" />
-<text text-anchor="" x="474.45" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`_$LT$alloc..v..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::pop_stack::h384a56b558ba448c (2,313 samples, 1.33%)</title><rect x="236.1" y="181" width="15.7" height="15.0" fill="rgb(221,115,47)" rx="2" ry="2" />
-<text text-anchor="" x="239.15" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..cell..Ref$LT$T$GT$$u20$as$u20$core..ops..deref..Deref$GT$::deref::ha3510be3b5fa35a3 (135 samples, 0.08%)</title><rect x="1171.5" y="213" width="0.9" height="15.0" fill="rgb(216,223,18)" rx="2" ry="2" />
-<text text-anchor="" x="1174.51" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..IndexMut$LT$I$GT$$GT$::index_mut::h030734449c969737 (38 samples, 0.02%)</title><rect x="991.4" y="197" width="0.3" height="15.0" fill="rgb(219,222,54)" rx="2" ry="2" />
-<text text-anchor="" x="994.42" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (350 samples, 0.20%)</title><rect x="10.0" y="213" width="2.4" height="15.0" fill="rgb(207,29,27)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Obj$u20$as$u20$core..clone..Clone$GT$::clone::h91404a570782ae0b (1,222 samples, 0.70%)</title><rect x="682.7" y="165" width="8.2" height="15.0" fill="rgb(208,173,42)" rx="2" ry="2" />
-<text text-anchor="" x="685.67" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$core..cell..BorrowRef$GT$::h7c5a6c3e2ef24ac0 (56 samples, 0.03%)</title><rect x="1022.2" y="181" width="0.4" height="15.0" fill="rgb(243,215,36)" rx="2" ry="2" />
-<text text-anchor="" x="1025.24" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ub_checks::is_nonoverlapping::runtime::h9ad793568b9a0a63 (634 samples, 0.36%)</title><rect x="1088.7" y="37" width="4.3" height="15.0" fill="rgb(247,221,7)" rx="2" ry="2" />
-<text text-anchor="" x="1091.72" y="47.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (1,242 samples, 0.71%)</title><rect x="723.1" y="181" width="8.4" height="15.0" fill="rgb(209,48,53)" rx="2" ry="2" />
-<text text-anchor="" x="726.11" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`hashbrown::raw::neon::Group::match_byte::h88fca404ac28bfda (527 samples, 0.30%)</title><rect x="1138.8" y="149" width="3.5" height="15.0" fill="rgb(221,161,43)" rx="2" ry="2" />
-<text text-anchor="" x="1141.78" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::get_mut::hc50a39f2490744be (2,783 samples, 1.59%)</title><rect x="627.7" y="181" width="18.9" height="15.0" fill="rgb(240,185,33)" rx="2" ry="2" />
-<text text-anchor="" x="630.75" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$T$u20$as$u20$core..borrow..Borrow$LT$T$GT$$GT$::borrow::h7f193511fdc74333 (39 samples, 0.02%)</title><rect x="1138.5" y="117" width="0.3" height="15.0" fill="rgb(251,220,30)" rx="2" ry="2" />
-<text text-anchor="" x="1141.52" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::cmp::impls::_$LT$impl$u20$core..cmp..Ord$u20$for$u20$usize$GT$::cmp::h1776bdcbdc9105b5 (97 samples, 0.06%)</title><rect x="1073.7" y="53" width="0.6" height="15.0" fill="rgb(247,125,48)" rx="2" ry="2" />
-<text text-anchor="" x="1076.66" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (690 samples, 0.40%)</title><rect x="977.0" y="181" width="4.7" height="15.0" fill="rgb(215,180,10)" rx="2" ry="2" />
-<text text-anchor="" x="980.01" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::inc_strong::hab2a07255ea3ce57 (704 samples, 0.40%)</title><rect x="179.9" y="133" width="4.7" height="15.0" fill="rgb(206,74,31)" rx="2" ry="2" />
-<text text-anchor="" x="182.85" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::cell::RefCell$LT$T$GT$::try_borrow::h6a65e3e11b2526d7 (858 samples, 0.49%)</title><rect x="1005.5" y="181" width="5.8" height="15.0" fill="rgb(219,195,7)" rx="2" ry="2" />
-<text text-anchor="" x="1008.52" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (27 samples, 0.02%)</title><rect x="1018.4" y="149" width="0.2" height="15.0" fill="rgb(238,172,51)" rx="2" ry="2" />
-<text text-anchor="" x="1021.41" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$alloc..rc..Rc$LT$Thesis..compiler..values..FunctionObj$GT$$GT$::h0f462f47dd86d509 (285 samples, 0.16%)</title><rect x="1016.7" y="165" width="1.9" height="15.0" fill="rgb(236,140,1)" rx="2" ry="2" />
-<text text-anchor="" x="1019.67" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Obj$GT$::h57a38a9b469b163a (434 samples, 0.25%)</title><rect x="1015.7" y="181" width="2.9" height="15.0" fill="rgb(215,77,2)" rx="2" ry="2" />
-<text text-anchor="" x="1018.66" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hbcfe8e9422c2cc1c (1,525 samples, 0.87%)</title><rect x="286.0" y="165" width="10.3" height="15.0" fill="rgb(239,5,48)" rx="2" ry="2" />
-<text text-anchor="" x="289.01" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (54 samples, 0.03%)</title><rect x="966.5" y="133" width="0.3" height="15.0" fill="rgb(238,8,21)" rx="2" ry="2" />
-<text text-anchor="" x="969.48" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`std::rt::lang_start_internal::hdd117cb81a316264 (174,437 samples, 99.96%)</title><rect x="10.0" y="325" width="1179.6" height="15.0" fill="rgb(219,169,5)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="335.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::rt::lang_start_internal::hdd117cb81a316264</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (44 samples, 0.03%)</title><rect x="1004.6" y="181" width="0.3" height="15.0" fill="rgb(206,39,22)" rx="2" ry="2" />
-<text text-anchor="" x="1007.64" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (1,382 samples, 0.79%)</title><rect x="1083.7" y="53" width="9.3" height="15.0" fill="rgb(245,74,36)" rx="2" ry="2" />
-<text text-anchor="" x="1086.66" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (25 samples, 0.01%)</title><rect x="966.8" y="149" width="0.2" height="15.0" fill="rgb(248,80,16)" rx="2" ry="2" />
-<text text-anchor="" x="969.85" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (32 samples, 0.02%)</title><rect x="1102.7" y="133" width="0.2" height="15.0" fill="rgb(213,91,49)" rx="2" ry="2" />
-<text text-anchor="" x="1105.73" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (138 samples, 0.08%)</title><rect x="237.9" y="165" width="0.9" height="15.0" fill="rgb(253,63,8)" rx="2" ry="2" />
-<text text-anchor="" x="240.87" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (11,223 samples, 6.43%)</title><rect x="551.9" y="165" width="75.8" height="15.0" fill="rgb(223,77,45)" rx="2" ry="2" />
-<text text-anchor="" x="554.85" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`c..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (228 samples, 0.13%)</title><rect x="1095.6" y="149" width="1.5" height="15.0" fill="rgb(231,24,23)" rx="2" ry="2" />
-<text text-anchor="" x="1098.57" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::read_file::h37b5cf9f64ab7647 (174,437 samples, 99.96%)</title><rect x="10.0" y="245" width="1179.6" height="15.0" fill="rgb(249,77,12)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="255.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::read_file::h37b5cf9f64ab7647</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::pop_stack::h384a56b558ba448c (16,869 samples, 9.67%)</title><rect x="708.2" y="197" width="114.1" height="15.0" fill="rgb(218,120,23)" rx="2" ry="2" />
-<text text-anchor="" x="711.19" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis:..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::add_call_frame::h054fcdb80941b4c2 (382 samples, 0.22%)</title><rect x="231.3" y="197" width="2.6" height="15.0" fill="rgb(239,150,37)" rx="2" ry="2" />
-<text text-anchor="" x="234.32" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::pop::h64df6fa6e293bc2a (291 samples, 0.17%)</title><rect x="1003.0" y="197" width="1.9" height="15.0" fill="rgb(247,43,30)" rx="2" ry="2" />
-<text text-anchor="" x="1005.96" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::binary_operators::h3c86464ea32c65de (35 samples, 0.02%)</title><rect x="12.8" y="213" width="0.2" height="15.0" fill="rgb(216,199,51)" rx="2" ry="2" />
-<text text-anchor="" x="15.79" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::len::h8fa6b764aa5855bb (65 samples, 0.04%)</title><rect x="1174.3" y="213" width="0.4" height="15.0" fill="rgb(220,7,52)" rx="2" ry="2" />
-<text text-anchor="" x="1177.25" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::len::h04c59a3506bf2141 (824 samples, 0.47%)</title><rect x="996.5" y="197" width="5.5" height="15.0" fill="rgb(251,109,39)" rx="2" ry="2" />
-<text text-anchor="" x="999.47" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::compiler::chunk::Chunk::get_const::h3b287c3160c1779d (32 samples, 0.02%)</title><rect x="12.4" y="213" width="0.2" height="15.0" fill="rgb(231,177,34)" rx="2" ry="2" />
-<text text-anchor="" x="15.37" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Value$GT$::h69408c76b956c6c2 (1,075 samples, 0.62%)</title><rect x="1011.3" y="197" width="7.3" height="15.0" fill="rgb(242,177,52)" rx="2" ry="2" />
-<text text-anchor="" x="1014.32" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::ha931683c23369d52 (339 samples, 0.19%)</title><rect x="1019.1" y="181" width="2.3" height="15.0" fill="rgb(212,49,23)" rx="2" ry="2" />
-<text text-anchor="" x="1022.06" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hash::sip::u8to64_le::h81a7b16b5c53bb15 (2,263 samples, 1.30%)</title><rect x="1077.7" y="69" width="15.3" height="15.0" fill="rgb(224,145,42)" rx="2" ry="2" />
-<text text-anchor="" x="1080.71" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$std..hash..random..RandomState$u20$as$u20$core..hash..BuildHasher$GT$::build_hasher::h19b2e35a7ea330c4 (669 samples, 0.38%)</title><rect x="1056.0" y="149" width="4.5" height="15.0" fill="rgb(253,15,34)" rx="2" ry="2" />
-<text text-anchor="" x="1058.99" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (22 samples, 0.01%)</title><rect x="1026.4" y="149" width="0.1" height="15.0" fill="rgb(217,90,8)" rx="2" ry="2" />
-<text text-anchor="" x="1029.38" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (3,362 samples, 1.93%)</title><rect x="296.3" y="165" width="22.8" height="15.0" fill="rgb(249,177,21)" rx="2" ry="2" />
-<text text-anchor="" x="299.32" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..hash..sip..Sip13Rounds$u20$as$u20$core..hash..sip..Sip$GT$::c_rounds::hd2ff29a18aaf4a1e (1,070 samples, 0.61%)</title><rect x="1031.5" y="133" width="7.3" height="15.0" fill="rgb(236,126,24)" rx="2" ry="2" />
-<text text-anchor="" x="1034.55" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (170 samples, 0.10%)</title><rect x="230.2" y="181" width="1.1" height="15.0" fill="rgb(239,93,54)" rx="2" ry="2" />
-<text text-anchor="" x="233.17" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::non_null::NonNull$LT$T$GT$::new_unchecked::precondition_check::hd29da0d36f729d62 (42 samples, 0.02%)</title><rect x="1011.0" y="165" width="0.3" height="15.0" fill="rgb(245,111,6)" rx="2" ry="2" />
-<text text-anchor="" x="1014.04" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (483 samples, 0.28%)</title><rect x="1134.1" y="69" width="3.3" height="15.0" fill="rgb(213,47,25)" rx="2" ry="2" />
-<text text-anchor="" x="1137.12" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..alloc..Global$u20$as$u20$core..clone..Clone$GT$::clone::h76883aa0cb2c3172 (20 samples, 0.01%)</title><rect x="964.0" y="165" width="0.1" height="15.0" fill="rgb(230,84,43)" rx="2" ry="2" />
-<text text-anchor="" x="966.97" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (17 samples, 0.01%)</title><rect x="170.3" y="181" width="0.1" height="15.0" fill="rgb(238,185,39)" rx="2" ry="2" />
-<text text-anchor="" x="173.33" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`main (54 samples, 0.03%)</title><rect x="1189.6" y="357" width="0.3" height="15.0" fill="rgb(214,53,9)" rx="2" ry="2" />
-<text text-anchor="" x="1192.58" y="367.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Value$GT$::h69408c76b956c6c2 (360 samples, 0.21%)</title><rect x="671.8" y="181" width="2.4" height="15.0" fill="rgb(212,124,50)" rx="2" ry="2" />
-<text text-anchor="" x="674.80" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ops::function::FnOnce::call_once::hff61657678c79296 (174,437 samples, 99.96%)</title><rect x="10.0" y="277" width="1179.6" height="15.0" fill="rgb(216,173,44)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="287.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`core::ops::function::FnOnce::call_once::hff61657678c79296</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (86 samples, 0.05%)</title><rect x="1170.9" y="213" width="0.6" height="15.0" fill="rgb(213,172,53)" rx="2" ry="2" />
-<text text-anchor="" x="1173.92" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>all (174,500 samples, 100%)</title><rect x="10.0" y="389" width="1180.0" height="15.0" fill="rgb(205,40,41)" rx="2" ry="2" />
-<text text-anchor="" x="13.00" y="399.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (106 samples, 0.06%)</title><rect x="246.0" y="149" width="0.8" height="15.0" fill="rgb(221,77,39)" rx="2" ry="2" />
-<text text-anchor="" x="249.03" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$Thesis..vm..CallFrame$GT$::h5d3fa17209e1d62d (20 samples, 0.01%)</title><rect x="1018.6" y="197" width="0.1" height="15.0" fill="rgb(231,19,46)" rx="2" ry="2" />
-<text text-anchor="" x="1021.59" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::is_falsey::h31b0dd4bf7f1744d (706 samples, 0.40%)</title><rect x="664.5" y="197" width="4.8" height="15.0" fill="rgb(240,229,1)" rx="2" ry="2" />
-<text text-anchor="" x="667.53" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::is_greater::h608b15988f1f44d4 (125 samples, 0.07%)</title><rect x="13.2" y="213" width="0.8" height="15.0" fill="rgb(231,154,32)" rx="2" ry="2" />
-<text text-anchor="" x="16.16" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvCs4lVlQVTSjbn_5cargo4main (54 samples, 0.03%)</title><rect x="1189.6" y="293" width="0.3" height="15.0" fill="rgb(226,9,17)" rx="2" ry="2" />
-<text text-anchor="" x="1192.58" y="303.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (2,914 samples, 1.67%)</title><rect x="971.7" y="197" width="19.7" height="15.0" fill="rgb(227,143,43)" rx="2" ry="2" />
-<text text-anchor="" x="974.71" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::hdac93f221f4a807e (4,079 samples, 2.34%)</title><rect x="1065.7" y="85" width="27.6" height="15.0" fill="rgb(233,139,6)" rx="2" ry="2" />
-<text text-anchor="" x="1068.68" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hbcfe8e9422c2cc1c (47 samples, 0.03%)</title><rect x="319.1" y="181" width="0.3" height="15.0" fill="rgb(211,78,20)" rx="2" ry="2" />
-<text text-anchor="" x="322.06" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..chunk..OpCode$u20$as$u20$core..clone..Clone$GT$::clone::h1ffa36ad2450ef0a (2,442 samples, 1.40%)</title><rect x="933.2" y="197" width="16.5" height="15.0" fill="rgb(236,145,31)" rx="2" ry="2" />
-<text text-anchor="" x="936.15" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::get_inner::h6e05bdcf7bfac404 (17,015 samples, 9.75%)</title><rect x="1027.3" y="181" width="115.0" height="15.0" fill="rgb(220,129,46)" rx="2" ry="2" />
-<text text-anchor="" x="1030.29" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`hashbro..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..cell..BorrowRef$u20$as$u20$core..ops..drop..Drop$GT$::drop::h534c635b33624ff4 (81 samples, 0.05%)</title><rect x="1021.7" y="181" width="0.5" height="15.0" fill="rgb(231,169,27)" rx="2" ry="2" />
-<text text-anchor="" x="1024.70" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (210 samples, 0.12%)</title><rect x="706.8" y="181" width="1.4" height="15.0" fill="rgb(239,72,36)" rx="2" ry="2" />
-<text text-anchor="" x="709.77" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$core..cell..Ref$LT$alloc..string..String$GT$$GT$::h4f4c8e22650f3e01 (173 samples, 0.10%)</title><rect x="1021.5" y="197" width="1.1" height="15.0" fill="rgb(254,30,21)" rx="2" ry="2" />
-<text text-anchor="" x="1024.45" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::interpret::hb4c029291b5ffa8e (174,436 samples, 99.96%)</title><rect x="10.0" y="229" width="1179.6" height="15.0" fill="rgb(248,85,48)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="239.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::vm::VM::interpret::hb4c029291b5ffa8e</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvNtNtCsl72PTIsNFLv_5cargo3ops13cargo_compile10compile_ws (15 samples, 0.01%)</title><rect x="1189.7" y="197" width="0.1" height="15.0" fill="rgb(228,172,47)" rx="2" ry="2" />
-<text text-anchor="" x="1192.73" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (6,934 samples, 3.97%)</title><rect x="775.4" y="181" width="46.9" height="15.0" fill="rgb(245,106,19)" rx="2" ry="2" />
-<text text-anchor="" x="778.37" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >libs..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (764 samples, 0.44%)</title><rect x="770.2" y="165" width="5.2" height="15.0" fill="rgb(206,3,36)" rx="2" ry="2" />
-<text text-anchor="" x="773.20" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::core_arch::arm_shared::neon::vget_lane_u64::h54f170b809a673b9 (72 samples, 0.04%)</title><rect x="1117.2" y="149" width="0.5" height="15.0" fill="rgb(249,138,16)" rx="2" ry="2" />
-<text text-anchor="" x="1120.24" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write_str::h7cfbc8172d2fb31a (4,169 samples, 2.39%)</title><rect x="1065.1" y="101" width="28.2" height="15.0" fill="rgb(252,35,5)" rx="2" ry="2" />
-<text text-anchor="" x="1068.08" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (35 samples, 0.02%)</title><rect x="1093.0" y="69" width="0.2" height="15.0" fill="rgb(251,41,45)" rx="2" ry="2" />
-<text text-anchor="" x="1096.01" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::is_greater::h608b15988f1f44d4 (729 samples, 0.42%)</title><rect x="669.3" y="197" width="4.9" height="15.0" fill="rgb(231,40,14)" rx="2" ry="2" />
-<text text-anchor="" x="672.31" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$Thesis..vm..CallFrame$GT$::h5d3fa17209e1d62d (503 samples, 0.29%)</title><rect x="1023.1" y="181" width="3.4" height="15.0" fill="rgb(240,179,11)" rx="2" ry="2" />
-<text text-anchor="" x="1026.12" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..string..String$u20$as$u20$core..hash..Hash$GT$::hash::h33bfd8baca23d6ac (5,009 samples, 2.87%)</title><rect x="1060.9" y="133" width="33.9" height="15.0" fill="rgb(214,86,27)" rx="2" ry="2" />
-<text text-anchor="" x="1063.93" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::core_arch::arm_shared::neon::generated::vreinterpret_u64_u8::h4fbd35b9738f1ca9 (193 samples, 0.11%)</title><rect x="1115.8" y="149" width="1.3" height="15.0" fill="rgb(218,114,0)" rx="2" ry="2" />
-<text text-anchor="" x="1118.78" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (201 samples, 0.12%)</title><rect x="1017.1" y="149" width="1.3" height="15.0" fill="rgb(252,35,12)" rx="2" ry="2" />
-<text text-anchor="" x="1020.05" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::strong::h03771017ecb87ec4 (15 samples, 0.01%)</title><rect x="1021.4" y="181" width="0.1" height="15.0" fill="rgb(211,156,7)" rx="2" ry="2" />
-<text text-anchor="" x="1024.35" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvNtCs4lVlQVTSjbn_5cargo3cli4main (51 samples, 0.03%)</title><rect x="1189.6" y="277" width="0.3" height="15.0" fill="rgb(219,80,16)" rx="2" ry="2" />
-<text text-anchor="" x="1192.59" y="287.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (345 samples, 0.20%)</title><rect x="254.0" y="165" width="2.4" height="15.0" fill="rgb(228,201,44)" rx="2" ry="2" />
-<text text-anchor="" x="257.05" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (52 samples, 0.03%)</title><rect x="229.8" y="181" width="0.4" height="15.0" fill="rgb(205,81,31)" rx="2" ry="2" />
-<text text-anchor="" x="232.82" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::cmp::impls::_$LT$impl$u20$core..cmp..PartialEq$LT$$RF$B$GT$$u20$for$u20$$RF$A$GT$::eq::ha4eab89bf1517fbe (74 samples, 0.04%)</title><rect x="968.9" y="181" width="0.5" height="15.0" fill="rgb(213,109,45)" rx="2" ry="2" />
-<text text-anchor="" x="971.94" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::haf362de5078a7738 (827 samples, 0.47%)</title><rect x="179.3" y="149" width="5.6" height="15.0" fill="rgb(210,67,37)" rx="2" ry="2" />
-<text text-anchor="" x="182.29" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvNtNtCsl72PTIsNFLv_5cargo3ops9cargo_run3run (17 samples, 0.01%)</title><rect x="1189.7" y="229" width="0.1" height="15.0" fill="rgb(209,178,14)" rx="2" ry="2" />
-<text text-anchor="" x="1192.72" y="239.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::push::h81e0c7be95da9d50 (212 samples, 0.12%)</title><rect x="252.6" y="165" width="1.4" height="15.0" fill="rgb(216,64,30)" rx="2" ry="2" />
-<text text-anchor="" x="255.61" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hb8e481fa37cec46b (47 samples, 0.03%)</title><rect x="646.6" y="181" width="0.3" height="15.0" fill="rgb(238,213,38)" rx="2" ry="2" />
-<text text-anchor="" x="649.56" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$$u5b$A$u5d$$u20$as$u20$core..slice..cmp..SlicePartialEq$LT$B$GT$$GT$::equal::he0d590708b88aadb (167 samples, 0.10%)</title><rect x="1133.0" y="69" width="1.1" height="15.0" fill="rgb(250,127,43)" rx="2" ry="2" />
-<text text-anchor="" x="1135.99" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::_$LT$impl$u20$$u5b$T$u5d$$GT$::get_mut::h67a2d035b380c619 (2,610 samples, 1.50%)</title><rect x="646.9" y="181" width="17.6" height="15.0" fill="rgb(213,44,10)" rx="2" ry="2" />
-<text text-anchor="" x="649.88" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (29 samples, 0.02%)</title><rect x="1023.4" y="165" width="0.2" height="15.0" fill="rgb(240,141,24)" rx="2" ry="2" />
-<text text-anchor="" x="1026.36" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$alloc..rc..Rc$LT$Thesis..compiler..values..FunctionObj$GT$$GT$::h0f462f47dd86d509 (439 samples, 0.25%)</title><rect x="1023.6" y="165" width="2.9" height="15.0" fill="rgb(229,156,13)" rx="2" ry="2" />
-<text text-anchor="" x="1026.56" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::peek_stack::h132aef9dd36c80c9 (42 samples, 0.02%)</title><rect x="14.0" y="213" width="0.3" height="15.0" fill="rgb(239,199,24)" rx="2" ry="2" />
-<text text-anchor="" x="17.01" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::read_unaligned::hff81b92a2bae55f9 (1,878 samples, 1.08%)</title><rect x="1102.9" y="133" width="12.7" height="15.0" fill="rgb(253,177,15)" rx="2" ry="2" />
-<text text-anchor="" x="1105.94" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Q$u20$as$u20$hashbrown..Equivalent$LT$K$GT$$GT$::equivalent::h2c4f803f49496ea2 (2,428 samples, 1.39%)</title><rect x="1122.1" y="117" width="16.4" height="15.0" fill="rgb(217,34,43)" rx="2" ry="2" />
-<text text-anchor="" x="1125.10" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::get_op_code::h66e673a068cd56c8 (48,820 samples, 27.98%)</title><rect x="334.4" y="197" width="330.1" height="15.0" fill="rgb(244,153,45)" rx="2" ry="2" />
-<text text-anchor="" x="337.40" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::vm::VM::get_op_code::h66e673a..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..IndexMut$LT$I$GT$$GT$::index_mut::h030734449c969737 (1,839 samples, 1.05%)</title><rect x="322.0" y="181" width="12.4" height="15.0" fill="rgb(236,205,48)" rx="2" ry="2" />
-<text text-anchor="" x="324.97" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hash::BuildHasher::hash_one::h4b2fa1cb5cbbebc3 (10,040 samples, 5.75%)</title><rect x="1029.2" y="165" width="67.9" height="15.0" fill="rgb(227,137,21)" rx="2" ry="2" />
-<text text-anchor="" x="1032.22" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::core_arch::arm_shared::neon::generated::vceq_u8::h692d2f641e7881cd (20 samples, 0.01%)</title><rect x="1115.6" y="149" width="0.2" height="15.0" fill="rgb(208,46,52)" rx="2" ry="2" />
-<text text-anchor="" x="1118.64" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Value$GT$::h69408c76b956c6c2 (245 samples, 0.14%)</title><rect x="667.6" y="181" width="1.7" height="15.0" fill="rgb(236,9,38)" rx="2" ry="2" />
-<text text-anchor="" x="670.65" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts_mut::precondition_check::h9192c07a86018128 (7,301 samples, 4.18%)</title><rect x="422.1" y="165" width="49.4" height="15.0" fill="rgb(253,101,8)" rx="2" ry="2" />
-<text text-anchor="" x="425.08" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`hashbrown::raw::RawTable$LT$T$C$A$GT$::find::_$u7b$$u7b$closure$u7d$$u7d$::h8e3647b250201c22 (3,114 samples, 1.78%)</title><rect x="1117.7" y="149" width="21.1" height="15.0" fill="rgb(253,32,21)" rx="2" ry="2" />
-<text text-anchor="" x="1120.73" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcmp (30 samples, 0.02%)</title><rect x="1132.8" y="69" width="0.2" height="15.0" fill="rgb(230,201,0)" rx="2" ry="2" />
-<text text-anchor="" x="1135.79" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$std..hash..random..RandomState$u20$as$u20$core..hash..BuildHasher$GT$::build_hasher::h19b2e35a7ea330c4 (16 samples, 0.01%)</title><rect x="1029.1" y="165" width="0.1" height="15.0" fill="rgb(231,139,43)" rx="2" ry="2" />
-<text text-anchor="" x="1032.11" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::push::hfa130cabb4aa78ae (200 samples, 0.11%)</title><rect x="232.6" y="181" width="1.3" height="15.0" fill="rgb(229,104,18)" rx="2" ry="2" />
-<text text-anchor="" x="235.55" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..IndexMut$LT$I$GT$$GT$::index_mut::h49e2541f7e0a6287 (665 samples, 0.38%)</title><rect x="991.7" y="197" width="4.5" height="15.0" fill="rgb(249,14,49)" rx="2" ry="2" />
-<text text-anchor="" x="994.67" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (478 samples, 0.27%)</title><rect x="164.1" y="197" width="3.3" height="15.0" fill="rgb(244,194,11)" rx="2" ry="2" />
-<text text-anchor="" x="167.14" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::inc_strong::h5afb8947985f5c6a (341 samples, 0.20%)</title><rect x="964.5" y="149" width="2.3" height="15.0" fill="rgb(237,147,6)" rx="2" ry="2" />
-<text text-anchor="" x="967.54" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (2,339 samples, 1.34%)</title><rect x="690.9" y="181" width="15.8" height="15.0" fill="rgb(219,196,24)" rx="2" ry="2" />
-<text text-anchor="" x="693.93" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::pop::ha84bbe015a141d73 (6,486 samples, 3.72%)</title><rect x="731.5" y="181" width="43.9" height="15.0" fill="rgb(221,157,51)" rx="2" ry="2" />
-<text text-anchor="" x="734.50" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (227 samples, 0.13%)</title><rect x="1093.3" y="117" width="1.5" height="15.0" fill="rgb(228,35,13)" rx="2" ry="2" />
-<text text-anchor="" x="1096.27" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvNtNtCs4lVlQVTSjbn_5cargo8commands3run4exec (29 samples, 0.02%)</title><rect x="1189.7" y="245" width="0.2" height="15.0" fill="rgb(240,89,45)" rx="2" ry="2" />
-<text text-anchor="" x="1192.72" y="255.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (419 samples, 0.24%)</title><rect x="256.4" y="181" width="2.8" height="15.0" fill="rgb(243,174,22)" rx="2" ry="2" />
-<text text-anchor="" x="259.38" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::get_mut_frame::h5ef64a65fe650805 (2,222 samples, 1.27%)</title><rect x="319.4" y="197" width="15.0" height="15.0" fill="rgb(240,86,18)" rx="2" ry="2" />
-<text text-anchor="" x="322.38" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ub_checks::is_nonoverlapping::runtime::h9ad793568b9a0a63 (835 samples, 0.48%)</title><rect x="1110.0" y="101" width="5.6" height="15.0" fill="rgb(236,78,24)" rx="2" ry="2" />
-<text text-anchor="" x="1113.00" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::peek_stack::h132aef9dd36c80c9 (5,021 samples, 2.88%)</title><rect x="674.2" y="197" width="34.0" height="15.0" fill="rgb(207,216,38)" rx="2" ry="2" />
-<text text-anchor="" x="677.24" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (1,012 samples, 0.58%)</title><rect x="699.9" y="165" width="6.8" height="15.0" fill="rgb(230,53,16)" rx="2" ry="2" />
-<text text-anchor="" x="702.90" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (3,424 samples, 1.96%)</title><rect x="206.7" y="165" width="23.1" height="15.0" fill="rgb(206,83,9)" rx="2" ry="2" />
-<text text-anchor="" x="209.66" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$std..hash..random..DefaultHasher$u20$as$u20$core..hash..Hasher$GT$::finish::h5a16232406b6dfde (3,765 samples, 2.16%)</title><rect x="1030.5" y="149" width="25.5" height="15.0" fill="rgb(233,78,6)" rx="2" ry="2" />
-<text text-anchor="" x="1033.53" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h58bdc809eff03b8d (174,437 samples, 99.96%)</title><rect x="10.0" y="309" width="1179.6" height="15.0" fill="rgb(218,21,32)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="319.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h58bdc809eff03b8d</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..clone..Clone$GT$::clone::h2ed088dfab147257 (1,884 samples, 1.08%)</title><rect x="678.2" y="181" width="12.7" height="15.0" fill="rgb(207,222,9)" rx="2" ry="2" />
-<text text-anchor="" x="681.19" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index_mut::hb01e93d0043bd6fc (103 samples, 0.06%)</title><rect x="993.3" y="181" width="0.7" height="15.0" fill="rgb(253,164,1)" rx="2" ry="2" />
-<text text-anchor="" x="996.30" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::h814925668f1ffd2f (23 samples, 0.01%)</title><rect x="967.0" y="181" width="0.2" height="15.0" fill="rgb(216,185,13)" rx="2" ry="2" />
-<text text-anchor="" x="970.02" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memcmp (162 samples, 0.09%)</title><rect x="1137.4" y="69" width="1.1" height="15.0" fill="rgb(247,35,45)" rx="2" ry="2" />
-<text text-anchor="" x="1140.38" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (6,645 samples, 3.81%)</title><rect x="184.9" y="181" width="44.9" height="15.0" fill="rgb(215,226,42)" rx="2" ry="2" />
-<text text-anchor="" x="187.88" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::add_call_frame::h054fcdb80941b4c2 (30 samples, 0.02%)</title><rect x="12.6" y="213" width="0.2" height="15.0" fill="rgb(215,122,32)" rx="2" ry="2" />
-<text text-anchor="" x="15.59" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..convert..AsRef$LT$T$GT$$GT$::as_ref::h002d407690e45abe (41 samples, 0.02%)</title><rect x="969.6" y="197" width="0.3" height="15.0" fill="rgb(208,13,5)" rx="2" ry="2" />
-<text text-anchor="" x="972.63" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..hash..sip..Sip13Rounds$u20$as$u20$core..hash..sip..Sip$GT$::d_rounds::h8f0b21c5f6f62bee (2,544 samples, 1.46%)</title><rect x="1038.8" y="133" width="17.2" height="15.0" fill="rgb(227,10,6)" rx="2" ry="2" />
-<text text-anchor="" x="1041.78" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (7,436 samples, 4.26%)</title><rect x="882.9" y="181" width="50.3" height="15.0" fill="rgb(218,149,9)" rx="2" ry="2" />
-<text text-anchor="" x="885.87" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >libsy..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index_mut::h934e0ce639715f57 (370 samples, 0.21%)</title><rect x="326.1" y="165" width="2.5" height="15.0" fill="rgb(240,163,29)" rx="2" ry="2" />
-<text text-anchor="" x="329.09" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::core_arch::aarch64::neon::vld1_u8::hc83ea6fc6e5e2ee0 (1,952 samples, 1.12%)</title><rect x="1102.4" y="149" width="13.2" height="15.0" fill="rgb(236,4,6)" rx="2" ry="2" />
-<text text-anchor="" x="1105.44" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hash::sip::Hasher$LT$S$GT$::reset::hd9b1a1dd0d79c254 (113 samples, 0.06%)</title><rect x="1094.8" y="149" width="0.8" height="15.0" fill="rgb(212,69,0)" rx="2" ry="2" />
-<text text-anchor="" x="1097.80" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvMNtCs4lVlQVTSjbn_5cargo3cliNtB2_4Exec4exec (29 samples, 0.02%)</title><rect x="1189.7" y="261" width="0.2" height="15.0" fill="rgb(253,140,27)" rx="2" ry="2" />
-<text text-anchor="" x="1192.72" y="271.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::cell::RefCell$LT$T$GT$::borrow::h3aa1e16580c89fb0 (944 samples, 0.54%)</title><rect x="1004.9" y="197" width="6.4" height="15.0" fill="rgb(212,146,22)" rx="2" ry="2" />
-<text text-anchor="" x="1007.94" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (74 samples, 0.04%)</title><rect x="252.1" y="165" width="0.5" height="15.0" fill="rgb(221,123,31)" rx="2" ry="2" />
-<text text-anchor="" x="255.11" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::push_stack::h2f5009e33ef8bf11 (16,399 samples, 9.40%)</title><rect x="822.3" y="197" width="110.9" height="15.0" fill="rgb(224,107,43)" rx="2" ry="2" />
-<text text-anchor="" x="825.26" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNvNtNtCsl72PTIsNFLv_5cargo3ops13cargo_compile7compile (15 samples, 0.01%)</title><rect x="1189.7" y="213" width="0.1" height="15.0" fill="rgb(213,213,15)" rx="2" ry="2" />
-<text text-anchor="" x="1192.73" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (76 samples, 0.04%)</title><rect x="1030.0" y="149" width="0.5" height="15.0" fill="rgb(237,129,7)" rx="2" ry="2" />
-<text text-anchor="" x="1033.01" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (23 samples, 0.01%)</title><rect x="1016.5" y="165" width="0.2" height="15.0" fill="rgb(234,56,36)" rx="2" ry="2" />
-<text text-anchor="" x="1019.51" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`std::rt::lang_start::hd1cfc539d38f9c4a (174,437 samples, 99.96%)</title><rect x="10.0" y="341" width="1179.6" height="15.0" fill="rgb(243,53,25)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="351.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::rt::lang_start::hd1cfc539d38f9c4a</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..borrow..Borrow$LT$T$GT$$GT$::borrow::he9485c899dffb72f (60 samples, 0.03%)</title><rect x="1170.5" y="213" width="0.4" height="15.0" fill="rgb(208,115,17)" rx="2" ry="2" />
-<text text-anchor="" x="1173.52" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::finish::h0c5183cce5c8b435 (101 samples, 0.06%)</title><rect x="1030.9" y="133" width="0.6" height="15.0" fill="rgb(217,87,45)" rx="2" ry="2" />
-<text text-anchor="" x="1033.87" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hash::impls::_$LT$impl$u20$core..hash..Hash$u20$for$u20$$RF$T$GT$::hash::h0dd40e58155590b4 (5,071 samples, 2.91%)</title><rect x="1060.5" y="149" width="34.3" height="15.0" fill="rgb(225,80,12)" rx="2" ry="2" />
-<text text-anchor="" x="1063.51" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$core..result..Result$LT$T$C$E$GT$$u20$as$u20$core..ops..try_trait..Try$GT$::branch::hf477598ccc1495b0 (194 samples, 0.11%)</title><rect x="1172.9" y="213" width="1.4" height="15.0" fill="rgb(238,84,39)" rx="2" ry="2" />
-<text text-anchor="" x="1175.94" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (1,394 samples, 0.80%)</title><rect x="828.1" y="181" width="9.4" height="15.0" fill="rgb(241,63,39)" rx="2" ry="2" />
-<text text-anchor="" x="831.05" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`main (174,437 samples, 99.96%)</title><rect x="10.0" y="357" width="1179.6" height="15.0" fill="rgb(241,195,13)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="367.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`main</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (57 samples, 0.03%)</title><rect x="235.8" y="181" width="0.3" height="15.0" fill="rgb(249,113,20)" rx="2" ry="2" />
-<text text-anchor="" x="238.76" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`hashbrown::raw::RawTable$LT$T$C$A$GT$::find::h10867a0bcab2f191 (6,690 samples, 3.83%)</title><rect x="1097.1" y="165" width="45.2" height="15.0" fill="rgb(231,177,18)" rx="2" ry="2" />
-<text text-anchor="" x="1100.11" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::ha931683c23369d52 (18 samples, 0.01%)</title><rect x="969.9" y="197" width="0.1" height="15.0" fill="rgb(244,126,25)" rx="2" ry="2" />
-<text text-anchor="" x="972.90" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`std::collections::hash::map::HashMap$LT$K$C$V$C$S$GT$::get::h7ffae9ba6bf2d831 (17,169 samples, 9.84%)</title><rect x="1026.6" y="197" width="116.1" height="15.0" fill="rgb(209,49,38)" rx="2" ry="2" />
-<text text-anchor="" x="1029.55" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::co..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Obj$u20$as$u20$core..clone..Clone$GT$::clone::h91404a570782ae0b (608 samples, 0.35%)</title><rect x="962.9" y="181" width="4.1" height="15.0" fill="rgb(237,57,34)" rx="2" ry="2" />
-<text text-anchor="" x="965.91" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::strong::h03771017ecb87ec4 (40 samples, 0.02%)</title><rect x="184.6" y="133" width="0.3" height="15.0" fill="rgb(237,115,10)" rx="2" ry="2" />
-<text text-anchor="" x="187.61" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`hashbrown::raw::RawTable$LT$T$C$A$GT$::find::h10867a0bcab2f191 (45 samples, 0.03%)</title><rect x="1142.3" y="181" width="0.4" height="15.0" fill="rgb(234,79,3)" rx="2" ry="2" />
-<text text-anchor="" x="1145.35" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..cmp..PartialEq$GT$::eq::h60c760ee4220f706 (363 samples, 0.21%)</title><rect x="967.2" y="197" width="2.4" height="15.0" fill="rgb(240,159,48)" rx="2" ry="2" />
-<text text-anchor="" x="970.17" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts_mut::precondition_check::h9192c07a86018128 (859 samples, 0.49%)</title><rect x="328.6" y="165" width="5.8" height="15.0" fill="rgb(246,126,13)" rx="2" ry="2" />
-<text text-anchor="" x="331.59" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`DYLD-STUB$$memcpy (19 samples, 0.01%)</title><rect x="678.1" y="181" width="0.1" height="15.0" fill="rgb(245,80,46)" rx="2" ry="2" />
-<text text-anchor="" x="681.06" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$alloc..rc..Rc$LT$core..cell..RefCell$LT$alloc..string..String$GT$$GT$$GT$::h47833e1a792e2c0e (403 samples, 0.23%)</title><rect x="1018.7" y="197" width="2.8" height="15.0" fill="rgb(251,205,10)" rx="2" ry="2" />
-<text text-anchor="" x="1021.73" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::vm::VM::run::hd1587a970b27e7a2 (170,957 samples, 97.97%)</title><rect x="14.4" y="213" width="1156.0" height="15.0" fill="rgb(231,64,13)" rx="2" ry="2" />
-<text text-anchor="" x="17.38" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::vm::VM::run::hd1587a970b27e7a2</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ptr::drop_in_place$LT$core..option..Option$LT$Thesis..vm..CallFrame$GT$$GT$::hf4df756dfa55d340 (578 samples, 0.33%)</title><rect x="1022.6" y="197" width="3.9" height="15.0" fill="rgb(215,182,3)" rx="2" ry="2" />
-<text text-anchor="" x="1025.62" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RNCINvNtCs6P7HZtpS3La_3std2rt10lang_startuE0Cs4lVlQVTSjbn_5cargo (54 samples, 0.03%)</title><rect x="1189.6" y="325" width="0.3" height="15.0" fill="rgb(209,62,15)" rx="2" ry="2" />
-<text text-anchor="" x="1192.58" y="335.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$std..hash..random..DefaultHasher$u20$as$u20$core..hash..Hasher$GT$::write_str::ha9fbed22fa50a462 (4,250 samples, 2.44%)</title><rect x="1064.5" y="117" width="28.8" height="15.0" fill="rgb(231,84,27)" rx="2" ry="2" />
-<text text-anchor="" x="1067.53" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (40 samples, 0.02%)</title><rect x="184.3" y="117" width="0.3" height="15.0" fill="rgb(231,184,50)" rx="2" ry="2" />
-<text text-anchor="" x="187.34" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>dyld`start (174,499 samples, 100.00%)</title><rect x="10.0" y="373" width="1180.0" height="15.0" fill="rgb(243,42,30)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="383.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >dyld`start</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::inc_strong::h5afb8947985f5c6a (867 samples, 0.50%)</title><rect x="684.9" y="133" width="5.9" height="15.0" fill="rgb(228,150,0)" rx="2" ry="2" />
-<text text-anchor="" x="687.91" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`std::sys::backtrace::__rust_begin_short_backtrace::h415df87154744c46 (174,437 samples, 99.96%)</title><rect x="10.0" y="293" width="1179.6" height="15.0" fill="rgb(228,158,26)" rx="2" ry="2" />
-<text text-anchor="" x="13.01" y="303.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::sys::backtrace::__rust_begin_short_backtrace::h415df87154744c46</text>
-</g>
-<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`Thesis::main::h687a427dc6403cf8 (174,437 samples, 99.96%)</title><rect x="10.0" y="261" width="1179.6" height="15.0" fill="rgb(217,150,37)" rx="2" ry="2" />
+<title>Thesis`Thesis::main::h687a427dc6403cf8 (207,753 samples, 99.97%)</title><rect x="10.0" y="261" width="1179.6" height="15.0" fill="rgb(221,223,26)" rx="2" ry="2" />
 <text text-anchor="" x="13.01" y="271.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::main::h687a427dc6403cf8</text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (22 samples, 0.01%)</title><rect x="690.8" y="133" width="0.1" height="15.0" fill="rgb(237,179,0)" rx="2" ry="2" />
-<text text-anchor="" x="693.78" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`Thesis::vm::VM::is_greater::h608b15988f1f44d4 (138 samples, 0.07%)</title><rect x="13.0" y="213" width="0.8" height="15.0" fill="rgb(211,61,16)" rx="2" ry="2" />
+<text text-anchor="" x="15.99" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>cargo`_RINvNtNtCs6P7HZtpS3La_3std3sys9backtrace28___rust_begin_short_backtraceFEuuECs4lVlQVTSjbn_5cargo (54 samples, 0.03%)</title><rect x="1189.6" y="309" width="0.3" height="15.0" fill="rgb(248,227,2)" rx="2" ry="2" />
-<text text-anchor="" x="1192.58" y="319.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`Thesis::compiler::chunk::Chunk::get_const::h3b287c3160c1779d (38 samples, 0.02%)</title><rect x="12.1" y="213" width="0.3" height="15.0" fill="rgb(232,139,25)" rx="2" ry="2" />
+<text text-anchor="" x="15.15" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::core_arch::arm_shared::neon::vdup_n_u8::h5440d735d3a6d1b2 (23 samples, 0.01%)</title><rect x="1117.1" y="149" width="0.1" height="15.0" fill="rgb(224,187,29)" rx="2" ry="2" />
-<text text-anchor="" x="1120.08" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`alloc::rc::RcInnerPtr::strong::h03771017ecb87ec4 (48 samples, 0.02%)</title><rect x="181.9" y="133" width="0.3" height="15.0" fill="rgb(217,44,46)" rx="2" ry="2" />
+<text text-anchor="" x="184.90" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (41 samples, 0.02%)</title><rect x="996.2" y="197" width="0.2" height="15.0" fill="rgb(206,110,36)" rx="2" ry="2" />
-<text text-anchor="" x="999.17" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`core::slice::_$LT$impl$u20$$u5b$T$u5d$$GT$::get_mut::h67a2d035b380c619 (2,957 samples, 1.42%)</title><rect x="633.4" y="181" width="16.8" height="15.0" fill="rgb(207,76,28)" rx="2" ry="2" />
+<text text-anchor="" x="636.38" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::slice::raw::from_raw_parts_mut::precondition_check::h9192c07a86018128 (321 samples, 0.18%)</title><rect x="994.0" y="181" width="2.2" height="15.0" fill="rgb(213,171,42)" rx="2" ry="2" />
-<text text-anchor="" x="997.00" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>libsystem_platform.dylib`_platform_memmove (1,012 samples, 0.49%)</title><rect x="246.2" y="165" width="5.7" height="15.0" fill="rgb(222,143,47)" rx="2" ry="2" />
+<text text-anchor="" x="249.18" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hb8e481fa37cec46b (3,589 samples, 2.06%)</title><rect x="527.6" y="165" width="24.3" height="15.0" fill="rgb(209,13,24)" rx="2" ry="2" />
-<text text-anchor="" x="530.58" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
+<title>Thesis`Thesis::vm::VM::run::hd1587a970b27e7a2 (203,828 samples, 98.08%)</title><rect x="14.1" y="213" width="1157.3" height="15.0" fill="rgb(217,122,39)" rx="2" ry="2" />
+<text text-anchor="" x="17.09" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::vm::VM::run::hd1587a970b27e7a2</text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (1,638 samples, 0.94%)</title><rect x="1104.6" y="117" width="11.0" height="15.0" fill="rgb(245,71,46)" rx="2" ry="2" />
-<text text-anchor="" x="1107.57" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`Thesis::read_file::h37b5cf9f64ab7647 (207,753 samples, 99.97%)</title><rect x="10.0" y="245" width="1179.6" height="15.0" fill="rgb(222,30,46)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="255.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::read_file::h37b5cf9f64ab7647</text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>libsystem_platform.dylib`_platform_memmove (4,107 samples, 2.35%)</title><rect x="1142.7" y="197" width="27.7" height="15.0" fill="rgb(212,123,13)" rx="2" ry="2" />
-<text text-anchor="" x="1145.65" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >l..</text>
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (2,762 samples, 1.33%)</title><rect x="678.1" y="181" width="15.7" height="15.0" fill="rgb(206,174,34)" rx="2" ry="2" />
+<text text-anchor="" x="681.07" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::h814925668f1ffd2f (431 samples, 0.25%)</title><rect x="964.1" y="165" width="2.9" height="15.0" fill="rgb(205,7,6)" rx="2" ry="2" />
-<text text-anchor="" x="967.10" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`std::rt::lang_start_internal::hdd117cb81a316264 (207,753 samples, 99.97%)</title><rect x="10.0" y="325" width="1179.6" height="15.0" fill="rgb(230,114,44)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="335.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::rt::lang_start_internal::hdd117cb81a316264</text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::partial_eq::_$LT$impl$u20$core..cmp..PartialEq$LT$alloc..vec..Vec$LT$U$C$A2$GT$$GT$$u20$for$u20$alloc..vec..Vec$LT$T$C$A1$GT$$GT$::eq::h8cb2fa4dec795f78 (2,270 samples, 1.30%)</title><rect x="1123.1" y="85" width="15.4" height="15.0" fill="rgb(254,51,8)" rx="2" ry="2" />
-<text text-anchor="" x="1126.13" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`Thesis::vm::VM::binary_operators::h3c86464ea32c65de (50 samples, 0.02%)</title><rect x="12.6" y="213" width="0.3" height="15.0" fill="rgb(245,68,53)" rx="2" ry="2" />
+<text text-anchor="" x="15.59" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`core::ops::function::FnOnce::call_once::hbc58d55ed17e3f34 (502 samples, 0.29%)</title><rect x="1074.3" y="53" width="3.4" height="15.0" fill="rgb(215,40,5)" rx="2" ry="2" />
-<text text-anchor="" x="1077.31" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+<title>Thesis`std::collections::hash::map::HashMap$LT$K$C$V$C$S$GT$::get::h7ffae9ba6bf2d831 (23,995 samples, 11.55%)</title><rect x="1007.9" y="197" width="136.3" height="15.0" fill="rgb(243,64,7)" rx="2" ry="2" />
+<text text-anchor="" x="1010.93" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::colle..</text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::push::h81e0c7be95da9d50 (6,712 samples, 3.85%)</title><rect x="837.5" y="181" width="45.4" height="15.0" fill="rgb(213,92,23)" rx="2" ry="2" />
-<text text-anchor="" x="840.48" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
+<title>Thesis`_$LT$alloc..alloc..Global$u20$as$u20$core..clone..Clone$GT$::clone::h76883aa0cb2c3172 (22 samples, 0.01%)</title><rect x="670.1" y="149" width="0.1" height="15.0" fill="rgb(245,187,15)" rx="2" ry="2" />
+<text text-anchor="" x="673.10" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 <g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
-<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..deref..DerefMut$GT$::deref_mut::hfb16ec8ca321b510 (11,386 samples, 6.52%)</title><rect x="394.5" y="181" width="77.0" height="15.0" fill="rgb(209,183,47)" rx="2" ry="2" />
-<text text-anchor="" x="397.46" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`_..</text>
+<title>libsystem_platform.dylib`_platform_memmove (4,803 samples, 2.31%)</title><rect x="1144.2" y="197" width="27.2" height="15.0" fill="rgb(220,59,19)" rx="2" ry="2" />
+<text text-anchor="" x="1147.18" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >l..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..alloc..Global$u20$as$u20$core..clone..Clone$GT$::clone::h76883aa0cb2c3172 (21 samples, 0.01%)</title><rect x="175.9" y="149" width="0.1" height="15.0" fill="rgb(214,49,9)" rx="2" ry="2" />
+<text text-anchor="" x="178.86" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::cmp::impls::_$LT$impl$u20$core..cmp..PartialEq$u20$for$u20$f64$GT$::eq::h4a4643ba7f12c95c (28 samples, 0.01%)</title><rect x="948.8" y="181" width="0.1" height="15.0" fill="rgb(250,176,50)" rx="2" ry="2" />
+<text text-anchor="" x="951.78" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..IndexMut$LT$I$GT$$GT$::index_mut::h49e2541f7e0a6287 (665 samples, 0.32%)</title><rect x="971.1" y="197" width="3.8" height="15.0" fill="rgb(252,172,19)" rx="2" ry="2" />
+<text text-anchor="" x="974.09" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::peek_stack::h132aef9dd36c80c9 (42 samples, 0.02%)</title><rect x="13.8" y="213" width="0.2" height="15.0" fill="rgb(252,91,25)" rx="2" ry="2" />
+<text text-anchor="" x="16.78" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (377 samples, 0.18%)</title><rect x="10.0" y="213" width="2.1" height="15.0" fill="rgb(217,228,26)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::core_arch::arm_shared::neon::generated::vceq_u8::h692d2f641e7881cd (28 samples, 0.01%)</title><rect x="1112.7" y="149" width="0.1" height="15.0" fill="rgb(225,64,36)" rx="2" ry="2" />
+<text text-anchor="" x="1115.65" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (280 samples, 0.13%)</title><rect x="997.1" y="149" width="1.6" height="15.0" fill="rgb(250,190,29)" rx="2" ry="2" />
+<text text-anchor="" x="1000.14" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (4,052 samples, 1.95%)</title><rect x="203.3" y="165" width="23.0" height="15.0" fill="rgb(232,27,28)" rx="2" ry="2" />
+<text text-anchor="" x="206.26" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h58bdc809eff03b8d (207,753 samples, 99.97%)</title><rect x="10.0" y="309" width="1179.6" height="15.0" fill="rgb(243,78,43)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="319.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::rt::lang_start::_$u7b$$u7b$closure$u7d$$u7d$::h58bdc809eff03b8d</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::read_unaligned::hff81b92a2bae55f9 (2,598 samples, 1.25%)</title><rect x="1097.9" y="133" width="14.8" height="15.0" fill="rgb(221,45,44)" rx="2" ry="2" />
+<text text-anchor="" x="1100.90" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts_mut::precondition_check::h9192c07a86018128 (321 samples, 0.15%)</title><rect x="973.0" y="181" width="1.9" height="15.0" fill="rgb(209,125,1)" rx="2" ry="2" />
+<text text-anchor="" x="976.05" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::inc_strong::h5afb8947985f5c6a (465 samples, 0.22%)</title><rect x="943.8" y="149" width="2.7" height="15.0" fill="rgb(225,72,52)" rx="2" ry="2" />
+<text text-anchor="" x="946.81" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`hashbrown::map::equivalent_key::_$u7b$$u7b$closure$u7d$$u7d$::ha94c911a574c7700 (3,513 samples, 1.69%)</title><rect x="1119.8" y="133" width="20.0" height="15.0" fill="rgb(240,70,43)" rx="2" ry="2" />
+<text text-anchor="" x="1122.81" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (186 samples, 0.09%)</title><rect x="235.8" y="165" width="1.1" height="15.0" fill="rgb(206,58,43)" rx="2" ry="2" />
+<text text-anchor="" x="238.82" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..clone..Clone$GT$::clone::h2ed088dfab147257 (3,134 samples, 1.51%)</title><rect x="929.1" y="197" width="17.8" height="15.0" fill="rgb(222,227,0)" rx="2" ry="2" />
+<text text-anchor="" x="932.09" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (613 samples, 0.29%)</title><rect x="683.6" y="165" width="3.4" height="15.0" fill="rgb(223,3,24)" rx="2" ry="2" />
+<text text-anchor="" x="686.56" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..deref..DerefMut$GT$::deref_mut::hfb16ec8ca321b510 (12,929 samples, 6.22%)</title><rect x="391.3" y="181" width="73.4" height="15.0" fill="rgb(244,2,22)" rx="2" ry="2" />
+<text text-anchor="" x="394.32" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`_..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Value$GT$::h69408c76b956c6c2 (1,349 samples, 0.65%)</title><rect x="991.3" y="197" width="7.6" height="15.0" fill="rgb(227,121,31)" rx="2" ry="2" />
+<text text-anchor="" x="994.28" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::push_stack::h2f5009e33ef8bf11 (945 samples, 0.45%)</title><rect x="251.9" y="181" width="5.4" height="15.0" fill="rgb(212,225,29)" rx="2" ry="2" />
+<text text-anchor="" x="254.93" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (1,606 samples, 0.77%)</title><rect x="812.2" y="181" width="9.2" height="15.0" fill="rgb(220,3,24)" rx="2" ry="2" />
+<text text-anchor="" x="815.24" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$Thesis..vm..CallFrame$GT$::h5d3fa17209e1d62d (34 samples, 0.02%)</title><rect x="998.9" y="197" width="0.2" height="15.0" fill="rgb(222,141,37)" rx="2" ry="2" />
+<text text-anchor="" x="1001.94" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (317 samples, 0.15%)</title><rect x="1089.3" y="149" width="1.8" height="15.0" fill="rgb(249,150,54)" rx="2" ry="2" />
+<text text-anchor="" x="1092.30" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::ha931683c23369d52 (21 samples, 0.01%)</title><rect x="949.3" y="197" width="0.1" height="15.0" fill="rgb(220,137,9)" rx="2" ry="2" />
+<text text-anchor="" x="952.27" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::core_arch::arm_shared::neon::vget_lane_u64::h54f170b809a673b9 (104 samples, 0.05%)</title><rect x="1114.5" y="149" width="0.6" height="15.0" fill="rgb(216,99,12)" rx="2" ry="2" />
+<text text-anchor="" x="1117.49" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..hash..sip..Sip13Rounds$u20$as$u20$core..hash..sip..Sip$GT$::c_rounds::hd2ff29a18aaf4a1e (1,495 samples, 0.72%)</title><rect x="1013.8" y="133" width="8.5" height="15.0" fill="rgb(249,62,37)" rx="2" ry="2" />
+<text text-anchor="" x="1016.79" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::push_stack::h2f5009e33ef8bf11 (19,134 samples, 9.21%)</title><rect x="806.6" y="197" width="108.6" height="15.0" fill="rgb(207,78,9)" rx="2" ry="2" />
+<text text-anchor="" x="809.57" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>dyld`start (207,815 samples, 100.00%)</title><rect x="10.0" y="373" width="1180.0" height="15.0" fill="rgb(229,86,1)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="383.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >dyld`start</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (295 samples, 0.14%)</title><rect x="226.6" y="181" width="1.7" height="15.0" fill="rgb(223,141,32)" rx="2" ry="2" />
+<text text-anchor="" x="229.58" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (28 samples, 0.01%)</title><rect x="167.0" y="181" width="0.1" height="15.0" fill="rgb(245,79,18)" rx="2" ry="2" />
+<text text-anchor="" x="169.97" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`hashbrown::raw::RawTable$LT$T$C$A$GT$::find::_$u7b$$u7b$closure$u7d$$u7d$::h8e3647b250201c22 (4,347 samples, 2.09%)</title><rect x="1115.1" y="149" width="24.7" height="15.0" fill="rgb(253,28,14)" rx="2" ry="2" />
+<text text-anchor="" x="1118.08" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (61 samples, 0.03%)</title><rect x="946.1" y="133" width="0.4" height="15.0" fill="rgb(241,185,4)" rx="2" ry="2" />
+<text text-anchor="" x="949.11" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::pop::h64df6fa6e293bc2a (420 samples, 0.20%)</title><rect x="981.4" y="197" width="2.4" height="15.0" fill="rgb(236,43,50)" rx="2" ry="2" />
+<text text-anchor="" x="984.42" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hbcfe8e9422c2cc1c (1,816 samples, 0.87%)</title><rect x="286.9" y="165" width="10.3" height="15.0" fill="rgb(247,198,28)" rx="2" ry="2" />
+<text text-anchor="" x="289.93" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (2,420 samples, 1.16%)</title><rect x="1175.9" y="213" width="13.7" height="15.0" fill="rgb(216,49,34)" rx="2" ry="2" />
+<text text-anchor="" x="1178.90" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (46 samples, 0.02%)</title><rect x="181.6" y="117" width="0.3" height="15.0" fill="rgb(246,20,45)" rx="2" ry="2" />
+<text text-anchor="" x="184.64" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::cmp::min_by::hec9846c765d95b36 (1,071 samples, 0.52%)</title><rect x="1062.0" y="69" width="6.1" height="15.0" fill="rgb(227,14,48)" rx="2" ry="2" />
+<text text-anchor="" x="1064.99" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (554 samples, 0.27%)</title><rect x="161.0" y="197" width="3.1" height="15.0" fill="rgb(222,2,28)" rx="2" ry="2" />
+<text text-anchor="" x="164.00" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::len::h04c59a3506bf2141 (937 samples, 0.45%)</title><rect x="975.2" y="197" width="5.3" height="15.0" fill="rgb(207,45,0)" rx="2" ry="2" />
+<text text-anchor="" x="978.18" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (570 samples, 0.27%)</title><rect x="257.3" y="181" width="3.2" height="15.0" fill="rgb(223,207,4)" rx="2" ry="2" />
+<text text-anchor="" x="260.29" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (166 samples, 0.08%)</title><rect x="676.9" y="117" width="1.0" height="15.0" fill="rgb(216,144,38)" rx="2" ry="2" />
+<text text-anchor="" x="679.92" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (37 samples, 0.02%)</title><rect x="1004.3" y="165" width="0.2" height="15.0" fill="rgb(227,101,43)" rx="2" ry="2" />
+<text text-anchor="" x="1007.26" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (7,765 samples, 3.74%)</title><rect x="182.2" y="181" width="44.1" height="15.0" fill="rgb(212,117,28)" rx="2" ry="2" />
+<text text-anchor="" x="185.18" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..alloc..Global$u20$as$u20$core..clone..Clone$GT$::clone::h76883aa0cb2c3172 (27 samples, 0.01%)</title><rect x="943.1" y="165" width="0.1" height="15.0" fill="rgb(229,194,5)" rx="2" ry="2" />
+<text text-anchor="" x="946.07" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..cell..Ref$LT$T$GT$$u20$as$u20$core..ops..deref..Deref$GT$::deref::ha3510be3b5fa35a3 (185 samples, 0.09%)</title><rect x="1172.5" y="213" width="1.1" height="15.0" fill="rgb(239,159,24)" rx="2" ry="2" />
+<text text-anchor="" x="1175.55" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::cmp::impls::_$LT$impl$u20$core..cmp..Ord$u20$for$u20$usize$GT$::cmp::h1776bdcbdc9105b5 (131 samples, 0.06%)</title><rect x="1063.4" y="53" width="0.7" height="15.0" fill="rgb(233,167,43)" rx="2" ry="2" />
+<text text-anchor="" x="1066.38" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (12,907 samples, 6.21%)</title><rect x="541.6" y="165" width="73.3" height="15.0" fill="rgb(224,130,9)" rx="2" ry="2" />
+<text text-anchor="" x="544.59" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`c..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`_RINvNtNtCs6P7HZtpS3La_3std3sys9backtrace28___rust_begin_short_backtraceFEuuECs4lVlQVTSjbn_5cargo (54 samples, 0.03%)</title><rect x="1189.6" y="309" width="0.4" height="15.0" fill="rgb(235,162,7)" rx="2" ry="2" />
+<text text-anchor="" x="1192.65" y="319.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$std..hash..random..RandomState$u20$as$u20$core..hash..BuildHasher$GT$::build_hasher::h19b2e35a7ea330c4 (942 samples, 0.45%)</title><rect x="1042.5" y="149" width="5.4" height="15.0" fill="rgb(253,199,47)" rx="2" ry="2" />
+<text text-anchor="" x="1045.51" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::get_unchecked::precondition_check::h1d07109b92f78efb (166 samples, 0.08%)</title><rect x="1074.1" y="53" width="1.0" height="15.0" fill="rgb(227,42,44)" rx="2" ry="2" />
+<text text-anchor="" x="1077.13" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`hashbrown::raw::neon::Group::match_byte::h88fca404ac28bfda (720 samples, 0.35%)</title><rect x="1139.8" y="149" width="4.0" height="15.0" fill="rgb(229,227,29)" rx="2" ry="2" />
+<text text-anchor="" x="1142.76" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (1,748 samples, 0.84%)</title><rect x="961.0" y="181" width="9.9" height="15.0" fill="rgb(228,122,24)" rx="2" ry="2" />
+<text text-anchor="" x="963.95" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..IndexMut$LT$I$GT$$GT$::index_mut::h030734449c969737 (38 samples, 0.02%)</title><rect x="970.9" y="197" width="0.2" height="15.0" fill="rgb(240,175,30)" rx="2" ry="2" />
+<text text-anchor="" x="973.88" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::get_mut_frame::h5ef64a65fe650805 (2,340 samples, 1.13%)</title><rect x="320.3" y="197" width="13.3" height="15.0" fill="rgb(246,141,42)" rx="2" ry="2" />
+<text text-anchor="" x="323.33" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hb8e481fa37cec46b (54 samples, 0.03%)</title><rect x="633.1" y="181" width="0.3" height="15.0" fill="rgb(220,138,41)" rx="2" ry="2" />
+<text text-anchor="" x="636.07" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::core_arch::aarch64::neon::vld1_u8::hc83ea6fc6e5e2ee0 (2,694 samples, 1.30%)</title><rect x="1097.4" y="149" width="15.3" height="15.0" fill="rgb(210,130,6)" rx="2" ry="2" />
+<text text-anchor="" x="1100.36" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Obj$GT$::h57a38a9b469b163a (612 samples, 0.29%)</title><rect x="995.5" y="181" width="3.4" height="15.0" fill="rgb(224,106,43)" rx="2" ry="2" />
+<text text-anchor="" x="998.47" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::pop_stack::h384a56b558ba448c (19,563 samples, 9.41%)</title><rect x="695.5" y="197" width="111.1" height="15.0" fill="rgb(247,50,9)" rx="2" ry="2" />
+<text text-anchor="" x="698.49" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::binary_operators::h3c86464ea32c65de (5,135 samples, 2.47%)</title><rect x="231.4" y="197" width="29.1" height="15.0" fill="rgb(205,166,53)" rx="2" ry="2" />
+<text text-anchor="" x="234.37" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`_RNvNtCs4lVlQVTSjbn_5cargo3cli4main (51 samples, 0.02%)</title><rect x="1189.7" y="277" width="0.2" height="15.0" fill="rgb(232,15,16)" rx="2" ry="2" />
+<text text-anchor="" x="1192.66" y="287.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..clone..Clone$GT$::clone::h2ed088dfab147257 (2,650 samples, 1.28%)</title><rect x="167.1" y="181" width="15.1" height="15.0" fill="rgb(253,183,36)" rx="2" ry="2" />
+<text text-anchor="" x="170.13" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$Thesis..compiler..values..Value$GT$::h69408c76b956c6c2 (305 samples, 0.15%)</title><rect x="653.2" y="181" width="1.8" height="15.0" fill="rgb(210,79,12)" rx="2" ry="2" />
+<text text-anchor="" x="656.23" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (75 samples, 0.04%)</title><rect x="233.4" y="181" width="0.4" height="15.0" fill="rgb(250,173,53)" rx="2" ry="2" />
+<text text-anchor="" x="236.42" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`std::rt::lang_start_internal::hdd117cb81a316264 (54 samples, 0.03%)</title><rect x="1189.6" y="341" width="0.4" height="15.0" fill="rgb(245,68,26)" rx="2" ry="2" />
+<text text-anchor="" x="1192.65" y="351.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hash::sip::u8to64_le::h81a7b16b5c53bb15 (3,184 samples, 1.53%)</title><rect x="1068.1" y="69" width="18.1" height="15.0" fill="rgb(225,57,53)" rx="2" ry="2" />
+<text text-anchor="" x="1071.07" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..cmp..PartialEq$GT$::eq::h60c760ee4220f706 (363 samples, 0.17%)</title><rect x="946.9" y="197" width="2.0" height="15.0" fill="rgb(250,176,15)" rx="2" ry="2" />
+<text text-anchor="" x="949.88" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts_mut::precondition_check::h9192c07a86018128 (8,258 samples, 3.97%)</title><rect x="417.8" y="165" width="46.9" height="15.0" fill="rgb(254,34,4)" rx="2" ry="2" />
+<text text-anchor="" x="420.84" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`hashbrown::raw::RawTable$LT$T$C$A$GT$::find::h10867a0bcab2f191 (9,290 samples, 4.47%)</title><rect x="1091.1" y="165" width="52.7" height="15.0" fill="rgb(206,198,7)" rx="2" ry="2" />
+<text text-anchor="" x="1094.10" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesi..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Obj$u20$as$u20$core..clone..Clone$GT$::clone::h91404a570782ae0b (1,719 samples, 0.83%)</title><rect x="668.3" y="165" width="9.8" height="15.0" fill="rgb(219,86,53)" rx="2" ry="2" />
+<text text-anchor="" x="671.31" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::get_op_code::h66e673a068cd56c8 (55,750 samples, 26.83%)</title><rect x="333.6" y="197" width="316.6" height="15.0" fill="rgb(207,37,3)" rx="2" ry="2" />
+<text text-anchor="" x="336.62" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::vm::VM::get_op_code::h66e67..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>all (207,816 samples, 100%)</title><rect x="10.0" y="389" width="1180.0" height="15.0" fill="rgb(236,97,46)" rx="2" ry="2" />
+<text text-anchor="" x="13.00" y="399.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index_mut::hb01e93d0043bd6fc (103 samples, 0.05%)</title><rect x="972.5" y="181" width="0.5" height="15.0" fill="rgb(249,97,17)" rx="2" ry="2" />
+<text text-anchor="" x="975.46" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (492 samples, 0.24%)</title><rect x="254.5" y="165" width="2.8" height="15.0" fill="rgb(230,123,47)" rx="2" ry="2" />
+<text text-anchor="" x="257.50" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$core..cell..BorrowRef$GT$::h7c5a6c3e2ef24ac0 (77 samples, 0.04%)</title><rect x="1003.0" y="181" width="0.4" height="15.0" fill="rgb(234,177,26)" rx="2" ry="2" />
+<text text-anchor="" x="1005.99" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcmp (39 samples, 0.02%)</title><rect x="1132.7" y="69" width="0.2" height="15.0" fill="rgb(246,192,52)" rx="2" ry="2" />
+<text text-anchor="" x="1135.72" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ub_checks::is_nonoverlapping::runtime::h9ad793568b9a0a63 (1,144 samples, 0.55%)</title><rect x="1106.2" y="101" width="6.5" height="15.0" fill="rgb(232,41,44)" rx="2" ry="2" />
+<text text-anchor="" x="1109.16" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$std..hash..random..DefaultHasher$u20$as$u20$core..hash..Hasher$GT$::finish::h5a16232406b6dfde (5,260 samples, 2.53%)</title><rect x="1012.6" y="149" width="29.9" height="15.0" fill="rgb(215,71,1)" rx="2" ry="2" />
+<text text-anchor="" x="1015.64" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$std..hash..random..RandomState$u20$as$u20$core..hash..BuildHasher$GT$::build_hasher::h19b2e35a7ea330c4 (26 samples, 0.01%)</title><rect x="1011.0" y="165" width="0.1" height="15.0" fill="rgb(218,163,47)" rx="2" ry="2" />
+<text text-anchor="" x="1013.98" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (664 samples, 0.32%)</title><rect x="1134.2" y="69" width="3.8" height="15.0" fill="rgb(238,186,29)" rx="2" ry="2" />
+<text text-anchor="" x="1137.19" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::is_falsey::h31b0dd4bf7f1744d (843 samples, 0.41%)</title><rect x="650.2" y="197" width="4.8" height="15.0" fill="rgb(222,185,24)" rx="2" ry="2" />
+<text text-anchor="" x="653.17" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::cmp::impls::_$LT$impl$u20$core..cmp..PartialEq$LT$$RF$B$GT$$u20$for$u20$$RF$A$GT$::eq::ha4eab89bf1517fbe (74 samples, 0.04%)</title><rect x="948.4" y="181" width="0.4" height="15.0" fill="rgb(240,88,24)" rx="2" ry="2" />
+<text text-anchor="" x="951.36" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hash::impls::_$LT$impl$u20$core..hash..Hash$u20$for$u20$$RF$T$GT$::hash::h0dd40e58155590b4 (7,124 samples, 3.43%)</title><rect x="1047.9" y="149" width="40.4" height="15.0" fill="rgb(206,42,3)" rx="2" ry="2" />
+<text text-anchor="" x="1050.85" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >The..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$core..option..Option$LT$Thesis..vm..CallFrame$GT$$GT$::hf4df756dfa55d340 (790 samples, 0.38%)</title><rect x="1003.4" y="197" width="4.5" height="15.0" fill="rgb(230,184,48)" rx="2" ry="2" />
+<text text-anchor="" x="1006.43" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..string..String$u20$as$u20$core..cmp..PartialEq$GT$::eq::h1da8d620b659b6a1 (3,205 samples, 1.54%)</title><rect x="1121.3" y="101" width="18.2" height="15.0" fill="rgb(252,13,30)" rx="2" ry="2" />
+<text text-anchor="" x="1124.26" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (930 samples, 0.45%)</title><rect x="198.0" y="165" width="5.3" height="15.0" fill="rgb(234,114,9)" rx="2" ry="2" />
+<text text-anchor="" x="200.98" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::add_call_frame::h054fcdb80941b4c2 (40 samples, 0.02%)</title><rect x="12.4" y="213" width="0.2" height="15.0" fill="rgb(213,48,17)" rx="2" ry="2" />
+<text text-anchor="" x="15.36" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::get_mut::hc50a39f2490744be (3,205 samples, 1.54%)</title><rect x="614.9" y="181" width="18.2" height="15.0" fill="rgb(234,224,44)" rx="2" ry="2" />
+<text text-anchor="" x="617.88" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ub_checks::is_nonoverlapping::runtime::h9ad793568b9a0a63 (928 samples, 0.45%)</title><rect x="1080.9" y="37" width="5.3" height="15.0" fill="rgb(224,75,26)" rx="2" ry="2" />
+<text text-anchor="" x="1083.88" y="47.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::non_null::NonNull$LT$T$GT$::new_unchecked::precondition_check::hd29da0d36f729d62 (64 samples, 0.03%)</title><rect x="990.9" y="165" width="0.4" height="15.0" fill="rgb(252,191,2)" rx="2" ry="2" />
+<text text-anchor="" x="993.92" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (2,259 samples, 1.09%)</title><rect x="1099.8" y="117" width="12.9" height="15.0" fill="rgb(237,72,0)" rx="2" ry="2" />
+<text text-anchor="" x="1102.83" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (46 samples, 0.02%)</title><rect x="1086.2" y="69" width="0.2" height="15.0" fill="rgb(223,228,30)" rx="2" ry="2" />
+<text text-anchor="" x="1089.15" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (508 samples, 0.24%)</title><rect x="1004.9" y="149" width="2.8" height="15.0" fill="rgb(231,14,12)" rx="2" ry="2" />
+<text text-anchor="" x="1007.86" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::len::h8fa6b764aa5855bb (161 samples, 0.08%)</title><rect x="980.5" y="197" width="0.9" height="15.0" fill="rgb(213,108,18)" rx="2" ry="2" />
+<text text-anchor="" x="983.50" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..convert..AsRef$LT$T$GT$$GT$::as_ref::h002d407690e45abe (57 samples, 0.03%)</title><rect x="948.9" y="197" width="0.4" height="15.0" fill="rgb(207,164,8)" rx="2" ry="2" />
+<text text-anchor="" x="951.94" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::compiler::chunk::Chunk::get_const::h3b287c3160c1779d (11,290 samples, 5.43%)</title><rect x="164.1" y="197" width="64.2" height="15.0" fill="rgb(207,116,31)" rx="2" ry="2" />
+<text text-anchor="" x="167.15" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`main (54 samples, 0.03%)</title><rect x="1189.6" y="357" width="0.4" height="15.0" fill="rgb(227,172,46)" rx="2" ry="2" />
+<text text-anchor="" x="1192.65" y="367.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index_mut::h934e0ce639715f57 (383 samples, 0.18%)</title><rect x="326.4" y="165" width="2.2" height="15.0" fill="rgb(249,181,39)" rx="2" ry="2" />
+<text text-anchor="" x="329.39" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::interpret::hb4c029291b5ffa8e (207,752 samples, 99.97%)</title><rect x="10.0" y="229" width="1179.6" height="15.0" fill="rgb(218,36,42)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="239.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`Thesis::vm::VM::interpret::hb4c029291b5ffa8e</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (36 samples, 0.02%)</title><rect x="677.9" y="133" width="0.2" height="15.0" fill="rgb(253,167,20)" rx="2" ry="2" />
+<text text-anchor="" x="680.86" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::strong::h03771017ecb87ec4 (20 samples, 0.01%)</title><rect x="1001.9" y="181" width="0.1" height="15.0" fill="rgb(209,40,41)" rx="2" ry="2" />
+<text text-anchor="" x="1004.91" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (302 samples, 0.15%)</title><rect x="693.8" y="181" width="1.7" height="15.0" fill="rgb(215,66,25)" rx="2" ry="2" />
+<text text-anchor="" x="696.78" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (1,183 samples, 0.57%)</title><rect x="687.0" y="165" width="6.8" height="15.0" fill="rgb(242,147,22)" rx="2" ry="2" />
+<text text-anchor="" x="690.04" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::cell::RefCell$LT$T$GT$::try_borrow::h6a65e3e11b2526d7 (1,214 samples, 0.58%)</title><rect x="984.4" y="181" width="6.9" height="15.0" fill="rgb(206,128,47)" rx="2" ry="2" />
+<text text-anchor="" x="987.39" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (3,493 samples, 1.68%)</title><rect x="951.0" y="197" width="19.9" height="15.0" fill="rgb(248,36,54)" rx="2" ry="2" />
+<text text-anchor="" x="954.04" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (55 samples, 0.03%)</title><rect x="226.3" y="181" width="0.3" height="15.0" fill="rgb(215,199,51)" rx="2" ry="2" />
+<text text-anchor="" x="229.27" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (103 samples, 0.05%)</title><rect x="252.3" y="165" width="0.6" height="15.0" fill="rgb(251,11,46)" rx="2" ry="2" />
+<text text-anchor="" x="255.27" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::push::h81e0c7be95da9d50 (7,753 samples, 3.73%)</title><rect x="821.4" y="181" width="44.0" height="15.0" fill="rgb(236,119,51)" rx="2" ry="2" />
+<text text-anchor="" x="824.36" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ops::function::FnOnce::call_once::hbc58d55ed17e3f34 (696 samples, 0.33%)</title><rect x="1064.1" y="53" width="4.0" height="15.0" fill="rgb(229,87,44)" rx="2" ry="2" />
+<text text-anchor="" x="1067.12" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::h814925668f1ffd2f (30 samples, 0.01%)</title><rect x="946.7" y="181" width="0.2" height="15.0" fill="rgb(232,188,11)" rx="2" ry="2" />
+<text text-anchor="" x="949.71" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..cell..BorrowRef$u20$as$u20$core..ops..drop..Drop$GT$::drop::h534c635b33624ff4 (117 samples, 0.06%)</title><rect x="1002.3" y="181" width="0.7" height="15.0" fill="rgb(242,21,54)" rx="2" ry="2" />
+<text text-anchor="" x="1005.33" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::h82155cf4c904f60e (35 samples, 0.02%)</title><rect x="996.5" y="165" width="0.2" height="15.0" fill="rgb(223,57,19)" rx="2" ry="2" />
+<text text-anchor="" x="999.51" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::haf362de5078a7738 (1,092 samples, 0.53%)</title><rect x="176.0" y="149" width="6.2" height="15.0" fill="rgb(254,104,52)" rx="2" ry="2" />
+<text text-anchor="" x="178.98" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (855 samples, 0.41%)</title><rect x="756.0" y="165" width="4.8" height="15.0" fill="rgb(235,189,10)" rx="2" ry="2" />
+<text text-anchor="" x="758.96" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::haae8b37ace2a2fba (100 samples, 0.05%)</title><rect x="1172.0" y="213" width="0.5" height="15.0" fill="rgb(241,179,45)" rx="2" ry="2" />
+<text text-anchor="" x="1174.97" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`_RNCINvNtCs6P7HZtpS3La_3std2rt10lang_startuE0Cs4lVlQVTSjbn_5cargo (54 samples, 0.03%)</title><rect x="1189.6" y="325" width="0.4" height="15.0" fill="rgb(207,206,2)" rx="2" ry="2" />
+<text text-anchor="" x="1192.65" y="335.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Q$u20$as$u20$hashbrown..Equivalent$LT$K$GT$$GT$::equivalent::h2c4f803f49496ea2 (3,343 samples, 1.61%)</title><rect x="1120.5" y="117" width="19.0" height="15.0" fill="rgb(214,71,27)" rx="2" ry="2" />
+<text text-anchor="" x="1123.47" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`hashbrown::map::HashMap$LT$K$C$V$C$S$C$A$GT$::get_inner::h6e05bdcf7bfac404 (23,771 samples, 11.44%)</title><rect x="1008.9" y="181" width="134.9" height="15.0" fill="rgb(247,92,52)" rx="2" ry="2" />
+<text text-anchor="" x="1011.87" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`hashbrown:..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$T$u20$as$u20$core..borrow..Borrow$LT$T$GT$$GT$::borrow::h7f193511fdc74333 (54 samples, 0.03%)</title><rect x="1139.5" y="117" width="0.3" height="15.0" fill="rgb(227,31,39)" rx="2" ry="2" />
+<text text-anchor="" x="1142.45" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (31 samples, 0.01%)</title><rect x="663.6" y="181" width="0.2" height="15.0" fill="rgb(213,188,41)" rx="2" ry="2" />
+<text text-anchor="" x="666.58" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (1,415 samples, 0.68%)</title><rect x="710.0" y="181" width="8.0" height="15.0" fill="rgb(226,119,25)" rx="2" ry="2" />
+<text text-anchor="" x="712.99" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::inc_strong::h5afb8947985f5c6a (1,249 samples, 0.60%)</title><rect x="670.8" y="133" width="7.1" height="15.0" fill="rgb(218,25,21)" rx="2" ry="2" />
+<text text-anchor="" x="673.77" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::add_call_frame::h054fcdb80941b4c2 (549 samples, 0.26%)</title><rect x="228.3" y="197" width="3.1" height="15.0" fill="rgb(220,173,3)" rx="2" ry="2" />
+<text text-anchor="" x="231.25" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..ops..drop..Drop$GT$::drop::ha931683c23369d52 (420 samples, 0.20%)</title><rect x="999.5" y="181" width="2.4" height="15.0" fill="rgb(248,104,24)" rx="2" ry="2" />
+<text text-anchor="" x="1002.52" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Obj$u20$as$u20$core..clone..Clone$GT$::clone::h91404a570782ae0b (1,295 samples, 0.62%)</title><rect x="174.8" y="165" width="7.4" height="15.0" fill="rgb(240,28,25)" rx="2" ry="2" />
+<text text-anchor="" x="177.82" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..result..Result$LT$T$C$E$GT$$u20$as$u20$core..ops..try_trait..Try$GT$::branch::hf477598ccc1495b0 (219 samples, 0.11%)</title><rect x="1174.2" y="213" width="1.2" height="15.0" fill="rgb(208,148,29)" rx="2" ry="2" />
+<text text-anchor="" x="1177.18" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (825 samples, 0.40%)</title><rect x="956.3" y="181" width="4.7" height="15.0" fill="rgb(230,171,48)" rx="2" ry="2" />
+<text text-anchor="" x="959.27" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ops::function::FnOnce::call_once::hff61657678c79296 (207,753 samples, 99.97%)</title><rect x="10.0" y="277" width="1179.6" height="15.0" fill="rgb(230,188,49)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="287.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`core::ops::function::FnOnce::call_once::hff61657678c79296</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$alloc..rc..Rc$LT$Thesis..compiler..values..FunctionObj$GT$$GT$::h0f462f47dd86d509 (393 samples, 0.19%)</title><rect x="996.7" y="165" width="2.2" height="15.0" fill="rgb(251,42,48)" rx="2" ry="2" />
+<text text-anchor="" x="999.71" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (330 samples, 0.16%)</title><rect x="1086.4" y="117" width="1.9" height="15.0" fill="rgb(246,16,29)" rx="2" ry="2" />
+<text text-anchor="" x="1089.43" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (8,058 samples, 3.88%)</title><rect x="760.8" y="181" width="45.8" height="15.0" fill="rgb(220,203,40)" rx="2" ry="2" />
+<text text-anchor="" x="763.82" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >libs..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (37 samples, 0.02%)</title><rect x="998.7" y="149" width="0.2" height="15.0" fill="rgb(212,71,34)" rx="2" ry="2" />
+<text text-anchor="" x="1001.73" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memcmp (254 samples, 0.12%)</title><rect x="1138.0" y="69" width="1.4" height="15.0" fill="rgb(227,87,30)" rx="2" ry="2" />
+<text text-anchor="" x="1140.96" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$core..cell..Ref$LT$alloc..string..String$GT$$GT$::h4f4c8e22650f3e01 (248 samples, 0.12%)</title><rect x="1002.0" y="197" width="1.4" height="15.0" fill="rgb(249,154,0)" rx="2" ry="2" />
+<text text-anchor="" x="1005.02" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$std..hash..random..DefaultHasher$u20$as$u20$core..hash..Hasher$GT$::write_str::ha9fbed22fa50a462 (5,977 samples, 2.88%)</title><rect x="1052.5" y="117" width="33.9" height="15.0" fill="rgb(222,215,33)" rx="2" ry="2" />
+<text text-anchor="" x="1055.49" y="127.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts::precondition_check::h4392e84752fa8be4 (4,008 samples, 1.93%)</title><rect x="297.2" y="165" width="22.8" height="15.0" fill="rgb(247,67,30)" rx="2" ry="2" />
+<text text-anchor="" x="300.24" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hash::sip::Hasher$LT$S$GT$::reset::hd9b1a1dd0d79c254 (175 samples, 0.08%)</title><rect x="1088.3" y="149" width="1.0" height="15.0" fill="rgb(240,27,15)" rx="2" ry="2" />
+<text text-anchor="" x="1091.31" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::pop_stack::h384a56b558ba448c (3,185 samples, 1.53%)</title><rect x="233.8" y="181" width="18.1" height="15.0" fill="rgb(227,92,46)" rx="2" ry="2" />
+<text text-anchor="" x="236.84" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$Thesis..vm..CallFrame$GT$::h5d3fa17209e1d62d (687 samples, 0.33%)</title><rect x="1004.0" y="181" width="3.9" height="15.0" fill="rgb(232,121,17)" rx="2" ry="2" />
+<text text-anchor="" x="1007.01" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`main (207,753 samples, 99.97%)</title><rect x="10.0" y="357" width="1179.6" height="15.0" fill="rgb(230,219,43)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="367.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`main</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::core_arch::arm_shared::neon::vdup_n_u8::h5440d735d3a6d1b2 (29 samples, 0.01%)</title><rect x="1114.3" y="149" width="0.2" height="15.0" fill="rgb(214,50,44)" rx="2" ry="2" />
+<text text-anchor="" x="1117.32" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hash::BuildHasher::hash_one::h4b2fa1cb5cbbebc3 (14,085 samples, 6.78%)</title><rect x="1011.1" y="165" width="80.0" height="15.0" fill="rgb(233,38,21)" rx="2" ry="2" />
+<text text-anchor="" x="1014.12" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`co..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`std::sys::backtrace::__rust_begin_short_backtrace::h415df87154744c46 (207,753 samples, 99.97%)</title><rect x="10.0" y="293" width="1179.6" height="15.0" fill="rgb(210,76,10)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="303.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::sys::backtrace::__rust_begin_short_backtrace::h415df87154744c46</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::h814925668f1ffd2f (1,382 samples, 0.67%)</title><rect x="670.2" y="149" width="7.9" height="15.0" fill="rgb(220,113,17)" rx="2" ry="2" />
+<text text-anchor="" x="673.22" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$$u5b$A$u5d$$u20$as$u20$core..slice..cmp..SlicePartialEq$LT$B$GT$$GT$::equal::he0d590708b88aadb (220 samples, 0.11%)</title><rect x="1132.9" y="69" width="1.3" height="15.0" fill="rgb(224,4,32)" rx="2" ry="2" />
+<text text-anchor="" x="1135.94" y="79.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::h5761dd8963fabb11 (52 samples, 0.03%)</title><rect x="974.9" y="197" width="0.3" height="15.0" fill="rgb(220,18,13)" rx="2" ry="2" />
+<text text-anchor="" x="977.87" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Value$u20$as$u20$core..clone..Clone$GT$::clone::h2ed088dfab147257 (2,521 samples, 1.21%)</title><rect x="663.8" y="181" width="14.3" height="15.0" fill="rgb(220,3,41)" rx="2" ry="2" />
+<text text-anchor="" x="666.76" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::inc_strong::hab2a07255ea3ce57 (925 samples, 0.45%)</title><rect x="176.7" y="133" width="5.2" height="15.0" fill="rgb(223,29,35)" rx="2" ry="2" />
+<text text-anchor="" x="179.65" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (143 samples, 0.07%)</title><rect x="245.4" y="149" width="0.8" height="15.0" fill="rgb(250,58,29)" rx="2" ry="2" />
+<text text-anchor="" x="248.37" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..clone..Clone$GT$::clone::h814925668f1ffd2f (615 samples, 0.30%)</title><rect x="943.2" y="165" width="3.5" height="15.0" fill="rgb(212,161,35)" rx="2" ry="2" />
+<text text-anchor="" x="946.22" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`std::rt::lang_start::hd1cfc539d38f9c4a (207,753 samples, 99.97%)</title><rect x="10.0" y="341" width="1179.6" height="15.0" fill="rgb(223,100,47)" rx="2" ry="2" />
+<text text-anchor="" x="13.01" y="351.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`std::rt::lang_start::hd1cfc539d38f9c4a</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::h6920b5eadf9f45e2 (8,611 samples, 4.14%)</title><rect x="271.1" y="181" width="48.9" height="15.0" fill="rgb(210,79,45)" rx="2" ry="2" />
+<text text-anchor="" x="274.10" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thes..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::cell::RefCell$LT$T$GT$::borrow::h3aa1e16580c89fb0 (1,317 samples, 0.63%)</title><rect x="983.8" y="197" width="7.5" height="15.0" fill="rgb(213,217,1)" rx="2" ry="2" />
+<text text-anchor="" x="986.81" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::is_greater::h608b15988f1f44d4 (848 samples, 0.41%)</title><rect x="655.0" y="197" width="4.8" height="15.0" fill="rgb(212,106,14)" rx="2" ry="2" />
+<text text-anchor="" x="657.96" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::slice::raw::from_raw_parts_mut::precondition_check::h9192c07a86018128 (890 samples, 0.43%)</title><rect x="328.6" y="165" width="5.0" height="15.0" fill="rgb(221,40,50)" rx="2" ry="2" />
+<text text-anchor="" x="331.56" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::hint::assert_unchecked::precondition_check::hba872d3076b65a73 (72 samples, 0.03%)</title><rect x="983.4" y="181" width="0.4" height="15.0" fill="rgb(212,52,13)" rx="2" ry="2" />
+<text text-anchor="" x="986.39" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::pop::ha84bbe015a141d73 (1,638 samples, 0.79%)</title><rect x="236.9" y="165" width="9.3" height="15.0" fill="rgb(218,223,42)" rx="2" ry="2" />
+<text text-anchor="" x="239.88" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (29 samples, 0.01%)</title><rect x="1007.7" y="149" width="0.2" height="15.0" fill="rgb(241,45,21)" rx="2" ry="2" />
+<text text-anchor="" x="1010.74" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$alloc..rc..Rc$LT$Thesis..compiler..values..FunctionObj$GT$$GT$::h0f462f47dd86d509 (606 samples, 0.29%)</title><rect x="1004.5" y="165" width="3.4" height="15.0" fill="rgb(213,181,40)" rx="2" ry="2" />
+<text text-anchor="" x="1007.47" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::get_frame::h6eed74fb947ee22d (10,532 samples, 5.07%)</title><rect x="260.5" y="197" width="59.8" height="15.0" fill="rgb(221,108,52)" rx="2" ry="2" />
+<text text-anchor="" x="263.53" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..values..Obj$u20$as$u20$core..clone..Clone$GT$::clone::h91404a570782ae0b (854 samples, 0.41%)</title><rect x="941.9" y="181" width="4.8" height="15.0" fill="rgb(230,174,43)" rx="2" ry="2" />
+<text text-anchor="" x="944.86" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hbcfe8e9422c2cc1c (59 samples, 0.03%)</title><rect x="320.0" y="181" width="0.3" height="15.0" fill="rgb(227,50,31)" rx="2" ry="2" />
+<text text-anchor="" x="323.00" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::h6920b5eadf9f45e2 (289 samples, 0.14%)</title><rect x="949.4" y="197" width="1.6" height="15.0" fill="rgb(223,161,34)" rx="2" ry="2" />
+<text text-anchor="" x="952.40" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (39 samples, 0.02%)</title><rect x="1097.7" y="133" width="0.2" height="15.0" fill="rgb(245,84,28)" rx="2" ry="2" />
+<text text-anchor="" x="1100.68" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`DYLD-STUB$$memcpy (102 samples, 0.05%)</title><rect x="1012.1" y="149" width="0.5" height="15.0" fill="rgb(244,49,42)" rx="2" ry="2" />
+<text text-anchor="" x="1015.06" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::rc::RcInnerPtr::strong::hfda52aee0649126a (45 samples, 0.02%)</title><rect x="946.5" y="149" width="0.2" height="15.0" fill="rgb(223,218,46)" rx="2" ry="2" />
+<text text-anchor="" x="949.45" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write_str::h7cfbc8172d2fb31a (5,868 samples, 2.82%)</title><rect x="1053.1" y="101" width="33.3" height="15.0" fill="rgb(218,86,38)" rx="2" ry="2" />
+<text text-anchor="" x="1056.11" y="111.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::intrinsics::copy_nonoverlapping::precondition_check::hb41e7c35f4d5f466 (1,951 samples, 0.94%)</title><rect x="1075.1" y="53" width="11.1" height="15.0" fill="rgb(234,22,21)" rx="2" ry="2" />
+<text text-anchor="" x="1078.08" y="63.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`_RNvNtNtCs4lVlQVTSjbn_5cargo8commands3run4exec (29 samples, 0.01%)</title><rect x="1189.8" y="245" width="0.1" height="15.0" fill="rgb(251,179,36)" rx="2" ry="2" />
+<text text-anchor="" x="1192.76" y="255.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::partial_eq::_$LT$impl$u20$core..cmp..PartialEq$LT$alloc..vec..Vec$LT$U$C$A2$GT$$GT$$u20$for$u20$alloc..vec..Vec$LT$T$C$A1$GT$$GT$::eq::h8cb2fa4dec795f78 (3,103 samples, 1.49%)</title><rect x="1121.8" y="85" width="17.6" height="15.0" fill="rgb(227,186,38)" rx="2" ry="2" />
+<text text-anchor="" x="1124.78" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::push::hfa130cabb4aa78ae (295 samples, 0.14%)</title><rect x="229.7" y="181" width="1.7" height="15.0" fill="rgb(239,34,47)" rx="2" ry="2" />
+<text text-anchor="" x="232.70" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`hashbrown::raw::RawTable$LT$T$C$A$GT$::find::h10867a0bcab2f191 (58 samples, 0.03%)</title><rect x="1143.8" y="181" width="0.4" height="15.0" fill="rgb(237,192,38)" rx="2" ry="2" />
+<text text-anchor="" x="1146.85" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`alloc::vec::Vec$LT$T$C$A$GT$::len::h8fa6b764aa5855bb (84 samples, 0.04%)</title><rect x="1175.4" y="213" width="0.5" height="15.0" fill="rgb(235,65,43)" rx="2" ry="2" />
+<text text-anchor="" x="1178.42" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::write::hdac93f221f4a807e (5,731 samples, 2.76%)</title><rect x="1053.9" y="85" width="32.5" height="15.0" fill="rgb(253,128,42)" rx="2" ry="2" />
+<text text-anchor="" x="1056.88" y="95.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Th..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`_RNvCs4lVlQVTSjbn_5cargo4main (54 samples, 0.03%)</title><rect x="1189.6" y="293" width="0.4" height="15.0" fill="rgb(217,170,17)" rx="2" ry="2" />
+<text text-anchor="" x="1192.65" y="303.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..hash..sip..Sip13Rounds$u20$as$u20$core..hash..sip..Sip$GT$::d_rounds::h8f0b21c5f6f62bee (3,562 samples, 1.71%)</title><rect x="1022.3" y="133" width="20.2" height="15.0" fill="rgb(245,169,50)" rx="2" ry="2" />
+<text text-anchor="" x="1025.28" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..rc..Rc$LT$T$C$A$GT$$u20$as$u20$core..borrow..Borrow$LT$T$GT$$GT$::borrow::he9485c899dffb72f (76 samples, 0.04%)</title><rect x="1171.5" y="213" width="0.5" height="15.0" fill="rgb(229,100,7)" rx="2" ry="2" />
+<text text-anchor="" x="1174.54" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$usize$u20$as$u20$core..slice..index..SliceIndex$LT$$u5b$T$u5d$$GT$$GT$::index::hb8e481fa37cec46b (4,067 samples, 1.96%)</title><rect x="518.5" y="165" width="23.1" height="15.0" fill="rgb(248,122,53)" rx="2" ry="2" />
+<text text-anchor="" x="521.50" y="175.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >T..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..string..String$u20$as$u20$core..hash..Hash$GT$::hash::h33bfd8baca23d6ac (7,039 samples, 3.39%)</title><rect x="1048.3" y="133" width="40.0" height="15.0" fill="rgb(230,23,5)" rx="2" ry="2" />
+<text text-anchor="" x="1051.34" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >The..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::ptr::drop_in_place$LT$alloc..rc..Rc$LT$core..cell..RefCell$LT$alloc..string..String$GT$$GT$$GT$::h47833e1a792e2c0e (508 samples, 0.24%)</title><rect x="999.1" y="197" width="2.9" height="15.0" fill="rgb(251,129,6)" rx="2" ry="2" />
+<text text-anchor="" x="1002.14" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`Thesis::vm::VM::peek_stack::h132aef9dd36c80c9 (6,291 samples, 3.03%)</title><rect x="659.8" y="197" width="35.7" height="15.0" fill="rgb(224,185,11)" rx="2" ry="2" />
+<text text-anchor="" x="662.77" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >The..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>libsystem_platform.dylib`_platform_memmove (8,778 samples, 4.22%)</title><rect x="865.4" y="181" width="49.8" height="15.0" fill="rgb(223,227,20)" rx="2" ry="2" />
+<text text-anchor="" x="868.38" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >libsy..</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`core::core_arch::arm_shared::neon::generated::vreinterpret_u64_u8::h4fbd35b9738f1ca9 (266 samples, 0.13%)</title><rect x="1112.8" y="149" width="1.5" height="15.0" fill="rgb(251,166,50)" rx="2" ry="2" />
+<text text-anchor="" x="1115.81" y="159.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..result..Result$LT$T$C$E$GT$$u20$as$u20$core..ops..try_trait..Try$GT$::branch::h9f796f53edae2e1a (102 samples, 0.05%)</title><rect x="1173.6" y="213" width="0.6" height="15.0" fill="rgb(211,15,39)" rx="2" ry="2" />
+<text text-anchor="" x="1176.60" y="223.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$Thesis..compiler..chunk..OpCode$u20$as$u20$core..clone..Clone$GT$::clone::h1ffa36ad2450ef0a (2,442 samples, 1.18%)</title><rect x="915.2" y="197" width="13.9" height="15.0" fill="rgb(236,160,39)" rx="2" ry="2" />
+<text text-anchor="" x="918.22" y="207.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..Index$LT$I$GT$$GT$::index::h367809c056cd2707 (26,443 samples, 12.72%)</title><rect x="464.7" y="181" width="150.2" height="15.0" fill="rgb(250,145,54)" rx="2" ry="2" />
+<text text-anchor="" x="467.73" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  >Thesis`_$LT$alloc....</text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$core..hash..sip..Hasher$LT$S$GT$$u20$as$u20$core..hash..Hasher$GT$::finish::h0c5183cce5c8b435 (139 samples, 0.07%)</title><rect x="1013.0" y="133" width="0.8" height="15.0" fill="rgb(230,33,0)" rx="2" ry="2" />
+<text text-anchor="" x="1016.00" y="143.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>cargo`_RNvMNtCs4lVlQVTSjbn_5cargo3cliNtB2_4Exec4exec (29 samples, 0.01%)</title><rect x="1189.8" y="261" width="0.1" height="15.0" fill="rgb(236,93,0)" rx="2" ry="2" />
+<text text-anchor="" x="1192.76" y="271.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
+</g>
+<g class="func_g" onmouseover="s(this)" onmouseout="c()" onclick="zoom(this)">
+<title>Thesis`_$LT$alloc..vec..Vec$LT$T$C$A$GT$$u20$as$u20$core..ops..index..IndexMut$LT$I$GT$$GT$::index_mut::h030734449c969737 (1,933 samples, 0.93%)</title><rect x="322.6" y="181" width="11.0" height="15.0" fill="rgb(218,2,9)" rx="2" ry="2" />
+<text text-anchor="" x="325.64" y="191.5" font-size="12" font-family="Verdana" fill="rgb(0,0,0)"  ></text>
 </g>
 </svg>

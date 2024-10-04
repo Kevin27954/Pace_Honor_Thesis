@@ -55,7 +55,6 @@ impl VM {
         let parser_res = parser.compile(source);
 
         if let Some(function_obj) = parser_res {
-            //println!("{}", function_obj.chunk.code.len());
             let function = Rc::new(function_obj);
 
             self.stack
@@ -107,9 +106,10 @@ impl VM {
                             };
 
                             if self.frame_count == 1 {
-                                while self.stack.len() > self.get_frame().slots {
-                                    self.pop_stack();
-                                }
+                                self.stack.clear();
+                                //while self.stack.len() > self.get_frame().slots {
+                                //    self.pop_stack();
+                                //}
                                 if DEBUG {
                                     println!("Stack:       {:?}", self.stack);
                                 }
@@ -134,6 +134,7 @@ impl VM {
                             Value::Obj(Obj::NativeFn(func)) => {
                                 let start = self.stack.len() - args_count as usize;
 
+                                // Check this
                                 if &func.name != "print" && func.arity != args_count {
                                     self.runtime_error(
                                         format!(
@@ -504,10 +505,6 @@ impl VM {
 
     fn get_op_code(&mut self) -> Option<OpCode> {
         if let Some(frame) = self.frame.get_mut(self.frame_count - 1) {
-            if frame.ic >= frame.function.chunk.code.len() {
-                return None;
-            }
-
             let code = frame.function.chunk.code[frame.ic];
             frame.ic += 1;
             return Some(code);
@@ -516,15 +513,17 @@ impl VM {
         None
     }
 
+    #[inline]
     fn push_stack(&mut self, value: Value) {
         self.stack.push(value);
     }
 
-    // TODO We might need a mut ref on one of them
+    #[inline]
     fn peek_stack(&self, idx: usize) -> Value {
         self.stack[self.stack.len() - 1 - idx].clone()
     }
 
+    #[inline]
     fn pop_stack(&mut self) -> Value {
         match self.stack.pop() {
             Some(val) => val,
