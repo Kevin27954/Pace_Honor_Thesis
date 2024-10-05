@@ -1,16 +1,18 @@
 use std::{borrow::Borrow, cell::RefCell, collections::HashMap, rc::Rc};
 
+mod gc;
+
 use crate::{
     compiler::{
         chunk::OpCode,
-        values::{FunctionObj, NativeFn, Obj, Value},
+        values::{FunctionObj, NativeFn, Obj, StrObj, Value},
         Parser,
     },
     debug::disaseemble_code,
     native_functions::get_all_natives,
 };
 
-static DEBUG: bool = false;
+static DEBUG: bool = true;
 
 pub enum InterpretError {
     CompileError,
@@ -19,7 +21,7 @@ pub enum InterpretError {
 
 pub struct CallFrame {
     // Rc cause 2 places need this value, but non modify it
-    function: Rc<FunctionObj>,
+    function: Rc<RefCell<FunctionObj>>,
     ic: usize,
     // This is just an index
     slots: usize,
@@ -31,6 +33,8 @@ pub struct VM {
 
     stack: Vec<Value>,
 
+    stack_cap: usize,
+
     globals: HashMap<String, Value>,
 }
 
@@ -41,6 +45,8 @@ impl VM {
             frame_count: 0,
 
             globals: HashMap::new(),
+
+            stack_cap: 0,
 
             stack: Vec::new(),
         };
@@ -55,7 +61,7 @@ impl VM {
         let parser_res = parser.compile(source);
 
         if let Some(function_obj) = parser_res {
-            let function = Rc::new(function_obj);
+            let function = Rc::new(RefCell::new(function_obj));
 
             self.stack
                 .push(Value::Obj(Obj::Function(Rc::clone(&function))));
@@ -78,6 +84,9 @@ impl VM {
 
     fn run(&mut self) -> Result<Value, InterpretError> {
         println!("\n=== VM ===");
+
+        let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+
         loop {
             if DEBUG {
                 print!("Stack:       [");
@@ -86,8 +95,8 @@ impl VM {
                 }
                 print!("{}", self.stack[self.stack.len() - 1]);
                 println!("]");
-                let frame = self.get_frame();
-                disaseemble_code(&frame.function.chunk, frame.ic);
+                let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                disaseemble_code(&func.borrow().chunk, self.get_frame().ic);
             }
 
             match self.get_op_code() {
@@ -134,6 +143,8 @@ impl VM {
                             Value::Obj(Obj::NativeFn(func)) => {
                                 let start = self.stack.len() - args_count as usize;
 
+                                let native_func_obj: &RefCell<NativeFn> = func.borrow();
+                                let func = native_func_obj.borrow();
                                 // Check this
                                 if &func.name != "print" && func.arity != args_count {
                                     self.runtime_error(
@@ -184,28 +195,27 @@ impl VM {
                         }
 
                         OpCode::OpConstant(idx) => {
-                            let frame = self.get_frame();
-                            self.push_stack(frame.function.chunk.get_const(idx));
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow().chunk.get_const(idx);
+                            self.push_stack(const_val);
                         }
                         OpCode::OpDefineGlobal(idx) => {
-                            let frame = self.get_frame();
-                            if let Value::Obj(Obj::String(var_name)) =
-                                frame.function.chunk.get_const(idx)
-                            {
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow().chunk.get_const(idx);
+                            if let Value::Obj(Obj::String(var_name)) = const_val {
                                 let value = self.pop_stack();
-                                let borrow_var_name: &RefCell<String> = var_name.borrow();
-                                let name: String = borrow_var_name.borrow().to_string();
+                                let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
+                                let name: String = borrow_var_name.borrow().name.to_string();
                                 self.globals.insert(name, value);
                             }
                         }
                         OpCode::OpGetGlobal(idx) => {
-                            let frame = self.get_frame();
-                            if let Value::Obj(Obj::String(var_name)) =
-                                frame.function.chunk.get_const(idx)
-                            {
-                                let borrow_var_name: &RefCell<String> = var_name.borrow();
-                                let name: &String = &borrow_var_name.borrow();
-                                match self.globals.get(name) {
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow().chunk.get_const(idx);
+                            if let Value::Obj(Obj::String(var_name)) = const_val {
+                                let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
+                                let name: &StrObj = &borrow_var_name.borrow();
+                                match self.globals.get(&name.name) {
                                     Some(value) => {
                                         self.push_stack(value.clone());
                                     }
@@ -219,12 +229,11 @@ impl VM {
                             }
                         }
                         OpCode::OpSetGlobal(idx) => {
-                            let frame = self.get_frame();
-                            if let Value::Obj(Obj::String(var_name)) =
-                                frame.function.chunk.get_const(idx)
-                            {
-                                let borrow_var_name: &RefCell<String> = var_name.borrow();
-                                let name: &String = &borrow_var_name.borrow();
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow().chunk.get_const(idx);
+                            if let Value::Obj(Obj::String(var_name)) = const_val {
+                                let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
+                                let name: &String = &borrow_var_name.borrow().name;
                                 if self.globals.contains_key(name) {
                                     self.globals.insert(name.to_string(), self.peek_stack(0));
                                 } else {
@@ -270,12 +279,14 @@ impl VM {
                                 Value::Obj(Obj::String(right_rc)),
                                 Value::Obj(Obj::String(left_rc)),
                             ) => {
-                                let mut left_string = left_rc.borrow_mut();
+                                let left_string: &RefCell<StrObj> = left_rc.borrow();
+                                let mut left_string = left_string.borrow_mut();
 
-                                let right_string: &RefCell<String> = right_rc.borrow();
+                                let right_string: &RefCell<StrObj> = right_rc.borrow();
+                                let right_string: &String = &right_string.borrow().name;
 
-                                left_string.reserve(right_string.borrow().len());
-                                left_string.push_str(&right_string.borrow());
+                                left_string.name.reserve(right_string.len());
+                                left_string.name.push_str(&right_string.borrow());
 
                                 self.push_stack(Value::Obj(Obj::String(left_rc.clone())))
                             }
@@ -351,7 +362,7 @@ impl VM {
             }
             Value::Obj(value_obj) => match value_obj {
                 Obj::String(string) => {
-                    let str: &RefCell<String> = string.borrow();
+                    let str: &RefCell<StrObj> = string.borrow();
                     self.runtime_error(
                         format!(
                             "{} not supported on string value: {}",
@@ -383,7 +394,7 @@ impl VM {
             }
             Value::Obj(value_obj) => match value_obj {
                 Obj::String(string) => {
-                    let str: &RefCell<String> = string.borrow();
+                    let str: &RefCell<StrObj> = string.borrow();
                     self.runtime_error(
                         format!(
                             "{} not supported on string value: {}",
@@ -441,8 +452,10 @@ impl VM {
         }
     }
 
-    fn add_call_frame(&mut self, function_obj: Rc<FunctionObj>, arg_count: usize) {
-        let temp_func_obj = function_obj.as_ref();
+    fn add_call_frame(&mut self, function_obj: Rc<RefCell<FunctionObj>>, arg_count: usize) {
+        let temp_func_obj = function_obj.clone();
+        let temp_func_obj: &RefCell<FunctionObj> = temp_func_obj.borrow();
+        let temp_func_obj = temp_func_obj.borrow();
 
         if arg_count != temp_func_obj.arity as usize {
             self.runtime_error(
@@ -469,22 +482,18 @@ impl VM {
         eprintln!("> Program Start");
         for i in 0..self.frame_count - 1 {
             let instruction = self.frame[i].ic - 1;
-            eprint!(
-                "| [line {}] in ",
-                self.frame[i].function.chunk.line[instruction]
-            );
+            let func: &RefCell<FunctionObj> = self.frame[i].function.borrow();
+            eprint!("| [line {}] in ", func.borrow().chunk.line[instruction]);
 
-            eprintln!("{}", self.frame[i].function);
+            eprintln!("{}", func.borrow());
         }
 
         let instruction = self.frame[self.frame_count - 1].ic - 1;
+        let func: &RefCell<FunctionObj> = self.frame[self.frame_count - 1].function.borrow();
         eprintln!("> Error Occured Here:");
-        eprint!(
-            "| [line {}] in ",
-            self.frame[self.frame_count - 1].function.chunk.line[instruction]
-        );
+        eprint!("| [line {}] in ", func.borrow().chunk.line[instruction]);
 
-        eprint!("{}: ", self.frame[self.frame_count - 1].function);
+        eprint!("{}: ", func.borrow());
         eprintln!("{}\n", message);
     }
 
@@ -496,7 +505,7 @@ impl VM {
 
     fn define_native_fn(&mut self, native_fn: NativeFn) {
         let native_fn_name = native_fn.name.clone();
-        let native_fn_val = Value::Obj(Obj::NativeFn(native_fn));
+        let native_fn_val = Value::Obj(Obj::NativeFn(Rc::new(RefCell::new(native_fn))));
         self.push_stack(native_fn_val);
 
         let native_fn_val = self.pop_stack();
@@ -505,7 +514,8 @@ impl VM {
 
     fn get_op_code(&mut self) -> Option<OpCode> {
         if let Some(frame) = self.frame.get_mut(self.frame_count - 1) {
-            let code = frame.function.chunk.code[frame.ic];
+            let func: &RefCell<FunctionObj> = frame.function.borrow();
+            let code = func.borrow().chunk.code[frame.ic];
             frame.ic += 1;
             return Some(code);
         }
@@ -515,6 +525,10 @@ impl VM {
 
     #[inline]
     fn push_stack(&mut self, value: Value) {
+        if self.stack_cap < self.stack.capacity() {
+            self.stack_cap = self.stack.capacity() * 2;
+            self.collect_garbage();
+        }
         self.stack.push(value);
     }
 

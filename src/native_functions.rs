@@ -11,6 +11,7 @@ fn make_native(
         name: name.to_string(),
         native_fn,
         arity,
+        is_marked: false,
     }
 }
 
