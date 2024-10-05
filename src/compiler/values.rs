@@ -32,9 +32,36 @@ pub struct GlobalVar {
 // This is only 8 bytes max: Enum (4byte) + Box (8byte)
 #[derive(Debug, PartialEq, Clone)]
 pub enum Obj {
-    String(Rc<RefCell<String>>),
-    Function(Rc<FunctionObj>),
-    NativeFn(NativeFn),
+    String(Rc<RefCell<StrObj>>),
+    Function(Rc<RefCell<FunctionObj>>),
+    NativeFn(Rc<RefCell<NativeFn>>),
+}
+
+#[derive(Debug)]
+pub struct StrObj {
+    pub name: String,
+    pub is_marked: bool,
+}
+
+impl StrObj {
+    pub fn new(name: String) -> Self {
+        StrObj {
+            name,
+            is_marked: false,
+        }
+    }
+}
+
+impl PartialEq for StrObj {
+    fn eq(&self, other: &Self) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+
+impl Display for StrObj {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
 }
 
 #[derive(Debug, PartialEq, Clone)]
@@ -42,6 +69,7 @@ pub struct FunctionObj {
     pub arity: u8,
     pub chunk: Chunk,
     pub name: Option<String>,
+    pub is_marked: bool,
 }
 
 impl FunctionObj {
@@ -51,6 +79,7 @@ impl FunctionObj {
             chunk: Chunk::new(),
             // Consider doing &str
             name: None,
+            is_marked: false,
         }
     }
 }
@@ -70,6 +99,7 @@ pub struct NativeFn {
     pub name: String,
     pub arity: u8,
     pub native_fn: fn(usize, &[Value]) -> Result<Value, &str>,
+    pub is_marked: bool,
 }
 
 impl Display for NativeFn {
@@ -97,10 +127,10 @@ impl Display for Value {
                     format!("{}", string.borrow())
                 }
                 Obj::Function(function) => {
-                    format!("{}", function)
+                    format!("{}", function.borrow())
                 }
                 Obj::NativeFn(function) => {
-                    format!("{}", function)
+                    format!("{}", function.borrow())
                 }
             },
         };

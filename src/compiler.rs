@@ -1,7 +1,7 @@
 use std::{cell::RefCell, mem, rc::Rc};
 
 use chunk::{Chunk, OpCode};
-use values::{FunctionObj, Obj, Value};
+use values::{FunctionObj, Obj, StrObj, Value};
 
 use crate::{
     debug::disassemble_chunk,
@@ -132,6 +132,7 @@ impl Parser {
                 arity: 0,
                 chunk: Chunk::new(),
                 name: Some(String::new()),
+                is_marked: false,
             },
         );
 
@@ -189,6 +190,7 @@ impl Parser {
             arity: 0,
             chunk: Chunk::new(),
             name: Some(fn_name),
+            is_marked: false,
         };
 
         if self.compiler.scope_depth >= 1 {
@@ -238,7 +240,7 @@ impl Parser {
 
         // Stores the Function Compiler, and sets originl back in place.
         let user_fn_obj = mem::replace(&mut self.compiler, main_fn_compiler);
-        let user_fn = Value::Obj(Obj::Function(Rc::new(user_fn_obj.function)));
+        let user_fn = Value::Obj(Obj::Function(Rc::new(RefCell::new(user_fn_obj.function))));
 
         let idx = self.add_value(user_fn);
         self.emit_opcode(OpCode::OpConstant(idx));
@@ -572,7 +574,7 @@ impl Parser {
             let clean_str = &token.lexeme[1..token.lexeme.len() - 1];
             let idx = self.add_value(Value::Obj(Obj::String(
                 // This clones the string when converting &str to String
-                Rc::new(RefCell::new(clean_str.to_string())),
+                Rc::new(RefCell::new(StrObj::new(clean_str.to_string()))),
             )));
 
             self.emit_opcode(OpCode::OpConstant(idx));
@@ -667,7 +669,9 @@ impl Parser {
     }
 
     fn make_identifier_constant(&mut self, token: Token) -> usize {
-        self.add_value(Value::Obj(Obj::String(Rc::new(RefCell::new(token.lexeme)))))
+        self.add_value(Value::Obj(Obj::String(Rc::new(RefCell::new(StrObj::new(
+            token.lexeme,
+        ))))))
     }
 
     // Only for local varables
