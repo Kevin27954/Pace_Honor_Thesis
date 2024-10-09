@@ -64,6 +64,15 @@ impl Display for StrObj {
     }
 }
 
+impl Default for StrObj {
+    fn default() -> Self {
+        StrObj {
+            name: String::new(),
+            is_marked: false,
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Clone)]
 pub struct FunctionObj {
     pub arity: u8,

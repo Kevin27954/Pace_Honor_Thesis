@@ -85,8 +85,8 @@ impl VM {
     fn run(&mut self) -> Result<Value, InterpretError> {
         println!("\n=== VM ===");
 
-        let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
-        println!("{:?}", func.borrow().chunk.values);
+        //let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+        //println!("{:?}", func.borrow().chunk.values);
 
         loop {
             if DEBUG {
@@ -197,12 +197,12 @@ impl VM {
 
                         OpCode::OpConstant(idx) => {
                             let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
-                            let const_val = func.borrow().chunk.get_const(idx);
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
                             self.push_stack(const_val);
                         }
                         OpCode::OpDefineGlobal(idx) => {
                             let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
-                            let const_val = func.borrow().chunk.get_const(idx);
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
                             if let Value::Obj(Obj::String(var_name)) = const_val {
                                 let value = self.pop_stack();
                                 let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
@@ -212,7 +212,7 @@ impl VM {
                         }
                         OpCode::OpGetGlobal(idx) => {
                             let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
-                            let const_val = func.borrow().chunk.get_const(idx);
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
                             if let Value::Obj(Obj::String(var_name)) = const_val {
                                 let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
                                 let name: &StrObj = &borrow_var_name.borrow();
@@ -231,7 +231,7 @@ impl VM {
                         }
                         OpCode::OpSetGlobal(idx) => {
                             let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
-                            let const_val = func.borrow().chunk.get_const(idx);
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
                             if let Value::Obj(Obj::String(var_name)) = const_val {
                                 let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
                                 let name: &String = &borrow_var_name.borrow().name;
@@ -280,9 +280,6 @@ impl VM {
                                 Value::Obj(Obj::String(right_rc)),
                                 Value::Obj(Obj::String(left_rc)),
                             ) => {
-                                println!("{}", Rc::strong_count(&left_rc));
-                                println!("{}", Rc::strong_count(&right_rc));
-
                                 let left_string: &RefCell<StrObj> = left_rc.borrow();
                                 let mut left_string = left_string.borrow_mut();
 

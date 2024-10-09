@@ -1,6 +1,6 @@
-use std::{borrow::Borrow, cell::RefCell, fmt::Display, rc::Rc};
+use std::{cell::RefCell, fmt::Display, mem, rc::Rc};
 
-use super::values::{FunctionObj, NativeFn, Obj, StrObj, Value};
+use super::values::{FunctionObj, Obj, StrObj, Value};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OpCode {
@@ -74,28 +74,36 @@ impl Chunk {
         self.values.len() - 1
     }
 
-    pub fn get_const(&self, idx: usize) -> Value {
-        match &self.values[idx as usize] {
+    pub fn get_const(&mut self, idx: usize) -> Value {
+        match self.values[idx as usize] {
             Value::None | Value::Number(_) | Value::Boolean(_) => self.values[idx as usize].clone(),
-            Value::Obj(obj) => {
+            Value::Obj(ref mut obj) => {
                 let new_obj = match obj {
                     Obj::String(str) => {
-                        let temp: &RefCell<StrObj> = str.borrow();
-                        let temp: &StrObj = &temp.borrow();
+                        let mut str_obj = Rc::new(RefCell::new(StrObj::default()));
+                        mem::swap(str, &mut str_obj);
+                        //let temp: &RefCell<StrObj> = str.borrow();
+                        //let temp: &StrObj = &temp.borrow();
 
-                        Obj::String(Rc::new(RefCell::new(temp.clone())))
+                        //Obj::String(Rc::new(RefCell::new(temp.clone())))
+                        Obj::String(str_obj)
                     }
                     Obj::Function(func) => {
-                        let temp: &RefCell<FunctionObj> = func.borrow();
-                        let temp: &FunctionObj = &temp.borrow();
+                        let mut func_obj = Rc::new(RefCell::new(FunctionObj::new()));
+                        mem::swap(func, &mut func_obj);
 
-                        Obj::Function(Rc::new(RefCell::new(temp.clone())))
+                        //let temp: &RefCell<FunctionObj> = func.borrow();
+                        //let temp: &FunctionObj = &temp.borrow();
+
+                        //Obj::Function(Rc::new(RefCell::new(temp.clone())))
+                        Obj::Function(func_obj)
                     }
                     Obj::NativeFn(native_func) => {
-                        let temp: &RefCell<NativeFn> = native_func.borrow();
-                        let temp: &NativeFn = &temp.borrow();
+                        //let temp: &RefCell<NativeFn> = native_func.borrow();
+                        //let temp: &NativeFn = &temp.borrow();
 
-                        Obj::NativeFn(Rc::new(RefCell::new(temp.clone())))
+                        //Obj::NativeFn(Rc::new(RefCell::new(temp.clone())))
+                        Obj::NativeFn(native_func.clone())
                     }
                 };
                 Value::Obj(new_obj)
