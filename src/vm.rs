@@ -86,6 +86,7 @@ impl VM {
         println!("\n=== VM ===");
 
         let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+        println!("{:?}", func.borrow().chunk.values);
 
         loop {
             if DEBUG {
@@ -279,6 +280,9 @@ impl VM {
                                 Value::Obj(Obj::String(right_rc)),
                                 Value::Obj(Obj::String(left_rc)),
                             ) => {
+                                println!("{}", Rc::strong_count(&left_rc));
+                                println!("{}", Rc::strong_count(&right_rc));
+
                                 let left_string: &RefCell<StrObj> = left_rc.borrow();
                                 let mut left_string = left_string.borrow_mut();
 

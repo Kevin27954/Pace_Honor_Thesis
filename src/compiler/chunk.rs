@@ -1,6 +1,6 @@
-use std::fmt::Display;
+use std::{borrow::Borrow, cell::RefCell, fmt::Display, rc::Rc};
 
-use super::values::Value;
+use super::values::{FunctionObj, NativeFn, Obj, StrObj, Value};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OpCode {
@@ -75,6 +75,32 @@ impl Chunk {
     }
 
     pub fn get_const(&self, idx: usize) -> Value {
-        self.values[idx as usize].clone()
+        match &self.values[idx as usize] {
+            Value::None | Value::Number(_) | Value::Boolean(_) => self.values[idx as usize].clone(),
+            Value::Obj(obj) => {
+                let new_obj = match obj {
+                    Obj::String(str) => {
+                        let temp: &RefCell<StrObj> = str.borrow();
+                        let temp: &StrObj = &temp.borrow();
+
+                        Obj::String(Rc::new(RefCell::new(temp.clone())))
+                    }
+                    Obj::Function(func) => {
+                        let temp: &RefCell<FunctionObj> = func.borrow();
+                        let temp: &FunctionObj = &temp.borrow();
+
+                        Obj::Function(Rc::new(RefCell::new(temp.clone())))
+                    }
+                    Obj::NativeFn(native_func) => {
+                        let temp: &RefCell<NativeFn> = native_func.borrow();
+                        let temp: &NativeFn = &temp.borrow();
+
+                        Obj::NativeFn(Rc::new(RefCell::new(temp.clone())))
+                    }
+                };
+                Value::Obj(new_obj)
+            }
+        }
+        //self.values[idx as usize].clone()
     }
 }

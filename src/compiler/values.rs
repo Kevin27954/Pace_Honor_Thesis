@@ -37,7 +37,7 @@ pub enum Obj {
     NativeFn(Rc<RefCell<NativeFn>>),
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct StrObj {
     pub name: String,
     pub is_marked: bool,
