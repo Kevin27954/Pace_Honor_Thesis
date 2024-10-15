@@ -51,6 +51,10 @@ pub fn disaseemble_code(chunk: &Chunk, offset: usize) {
             println!("{} {:10} ", code, loc);
         }
 
+        OpCode::OpClass(loc) => {
+            println!("{} {:10} ", code, loc);
+        }
+
         // Add individal codes here if you want to debug
         _ => {
             println!("{}", chunk.code[offset]);

@@ -1,4 +1,4 @@
-use std::{cell::RefCell, fmt::Display, rc::Rc};
+use std::{cell::RefCell, collections::HashMap, fmt::Display, rc::Rc};
 
 use super::chunk::Chunk;
 
@@ -35,6 +35,72 @@ pub enum Obj {
     String(Rc<RefCell<StrObj>>),
     Function(Rc<RefCell<FunctionObj>>),
     NativeFn(Rc<RefCell<NativeFn>>),
+    Structs(Rc<RefCell<Structs>>),
+    Instance(Rc<RefCell<StructsInstance>>),
+}
+
+#[derive(Debug, Clone)]
+pub struct Structs {
+    pub name: String,
+    pub fields: HashMap<String, Value>,
+    pub is_marked: bool,
+}
+
+impl Structs {
+    pub fn new(name: String) -> Self {
+        Structs {
+            name,
+            fields: HashMap::new(),
+            is_marked: false,
+        }
+    }
+}
+
+impl Default for Structs {
+    fn default() -> Self {
+        Structs {
+            name: String::new(),
+            fields: HashMap::new(),
+            is_marked: false,
+        }
+    }
+}
+
+impl Display for Structs {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.name)
+    }
+}
+
+impl PartialEq for Structs {
+    fn eq(&self, other: &Self) -> bool {
+        self.name.eq(&other.name)
+    }
+}
+
+#[derive(Debug, PartialEq)]
+pub struct StructsInstance {
+    origin: Rc<RefCell<Structs>>,
+    pub fields: HashMap<String, Value>,
+    pub is_marked: bool,
+}
+
+impl StructsInstance {
+    pub fn new(origin: Rc<RefCell<Structs>>) -> Self {
+        StructsInstance {
+            origin,
+            fields: HashMap::new(),
+            is_marked: false,
+        }
+    }
+}
+
+impl Display for StructsInstance {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        use std::borrow::Borrow;
+        let origin: &RefCell<Structs> = self.origin.borrow();
+        write!(f, "{} instance", origin.borrow().name)
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -140,6 +206,12 @@ impl Display for Value {
                 }
                 Obj::NativeFn(function) => {
                     format!("{}", function.borrow())
+                }
+                Obj::Structs(structs) => {
+                    format!("{}", structs.borrow())
+                }
+                Obj::Instance(instance) => {
+                    format!("{}", instance.borrow())
                 }
             },
         };

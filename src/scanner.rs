@@ -324,7 +324,7 @@ impl Scanner {
             '(' => return self.make_token(TokenType::LeftParen),
             ')' => return self.make_token(TokenType::RightParen),
             '{' => return self.make_token(TokenType::LeftBrace),
-            '}' => return self.make_token(TokenType::RightParen),
+            '}' => return self.make_token(TokenType::RightBrace),
             ',' => return self.make_token(TokenType::Comma),
             '.' => return self.make_token(TokenType::Dot),
             '+' => return self.make_token(TokenType::Plus),

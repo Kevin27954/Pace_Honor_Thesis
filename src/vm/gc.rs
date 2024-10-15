@@ -1,13 +1,16 @@
 use std::{borrow::Borrow, cell::RefCell};
 
 use crate::{
-    compiler::values::{FunctionObj, NativeFn, Obj, StrObj, Value},
-    vm::VM,
+    compiler::values::{FunctionObj, NativeFn, Obj, StrObj, Structs, StructsInstance, Value},
+    vm::{DEBUG, VM},
 };
 
+#[allow(dead_code)]
 impl VM {
     pub fn collect_garbage(&self) {
-        println!("-- Collecting Garbage");
+        if DEBUG {
+            println!("-- Collecting Garbage");
+        }
 
         let mut worklist = Vec::new();
         self.mark_root(worklist.as_mut());
@@ -21,7 +24,9 @@ impl VM {
 
         self.sweep();
 
-        println!("-- Finished Collecting Garbage");
+        if DEBUG {
+            println!("-- Finished Collecting Garbage");
+        }
     }
 
     fn mark_root<'a>(&'a self, worklist: &mut Vec<&'a Obj>) {
@@ -48,21 +53,52 @@ impl VM {
                 match obj {
                     Obj::String(str) => {
                         let str_obj: &RefCell<StrObj> = str.borrow();
-                        println!("mark {}", str_obj.borrow());
+
+                        if DEBUG {
+                            println!("mark {}", str_obj.borrow());
+                        }
                         let mut str_obj = str_obj.borrow_mut();
                         str_obj.is_marked = if str_obj.is_marked { return } else { true };
                     }
                     Obj::Function(func) => {
                         let func_obj: &RefCell<FunctionObj> = func.borrow();
-                        println!("mark {}", func_obj.borrow());
+                        if DEBUG {
+                            println!("mark {}", func_obj.borrow());
+                        }
                         let mut func_obj = func_obj.borrow_mut();
                         func_obj.is_marked = if func_obj.is_marked { return } else { true };
                     }
                     Obj::NativeFn(nativ_func) => {
                         let native_func_obj: &RefCell<NativeFn> = nativ_func.borrow();
-                        println!("mark {}", native_func_obj.borrow());
+                        if DEBUG {
+                            println!("mark {}", native_func_obj.borrow());
+                        }
                         let mut native_func_obj = native_func_obj.borrow_mut();
                         native_func_obj.is_marked = if native_func_obj.is_marked {
+                            return;
+                        } else {
+                            true
+                        };
+                    }
+                    Obj::Structs(structs) => {
+                        let struct_obj: &RefCell<Structs> = structs.borrow();
+                        if DEBUG {
+                            println!("mark {}", struct_obj.borrow());
+                        }
+                        let mut struct_obj = struct_obj.borrow_mut();
+                        struct_obj.is_marked = if struct_obj.is_marked {
+                            return;
+                        } else {
+                            true
+                        };
+                    }
+                    Obj::Instance(instance) => {
+                        let instance_obj: &RefCell<StructsInstance> = instance.borrow();
+                        if DEBUG {
+                            println!("mark {}", instance_obj.borrow());
+                        }
+                        let mut instance_obj = instance_obj.borrow_mut();
+                        instance_obj.is_marked = if instance_obj.is_marked {
                             return;
                         } else {
                             true
@@ -82,7 +118,9 @@ impl VM {
         // For now all I'll do is just log, if any, unmarked objs.
         // This implementation is still flawed too somehow.
 
-        println!("--- Unmarked Objs ---");
+        if DEBUG {
+            println!("--- Unmarked Objs ---");
+        }
         for val in &self.stack {
             self.print_unmarked_val(val)
         }
@@ -95,15 +133,35 @@ impl VM {
         match obj {
             Obj::String(obj) => {
                 let str_obj: &RefCell<StrObj> = obj.borrow();
-                println!("blacken {}", str_obj.borrow());
+
+                if DEBUG {
+                    println!("blacken {}", str_obj.borrow());
+                }
             }
             Obj::NativeFn(obj) => {
                 let native_fn: &RefCell<NativeFn> = obj.borrow();
-                println!("blacken {}", native_fn.borrow());
+
+                if DEBUG {
+                    println!("blacken {}", native_fn.borrow());
+                }
             }
             Obj::Function(obj) => {
                 let fn_obj: &RefCell<FunctionObj> = obj.borrow();
-                println!("blacken {}", fn_obj.borrow());
+                if DEBUG {
+                    println!("blacken {}", fn_obj.borrow());
+                }
+            }
+            Obj::Structs(obj) => {
+                let structs_obj: &RefCell<Structs> = obj.borrow();
+                if DEBUG {
+                    println!("blacken {}", structs_obj.borrow());
+                }
+            }
+            Obj::Instance(obj) => {
+                let instance_obj: &RefCell<StructsInstance> = obj.borrow();
+                if DEBUG {
+                    println!("blacken {}", instance_obj.borrow());
+                }
             }
         }
     }
@@ -130,6 +188,21 @@ impl VM {
                     let fn_obj = fn_obj.borrow();
                     if !fn_obj.is_marked {
                         println!("{}", fn_obj);
+                    }
+                }
+                Obj::Structs(obj) => {
+                    let structs_obj: &RefCell<Structs> = obj.borrow();
+                    let structs_obj = structs_obj.borrow();
+                    if !structs_obj.is_marked {
+                        println!("{}", structs_obj);
+                    }
+                }
+
+                Obj::Instance(obj) => {
+                    let instance_obj: &RefCell<StructsInstance> = obj.borrow();
+                    let instance_obj = instance_obj.borrow();
+                    if !instance_obj.is_marked {
+                        println!("{}", instance_obj);
                     }
                 }
             },

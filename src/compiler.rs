@@ -143,7 +143,9 @@ impl Parser {
     }
 
     fn declaration(&mut self) {
-        if self.match_token_type(TokenType::Function) {
+        if self.match_token_type(TokenType::Struct) {
+            self.class_decl();
+        } else if self.match_token_type(TokenType::Function) {
             self.fn_decl();
         } else if self.match_token_type(TokenType::Let) {
             self.var_decl();
@@ -157,6 +159,36 @@ impl Parser {
     }
 
     // ****************************     Delcarations     ***************************
+
+    fn class_decl(&mut self) {
+        self.consume(TokenType::Identifier, "Expected Struct name here.");
+        if let Some(ref token) = self.previous {
+            let struct_idx = self.make_identifier_constant(token.clone());
+            self.declare_var();
+
+            self.emit_opcode(OpCode::OpClass(struct_idx));
+            self.define_var(struct_idx);
+
+            self.consume(TokenType::LeftBrace, "Expected opening brace '{' here");
+
+            //parse fields declaration where is it stored?
+            // Store in const table as a thing that we grab instead?
+            // Or push it onto the stack and when opclass comes we loop args_count times to get the
+            // itmes back? As a test.
+            self.skip_empty_line();
+
+            self.consume(TokenType::RightBrace, "Expected closing brace '}' here");
+
+            // Logic, we parse out the fields first, push the strings onto the stack.
+            // When we get the OpClass, then push number equal to arg_count too?. Using the fields
+            // on the struct we parse the number of
+            // Nah it's better if we just emit another opcode saying how much fields we got.
+            //
+            // After peeking in the chapter, I was half correct. Just in the opposite direction. We
+            // parse the class decl and then we push the values onto the stack and then we say what
+            // field or place that thing is for.
+        }
+    }
 
     fn fn_decl(&mut self) {
         let idx = self.parse_variable();
@@ -504,9 +536,29 @@ impl Parser {
         }
     }
 
-    fn call(&mut self, _can_assign: bool) {
+    fn dot(&mut self, can_assign: bool) {
+        self.consume(TokenType::Identifier, "Expected a property name after '.'");
+        if let Some(ref token) = self.previous {
+            let idx = self.make_identifier_constant(token.clone());
+
+            if can_assign && self.match_token_type(TokenType::Equal) {
+                self.expression();
+                self.emit_opcode(OpCode::OpSetProperty(idx));
+            } else {
+                self.emit_opcode(OpCode::OpGetProperty(idx));
+            }
+        }
+    }
+
+    fn call(&mut self) {
         let arg_count = self.argument_list();
         self.emit_opcode(OpCode::OpCall(arg_count));
+    }
+
+    fn instance(&mut self) {
+        // How we parse the struct args is in here.
+        let arg_count = self.instance_args();
+        self.emit_opcode(OpCode::OpCall(arg_count.into()));
     }
 
     fn parse_and(&mut self) {
@@ -609,6 +661,32 @@ impl Parser {
             }
         }
         self.consume(TokenType::RightParen, "Expected ')' after arguments");
+
+        arg_count
+    }
+
+    fn instance_args(&mut self) -> u8 {
+        let mut arg_count: u8 = 0;
+
+        let curr_token_type = self.grab_curr_token_type().unwrap();
+        if curr_token_type != TokenType::RightBrace {
+            loop {
+                self.expression();
+
+                if arg_count == 255 {
+                    if let Some(ref token) = self.previous {
+                        self.error(token, "Can't have more than 255 arguments");
+                    }
+                }
+
+                arg_count += 1;
+
+                if !self.match_token_type(TokenType::Comma) {
+                    break;
+                }
+            }
+        }
+        self.consume(TokenType::RightBrace, "Expected '}' after arguments");
 
         arg_count
     }
@@ -876,7 +954,9 @@ impl Parser {
             ParseFn::Variable => self.variable(can_assign),
             ParseFn::And => self.parse_and(),
             ParseFn::Or => self.parse_or(),
-            ParseFn::Call => self.call(can_assign),
+            ParseFn::Call => self.call(),
+            ParseFn::Dot => self.dot(can_assign),
+            ParseFn::Instance => self.instance(),
         };
     }
 

@@ -11,6 +11,7 @@ pub struct Precdence {
     pub factor: u8,
     pub unary: u8,
     pub call: u8,
+    pub instance: u8,
 }
 
 pub const PRECEDENCE: Precdence = Precdence {
@@ -24,6 +25,7 @@ pub const PRECEDENCE: Precdence = Precdence {
     factor: 7,
     unary: 8,
     call: 9,
+    instance: 9,
 };
 
 pub fn get_precedence(token_type: TokenType) -> u8 {
@@ -36,7 +38,8 @@ pub fn get_precedence(token_type: TokenType) -> u8 {
         }
         TokenType::And => PRECEDENCE.and,
         TokenType::Or => PRECEDENCE.or,
-        TokenType::LeftParen => PRECEDENCE.call,
+        TokenType::LeftParen | TokenType::Dot => PRECEDENCE.call,
+        TokenType::LeftBrace => PRECEDENCE.instance,
         _ => PRECEDENCE.none,
     }
 }
@@ -56,6 +59,8 @@ pub enum ParseFn {
     String,
 
     Call,
+    Dot,
+    Instance,
 }
 
 pub struct ParseRule {
@@ -79,7 +84,7 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
         },
         TokenType::LeftBrace => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Instance),
             precedence: get_precedence(token_type),
         },
         TokenType::RightBrace => ParseRule {
@@ -96,7 +101,7 @@ pub fn get_parse_rule(token_type: TokenType) -> ParseRule {
         },
         TokenType::Dot => ParseRule {
             prefix_rule: None,
-            infix_rule: None,
+            infix_rule: Some(ParseFn::Dot),
             precedence: get_precedence(token_type),
         },
         TokenType::Minus => ParseRule {

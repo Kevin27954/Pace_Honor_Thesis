@@ -5,14 +5,14 @@ mod gc;
 use crate::{
     compiler::{
         chunk::OpCode,
-        values::{FunctionObj, NativeFn, Obj, StrObj, Value},
+        values::{FunctionObj, NativeFn, Obj, StrObj, Structs, StructsInstance, Value},
         Parser,
     },
     debug::disaseemble_code,
     native_functions::get_all_natives,
 };
 
-static DEBUG: bool = true;
+static DEBUG: bool = false;
 
 pub enum InterpretError {
     CompileError,
@@ -33,8 +33,7 @@ pub struct VM {
 
     stack: Vec<Value>,
 
-    stack_cap: usize,
-
+    //stack_cap: usize,
     globals: HashMap<String, Value>,
 }
 
@@ -46,8 +45,7 @@ impl VM {
 
             globals: HashMap::new(),
 
-            stack_cap: 0,
-
+            //stack_cap: 0,
             stack: Vec::new(),
         };
 
@@ -137,48 +135,57 @@ impl VM {
                         OpCode::OpPop => {
                             self.pop_stack();
                         }
-                        OpCode::OpCall(args_count) => match self.peek_stack(args_count as usize) {
-                            Value::Obj(Obj::Function(func)) => {
-                                self.add_call_frame(func, args_count as usize);
-                            }
-                            Value::Obj(Obj::NativeFn(func)) => {
-                                let start = self.stack.len() - args_count as usize;
-
-                                let native_func_obj: &RefCell<NativeFn> = func.borrow();
-                                let func = native_func_obj.borrow();
-                                // Check this
-                                if &func.name != "print" && func.arity != args_count {
-                                    self.runtime_error(
-                                        format!(
-                                            "{} Expected {} arguments but got {}",
-                                            func.name, func.arity, args_count
-                                        )
-                                        .as_str(),
-                                    );
-
-                                    return Err(InterpretError::RuntimeError);
+                        OpCode::OpCall(args_count) => {
+                            match self.peek_stack(args_count as usize) {
+                                Value::Obj(Obj::Function(func)) => {
+                                    self.add_call_frame(func, args_count as usize);
                                 }
+                                Value::Obj(Obj::NativeFn(func)) => {
+                                    let start = self.stack.len() - args_count as usize;
 
-                                let args: Vec<Value> = self.stack.drain(start..).collect();
+                                    let native_func_obj: &RefCell<NativeFn> = func.borrow();
+                                    let func = native_func_obj.borrow();
+                                    // Check this
+                                    if &func.name != "print" && func.arity != args_count {
+                                        self.runtime_error(
+                                            format!(
+                                                "{} Expected {} arguments but got {}",
+                                                func.name, func.arity, args_count
+                                            )
+                                            .as_str(),
+                                        );
 
-                                let value_res = (func.native_fn)(args_count as usize, &args);
-
-                                // Pops the function out from the stack
-                                self.pop_stack();
-
-                                match value_res {
-                                    Ok(value) => self.push_stack(value),
-                                    Err(msg) => {
-                                        self.runtime_error(msg);
                                         return Err(InterpretError::RuntimeError);
                                     }
+
+                                    let args: Vec<Value> = self.stack.drain(start..).collect();
+
+                                    let value_res = (func.native_fn)(args_count as usize, &args);
+
+                                    // Pops the function out from the stack
+                                    self.pop_stack();
+
+                                    match value_res {
+                                        Ok(value) => self.push_stack(value),
+                                        Err(msg) => {
+                                            self.runtime_error(msg);
+                                            return Err(InterpretError::RuntimeError);
+                                        }
+                                    }
+                                }
+                                Value::Obj(Obj::Structs(struct_obj)) => {
+                                    let length = self.stack.len();
+                                    self.stack[length - (args_count as usize) - 1] =
+                                        Value::Obj(Obj::Instance(Rc::new(RefCell::new(
+                                            StructsInstance::new(struct_obj),
+                                        ))));
+                                }
+                                _ => {
+                                    self.runtime_error("Can only call Functions");
+                                    return Err(InterpretError::RuntimeError);
                                 }
                             }
-                            _ => {
-                                self.runtime_error("Can only call Functions");
-                                return Err(InterpretError::RuntimeError);
-                            }
-                        },
+                        }
 
                         OpCode::OpJumpIfFalse(jump) => {
                             if self.is_falsey(self.peek_stack(0)) {
@@ -205,8 +212,18 @@ impl VM {
                             let const_val = func.borrow_mut().chunk.get_const(idx);
                             if let Value::Obj(Obj::String(var_name)) = const_val {
                                 let value = self.pop_stack();
+
                                 let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
-                                let name: String = borrow_var_name.borrow().name.to_string();
+                                let mut name = borrow_var_name.borrow().name.to_string();
+
+                                match value {
+                                    Value::Obj(Obj::Structs(ref struct_obj)) => {
+                                        let struct_obj: &RefCell<Structs> = struct_obj.borrow();
+                                        name = struct_obj.borrow().name.to_string();
+                                    }
+                                    _ => {}
+                                };
+
                                 self.globals.insert(name, value);
                             }
                         }
@@ -216,6 +233,7 @@ impl VM {
                             if let Value::Obj(Obj::String(var_name)) = const_val {
                                 let borrow_var_name: &RefCell<StrObj> = var_name.borrow();
                                 let name: &StrObj = &borrow_var_name.borrow();
+
                                 match self.globals.get(&name.name) {
                                     Some(value) => {
                                         self.push_stack(value.clone());
@@ -257,6 +275,74 @@ impl VM {
                             let frame_stack_idx = frame.slots + idx;
 
                             self.stack[frame_stack_idx] = self.peek_stack(0);
+                        }
+
+                        OpCode::OpSetProperty(idx) => match self.peek_stack(1) {
+                            Value::Obj(Obj::Instance(instance_obj)) => {
+                                let func: &RefCell<FunctionObj> =
+                                    self.get_frame().function.borrow();
+                                let name = func.borrow_mut().chunk.get_const(idx);
+
+                                let value = self.pop_stack();
+
+                                let instance: &RefCell<StructsInstance> = instance_obj.borrow();
+                                let mut instance = instance.borrow_mut();
+
+                                match name {
+                                    Value::Obj(Obj::String(str_obj)) => {
+                                        let str: &RefCell<StrObj> = str_obj.borrow();
+                                        let str = str.borrow();
+                                        instance.fields.insert(str.name.to_string(), value);
+                                    }
+                                    _ => {
+                                        unreachable!();
+                                    }
+                                }
+                            }
+                            _ => {
+                                self.runtime_error("Can't set property on non Instance");
+                                return Err(InterpretError::RuntimeError);
+                            }
+                        },
+                        OpCode::OpGetProperty(idx) => {
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
+                            let instance = self.peek_stack(0);
+
+                            match const_val {
+                                Value::Obj(Obj::String(ref name)) => {
+                                    match instance {
+                                        Value::Obj(Obj::Instance(instance)) => {
+                                            let name: &RefCell<StrObj> = name.borrow();
+                                            let name: &String = &name.borrow().name;
+
+                                            let instance_obj: &RefCell<StructsInstance> =
+                                                instance.borrow();
+                                            let instance_fields: &HashMap<String, Value> =
+                                                &instance_obj.borrow().fields;
+                                            if instance_fields.contains_key(name) {
+                                                self.pop_stack();
+                                                if let Some(value) = instance_fields.get(name) {
+                                                    self.push_stack(value.clone());
+                                                }
+                                            } else {
+                                                self.runtime_error(
+                                                    format!("Undefined property: {}", name)
+                                                        .as_str(),
+                                                );
+                                                return Err(InterpretError::RuntimeError);
+                                            }
+                                        }
+                                        _ => {
+                                            self.runtime_error("Only instances of Structs are allowed to have properties");
+                                            return Err(InterpretError::RuntimeError);
+                                        }
+                                    };
+                                }
+                                _ => {
+                                    unreachable!();
+                                }
+                            }
                         }
 
                         OpCode::OpNegate => {
@@ -335,6 +421,21 @@ impl VM {
                                 value = !self.is_greater(left, right)?;
                             }
                             self.push_stack(Value::Boolean(value))
+                        }
+                        OpCode::OpClass(idx) => {
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
+                            match const_val {
+                                Value::Obj(Obj::String(str)) => {
+                                    let string: &RefCell<StrObj> = str.borrow();
+                                    let string: &String = &string.borrow().name;
+                                    let value = Value::Obj(Obj::Structs(Rc::new(RefCell::new(
+                                        Structs::new(string.to_string()),
+                                    ))));
+                                    self.push_stack(value);
+                                }
+                                _ => unreachable!(),
+                            }
                         }
                     }
                 }
@@ -526,10 +627,10 @@ impl VM {
 
     #[inline]
     fn push_stack(&mut self, value: Value) {
-        if self.stack_cap < self.stack.capacity() {
-            self.stack_cap = self.stack.capacity() * 2;
-            self.collect_garbage();
-        }
+        //if self.stack_cap < self.stack.capacity() {
+        //    self.stack_cap = self.stack.capacity() * 2;
+        //    self.collect_garbage();
+        //}
         self.stack.push(value);
     }
 
