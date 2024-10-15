@@ -87,9 +87,14 @@ pub struct StructsInstance {
 
 impl StructsInstance {
     pub fn new(origin: Rc<RefCell<Structs>>) -> Self {
+        use std::borrow::Borrow;
+        let origin_hashmap = origin.clone();
+        let origin_hashmap: &RefCell<Structs> = origin_hashmap.borrow();
+        let origin_hashmap: &Structs = &origin_hashmap.borrow();
+        let fields = origin_hashmap.fields.clone();
         StructsInstance {
             origin,
-            fields: HashMap::new(),
+            fields,
             is_marked: false,
         }
     }

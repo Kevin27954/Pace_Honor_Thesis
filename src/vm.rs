@@ -12,7 +12,7 @@ use crate::{
     native_functions::get_all_natives,
 };
 
-static DEBUG: bool = false;
+static DEBUG: bool = true;
 
 pub enum InterpretError {
     CompileError,
@@ -292,7 +292,13 @@ impl VM {
                                     Value::Obj(Obj::String(str_obj)) => {
                                         let str: &RefCell<StrObj> = str_obj.borrow();
                                         let str = str.borrow();
-                                        instance.fields.insert(str.name.to_string(), value);
+                                        if instance.fields.contains_key(&str.name) {
+                                            instance.fields.insert(str.name.to_string(), value);
+                                        } else {
+                                            self.runtime_error(
+                                                "Can't set property on unknown field",
+                                            );
+                                        }
                                     }
                                     _ => {
                                         unreachable!();
@@ -435,6 +441,35 @@ impl VM {
                                     self.push_stack(value);
                                 }
                                 _ => unreachable!(),
+                            }
+                        }
+                        OpCode::OpField(idx) => {
+                            let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
+                            let const_val = func.borrow_mut().chunk.get_const(idx);
+
+                            let structs = self.peek_stack(0);
+                            match structs {
+                                Value::Obj(Obj::Structs(struct_obj)) => {
+                                    let struct_obj: &RefCell<Structs> = struct_obj.borrow();
+                                    let struct_obj: &mut Structs = &mut struct_obj.borrow_mut();
+
+                                    match const_val {
+                                        Value::Obj(Obj::String(str_obj)) => {
+                                            let str_obj: &RefCell<StrObj> = str_obj.borrow();
+                                            let str_obj: &StrObj = &str_obj.borrow();
+
+                                            struct_obj
+                                                .fields
+                                                .insert(str_obj.name.clone(), Value::None);
+                                        }
+                                        _ => {
+                                            unreachable!();
+                                        }
+                                    }
+                                }
+                                _ => {
+                                    unreachable!();
+                                }
                             }
                         }
                     }

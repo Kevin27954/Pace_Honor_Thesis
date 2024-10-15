@@ -169,24 +169,14 @@ impl Parser {
             self.emit_opcode(OpCode::OpClass(struct_idx));
             self.define_var(struct_idx);
 
+            self.name_variable(false);
             self.consume(TokenType::LeftBrace, "Expected opening brace '{' here");
 
-            //parse fields declaration where is it stored?
-            // Store in const table as a thing that we grab instead?
-            // Or push it onto the stack and when opclass comes we loop args_count times to get the
-            // itmes back? As a test.
-            self.skip_empty_line();
+            self.parse_field_decl();
 
             self.consume(TokenType::RightBrace, "Expected closing brace '}' here");
 
-            // Logic, we parse out the fields first, push the strings onto the stack.
-            // When we get the OpClass, then push number equal to arg_count too?. Using the fields
-            // on the struct we parse the number of
-            // Nah it's better if we just emit another opcode saying how much fields we got.
-            //
-            // After peeking in the chapter, I was half correct. Just in the opposite direction. We
-            // parse the class decl and then we push the values onto the stack and then we say what
-            // field or place that thing is for.
+            self.emit_opcode(OpCode::OpPop);
         }
     }
 
@@ -638,6 +628,19 @@ impl Parser {
     }
 
     // ****************************     Helpers     ***************************
+
+    fn parse_field_decl(&mut self) {
+        self.skip_empty_line();
+        while self.match_token_type(TokenType::Identifier) {
+            if let Some(ref token) = self.previous {
+                let idx = self.make_identifier_constant(token.clone());
+
+                self.emit_opcode(OpCode::OpField(idx));
+            }
+            self.match_token_type(TokenType::Comma);
+            self.skip_empty_line();
+        }
+    }
 
     fn argument_list(&mut self) -> u8 {
         let mut arg_count: u8 = 0;

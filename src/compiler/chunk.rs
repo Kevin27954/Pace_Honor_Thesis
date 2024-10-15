@@ -44,6 +44,7 @@ pub enum OpCode {
     OpClass(usize),
     OpSetProperty(usize),
     OpGetProperty(usize),
+    OpField(usize),
 }
 
 impl Display for OpCode {
