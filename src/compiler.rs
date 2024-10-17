@@ -7,6 +7,7 @@ use crate::{
     debug::disassemble_chunk,
     expr_prec::{get_parse_rule, ParseFn, PRECEDENCE},
     scanner::{Scanner, Token, TokenType},
+    vm::DEBUG,
 };
 
 pub mod chunk;
@@ -113,7 +114,7 @@ impl Parser {
             self.skip_empty_line();
         }
 
-        if self.has_error {
+        if DEBUG && self.has_error {
             // From here on out, we will treat the global scope as "main()"
             if let Some(function_name) = self.compiler.function.name.clone() {
                 disassemble_chunk(self.current_chunk(), function_name);
@@ -143,7 +144,9 @@ impl Parser {
     }
 
     fn declaration(&mut self) {
-        if self.match_token_type(TokenType::Function) {
+        if self.match_token_type(TokenType::Struct) {
+            self.class_decl();
+        } else if self.match_token_type(TokenType::Function) {
             self.fn_decl();
         } else if self.match_token_type(TokenType::Let) {
             self.var_decl();
@@ -157,6 +160,26 @@ impl Parser {
     }
 
     // ****************************     Delcarations     ***************************
+
+    fn class_decl(&mut self) {
+        self.consume(TokenType::Identifier, "Expected Struct name here.");
+        if let Some(ref token) = self.previous {
+            let struct_idx = self.make_identifier_constant(token.clone());
+            self.declare_var();
+
+            self.emit_opcode(OpCode::OpClass(struct_idx));
+            self.define_var(struct_idx);
+
+            self.name_variable(false);
+            self.consume(TokenType::LeftBrace, "Expected opening brace '{' here");
+
+            self.parse_field_decl();
+
+            self.consume(TokenType::RightBrace, "Expected closing brace '}' here");
+
+            self.emit_opcode(OpCode::OpPop);
+        }
+    }
 
     fn fn_decl(&mut self) {
         let idx = self.parse_variable();
@@ -173,8 +196,8 @@ impl Parser {
     }
 
     fn block(&mut self) {
-        let mut curr_token_type = self.grab_curr_token_type().unwrap();
         self.skip_empty_line();
+        let mut curr_token_type = self.grab_curr_token_type().unwrap();
 
         while curr_token_type != TokenType::End && curr_token_type != TokenType::EOF {
             self.declaration();
@@ -504,9 +527,29 @@ impl Parser {
         }
     }
 
-    fn call(&mut self, _can_assign: bool) {
+    fn dot(&mut self, can_assign: bool) {
+        self.consume(TokenType::Identifier, "Expected a property name after '.'");
+        if let Some(ref token) = self.previous {
+            let idx = self.make_identifier_constant(token.clone());
+
+            if can_assign && self.match_token_type(TokenType::Equal) {
+                self.expression();
+                self.emit_opcode(OpCode::OpSetProperty(idx));
+            } else {
+                self.emit_opcode(OpCode::OpGetProperty(idx));
+            }
+        }
+    }
+
+    fn call(&mut self) {
         let arg_count = self.argument_list();
         self.emit_opcode(OpCode::OpCall(arg_count));
+    }
+
+    fn instance(&mut self) {
+        // How we parse the struct args is in here.
+        let arg_count = self.instance_args();
+        self.emit_opcode(OpCode::OpCall(arg_count.into()));
     }
 
     fn parse_and(&mut self) {
@@ -587,6 +630,19 @@ impl Parser {
 
     // ****************************     Helpers     ***************************
 
+    fn parse_field_decl(&mut self) {
+        self.skip_empty_line();
+        while self.match_token_type(TokenType::Identifier) {
+            if let Some(ref token) = self.previous {
+                let idx = self.make_identifier_constant(token.clone());
+
+                self.emit_opcode(OpCode::OpField(idx));
+            }
+            self.match_token_type(TokenType::Comma);
+            self.skip_empty_line();
+        }
+    }
+
     fn argument_list(&mut self) -> u8 {
         let mut arg_count: u8 = 0;
 
@@ -609,6 +665,32 @@ impl Parser {
             }
         }
         self.consume(TokenType::RightParen, "Expected ')' after arguments");
+
+        arg_count
+    }
+
+    fn instance_args(&mut self) -> u8 {
+        let mut arg_count: u8 = 0;
+
+        let curr_token_type = self.grab_curr_token_type().unwrap();
+        if curr_token_type != TokenType::RightBrace {
+            loop {
+                self.expression();
+
+                if arg_count == 255 {
+                    if let Some(ref token) = self.previous {
+                        self.error(token, "Can't have more than 255 arguments");
+                    }
+                }
+
+                arg_count += 1;
+
+                if !self.match_token_type(TokenType::Comma) {
+                    break;
+                }
+            }
+        }
+        self.consume(TokenType::RightBrace, "Expected '}' after arguments");
 
         arg_count
     }
@@ -876,7 +958,9 @@ impl Parser {
             ParseFn::Variable => self.variable(can_assign),
             ParseFn::And => self.parse_and(),
             ParseFn::Or => self.parse_or(),
-            ParseFn::Call => self.call(can_assign),
+            ParseFn::Call => self.call(),
+            ParseFn::Dot => self.dot(can_assign),
+            ParseFn::Instance => self.instance(),
         };
     }
 

@@ -39,6 +39,12 @@ pub enum OpCode {
     OpSubtract,
     OpMultiply,
     OpDivide,
+
+    // Class
+    OpClass(usize),
+    OpSetProperty(usize),
+    OpGetProperty(usize),
+    OpField(usize),
 }
 
 impl Display for OpCode {
@@ -74,7 +80,43 @@ impl Chunk {
         self.values.len() - 1
     }
 
-    pub fn get_const(&self, idx: usize) -> Value {
+    pub fn get_const(&mut self, idx: usize) -> Value {
+        //match self.values[idx as usize] {
+        //    Value::None | Value::Number(_) | Value::Boolean(_) => self.values[idx as usize].clone(),
+        //    Value::Obj(ref mut obj) => {
+        //        let new_obj = match obj {
+        //            Obj::String(str) => {
+        //                let mut str_obj = Rc::new(RefCell::new(StrObj::default()));
+        //                mem::swap(str, &mut str_obj);
+        //                //let temp: &RefCell<StrObj> = str.borrow();
+        //                //let temp: &StrObj = &temp.borrow();
+        //                //Obj::String(Rc::new(RefCell::new(temp.clone())))
+        //                Obj::String(str_obj)
+        //            }
+        //            Obj::Function(func) => {
+        //                let mut func_obj = Rc::new(RefCell::new(FunctionObj::new()));
+        //                mem::swap(func, &mut func_obj);
+        //                //let temp: &RefCell<FunctionObj> = func.borrow();
+        //                //let temp: &FunctionObj = &temp.borrow();
+        //                //Obj::Function(Rc::new(RefCell::new(temp.clone())))
+        //                Obj::Function(func_obj)
+        //            }
+        //            Obj::NativeFn(native_func) => {
+        //                //let temp: &RefCell<NativeFn> = native_func.borrow();
+        //                //let temp: &NativeFn = &temp.borrow();
+        //                //Obj::NativeFn(Rc::new(RefCell::new(temp.clone())))
+        //                Obj::NativeFn(native_func.clone())
+        //            }
+        //            Obj::Structs(_struct_ref) => {
+        //                unreachable!();
+        //            }
+        //            Obj::Instance(_instance_ref) => {
+        //                unreachable!();
+        //            }
+        //        };
+        //        Value::Obj(new_obj)
+        //    }
+        //}
         self.values[idx as usize].clone()
     }
 }
