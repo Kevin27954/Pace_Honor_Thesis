@@ -12,7 +12,7 @@ use crate::{
     native_functions::get_all_natives,
 };
 
-static DEBUG: bool = true;
+pub static DEBUG: bool = false;
 
 pub enum InterpretError {
     CompileError,

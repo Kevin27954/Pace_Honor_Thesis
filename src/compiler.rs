@@ -7,6 +7,7 @@ use crate::{
     debug::disassemble_chunk,
     expr_prec::{get_parse_rule, ParseFn, PRECEDENCE},
     scanner::{Scanner, Token, TokenType},
+    vm::DEBUG,
 };
 
 pub mod chunk;
@@ -113,7 +114,7 @@ impl Parser {
             self.skip_empty_line();
         }
 
-        if self.has_error {
+        if DEBUG && self.has_error {
             // From here on out, we will treat the global scope as "main()"
             if let Some(function_name) = self.compiler.function.name.clone() {
                 disassemble_chunk(self.current_chunk(), function_name);
@@ -195,8 +196,8 @@ impl Parser {
     }
 
     fn block(&mut self) {
-        let mut curr_token_type = self.grab_curr_token_type().unwrap();
         self.skip_empty_line();
+        let mut curr_token_type = self.grab_curr_token_type().unwrap();
 
         while curr_token_type != TokenType::End && curr_token_type != TokenType::EOF {
             self.declaration();

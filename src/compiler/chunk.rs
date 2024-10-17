@@ -1,6 +1,6 @@
-use std::{cell::RefCell, fmt::Display, mem, rc::Rc};
+use std::fmt::Display;
 
-use super::values::{FunctionObj, Obj, StrObj, Structs, Value};
+use super::values::Value;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum OpCode {
