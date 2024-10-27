@@ -81,10 +81,9 @@ impl VM {
     }
 
     fn run(&mut self) -> Result<Value, InterpretError> {
-        println!("\n=== VM ===");
-
-        //let func: &RefCell<FunctionObj> = self.get_frame().function.borrow();
-        //println!("{:?}", func.borrow().chunk.values);
+        if DEBUG {
+            println!("\n=== VM ===");
+        }
 
         loop {
             if DEBUG {
