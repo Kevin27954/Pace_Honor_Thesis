@@ -216,7 +216,7 @@ impl Parser {
             is_marked: false,
         };
 
-        if self.compiler.scope_depth >= 1 {
+        if self.compiler.scope_depth >= 1 && DEBUG {
             println!("There is a function declared in a local scope");
         }
 

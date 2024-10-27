@@ -68,7 +68,21 @@ impl Default for Structs {
 
 impl Display for Structs {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.name)
+        let mut display_str = String::new();
+        display_str.push_str(&self.name);
+        display_str.push('{');
+        display_str.push('\t');
+
+        for (key, value) in &self.fields {
+            display_str.push_str(&key.to_string());
+            display_str.push(':');
+            display_str.push_str(&value.to_string());
+            display_str.push_str(", ");
+        }
+        display_str.push('\t');
+        display_str.push('}');
+
+        write!(f, "{}", display_str)
     }
 }
 
@@ -104,7 +118,23 @@ impl Display for StructsInstance {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         use std::borrow::Borrow;
         let origin: &RefCell<Structs> = self.origin.borrow();
-        write!(f, "{} instance", origin.borrow().name)
+
+        let mut display_str = String::new();
+        display_str.push_str(&origin.borrow().name);
+        display_str.push_str(" instance");
+        display_str.push('{');
+        display_str.push('\t');
+
+        for (key, value) in &self.fields {
+            display_str.push_str(&key.to_string());
+            display_str.push(':');
+            display_str.push_str(&value.to_string());
+            display_str.push_str(", ");
+        }
+        display_str.push('\t');
+        display_str.push('}');
+
+        write!(f, "{}", display_str)
     }
 }
 

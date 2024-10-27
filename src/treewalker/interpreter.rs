@@ -29,7 +29,6 @@ impl Interpreter {
 
     pub fn resolve(&mut self, expr: &Expr, levels: usize) {
         self.symbol_table.insert(expr.clone(), levels);
-        println!("{:?}", self.symbol_table);
     }
 
     pub fn get_runtime_env(&self) -> &RuntimeEnv {
