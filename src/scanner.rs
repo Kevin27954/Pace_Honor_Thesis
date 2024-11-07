@@ -185,7 +185,7 @@ impl Scanner {
                 }
                 '/' => {
                     if self.peek_next() == '/' {
-                        while !self.is_at_end() && self.peek() == '\n' {
+                        while !self.is_at_end() && self.peek() != '\n' {
                             self.advance();
                         }
                     }

@@ -331,7 +331,11 @@ impl Parser {
     fn return_stmt(&mut self) {
         match self.compiler.function_type {
             FunctionType::ScriptType => match self.previous {
-                Some(ref token) => self.error(token, "Can't have return values at top level"),
+                Some(ref token) => {
+                    self.error(token, "Can't have return values at top level");
+                    self.panic_error = true;
+                    self.has_error = true;
+                }
                 _ => {}
             },
             _ => {}
@@ -472,7 +476,11 @@ impl Parser {
 
         if let Some(token) = temp_token {
             if can_assign && self.match_token_type(TokenType::Equal) {
-                self.error(&token.clone(), "Invalid Assignemnt");
+                {
+                    self.error(&token.clone(), "Invalid Assignemnt");
+                    self.panic_error = true;
+                    self.has_error = true;
+                }
             }
         }
 
@@ -654,6 +662,8 @@ impl Parser {
                 if arg_count == 255 {
                     if let Some(ref token) = self.previous {
                         self.error(token, "Can't have more than 255 arguments");
+                        self.panic_error = true;
+                        self.has_error = true;
                     }
                 }
 
@@ -680,6 +690,8 @@ impl Parser {
                 if arg_count == 255 {
                     if let Some(ref token) = self.previous {
                         self.error(token, "Can't have more than 255 arguments");
+                        self.panic_error = true;
+                        self.has_error = true;
                     }
                 }
 
@@ -702,27 +714,28 @@ impl Parser {
     }
 
     fn name_variable(&mut self, can_assign: bool) {
-        if let Some(ref token) = self.previous {
-            let op_get_code: OpCode;
-            let op_set_code: OpCode;
+        // Absolute dogwater trash code. Everything needs to be rewritten.
+        let token = self.previous.as_ref().unwrap().clone();
 
-            let idx = self.resolve_local(token);
-            if idx == -1 {
-                // Global
-                let idx = self.make_identifier_constant(token.clone());
-                op_get_code = OpCode::OpGetGlobal(idx as usize);
-                op_set_code = OpCode::OpSetGlobal(idx as usize);
-            } else {
-                op_get_code = OpCode::OpGetLocal(idx as usize);
-                op_set_code = OpCode::OpSetLocal(idx as usize);
-            }
+        let op_get_code: OpCode;
+        let op_set_code: OpCode;
 
-            if can_assign && self.match_token_type(TokenType::Equal) {
-                self.expression();
-                self.emit_opcode(op_set_code);
-            } else {
-                self.emit_opcode(op_get_code);
-            }
+        let idx = self.resolve_local(&token);
+        if idx == -1 {
+            // Global
+            let idx = self.make_identifier_constant(token.clone());
+            op_get_code = OpCode::OpGetGlobal(idx as usize);
+            op_set_code = OpCode::OpSetGlobal(idx as usize);
+        } else {
+            op_get_code = OpCode::OpGetLocal(idx as usize);
+            op_set_code = OpCode::OpSetLocal(idx as usize);
+        }
+
+        if can_assign && self.match_token_type(TokenType::Equal) {
+            self.expression();
+            self.emit_opcode(op_set_code);
+        } else {
+            self.emit_opcode(op_get_code);
         }
     }
 
@@ -779,7 +792,9 @@ impl Parser {
                     self.error(
                         token,
                         format!("Variable {} already exist in this scope", token.lexeme).as_str(),
-                    )
+                    );
+                    self.panic_error = true;
+                    self.has_error = true;
                 }
             }
 
@@ -787,12 +802,14 @@ impl Parser {
         }
     }
 
-    fn resolve_local(&self, name: &Token) -> i32 {
+    fn resolve_local(&mut self, name: &Token) -> i32 {
         for i in (0..self.compiler.locals.len()).rev() {
             let local = &self.compiler.locals[i];
             if self.is_eq_token_name(name, &local.name) {
                 if local.depth == LocalState::Uninit {
                     self.error(name, "Can't read local variable in it's own init field.");
+                    self.has_error = true;
+                    self.panic_error = true;
                 }
                 return i as i32;
             }
