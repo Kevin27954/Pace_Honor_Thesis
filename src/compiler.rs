@@ -896,7 +896,7 @@ impl Parser {
                         break;
                     }
 
-                    self.error(token, "You got some dogshit symbols");
+                    self.error(token, "Unreadable Symbols");
                     self.panic_error = true;
                     self.has_error = true;
                 }

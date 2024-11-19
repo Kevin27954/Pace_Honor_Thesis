@@ -1,0 +1,8 @@
+
+// Play around with the print function. Get use to it.
+// Try with numbers or multiple numbers:
+// print(123)
+// print(123, 456, 789)
+
+
+print(1123)

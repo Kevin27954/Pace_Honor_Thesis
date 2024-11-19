@@ -1,14 +1,21 @@
+use core::str;
 use std::{
     fs::{self, File},
     io::{self, Write},
     path::Path,
     process::Command,
-    sync::mpsc::{self, Receiver},
+    sync::{
+        mpsc::{self, Receiver},
+        {Arc, RwLock},
+    },
     thread::{self, JoinHandle},
     time::{Duration, SystemTime},
 };
 
 use once_cell::sync::Lazy;
+
+use crate::printer::{center_text, print_hint, print_msg};
+use crate::stage_problems::StageInfo;
 
 pub enum UserInput {
     Quit,
@@ -24,14 +31,8 @@ static PATH: Lazy<String> = Lazy::new(|| {
         std::env::var("HOME").expect("HOME environment variable not set")
     )
 });
-static INIT_STAGE_PATH: Lazy<String> = Lazy::new(|| {
-    format!(
-        "{}/git/HonorThesis/init_stage/",
-        std::env::var("HOME").expect("HOME environment variable not set")
-    )
-});
 
-pub fn start_user_input() -> mpsc::Receiver<UserInput> {
+pub fn start_user_input(stages: Arc<RwLock<StageInfo>>) -> mpsc::Receiver<UserInput> {
     let (tx, rx) = mpsc::channel::<UserInput>();
 
     thread::spawn(move || loop {
@@ -42,10 +43,20 @@ pub fn start_user_input() -> mpsc::Receiver<UserInput> {
             tx.send(UserInput::Quit).expect("Unable to send message");
             break;
         } else if &input.cmp(&String::from("hint\n")) == &std::cmp::Ordering::Equal {
-            tx.send(UserInput::Hint).expect("Unable to send message");
+            print_hint(stages.read().unwrap().get_stage_hint());
+            println!("\n\n\n\n\n\n");
         } else {
-            //tx.send(UserInput::Other(input))
-            tx.send(UserInput::Other).expect("Unable to send message");
+            // Show user how to quit
+
+            print!("\x1B[1A\x1B[2K\x1B7\x1B[50B\x1B[2K");
+            let text = center_text(
+                "Type \x1B[38;5;196mquit\x1B[0m to exit or quit the program.",
+                17,
+            );
+            print!("{text}");
+            print!("\x1B8");
+
+            io::stdout().flush().unwrap();
         }
     });
 
@@ -54,7 +65,7 @@ pub fn start_user_input() -> mpsc::Receiver<UserInput> {
 
 pub fn start_file_listener(
     user_input_rx: Receiver<UserInput>,
-    stages: Vec<(String, bool)>,
+    stages: Arc<RwLock<StageInfo>>,
     mut curr_stage: usize,
 ) -> JoinHandle<()> {
     thread::spawn(move || {
@@ -74,12 +85,15 @@ pub fn start_file_listener(
                 },
             }
 
-            if curr_stage >= stages.len() {
+            let read_lock = stages.read().unwrap();
+
+            if curr_stage >= read_lock.total_stages() {
                 println!("You finished");
                 break;
             }
 
-            let file_path = Path::new(FILE_DIR).join(&stages[curr_stage].0);
+            let file_path =
+                Path::new(FILE_DIR).join(&read_lock.get_stage_complete_at(curr_stage).0);
             let file_path_str = file_path.to_str().unwrap();
             let data = fs::metadata(file_path_str);
 
@@ -98,7 +112,7 @@ pub fn start_file_listener(
                     }
                 }
                 Err(_err) => {
-                    match create_file(&stages[curr_stage].0) {
+                    match create_file(stages.clone(), curr_stage) {
                         Ok(_) => {}
                         Err(_err) => {}
                     };
@@ -107,25 +121,37 @@ pub fn start_file_listener(
 
             if is_modified {
                 // Replace with built version in bin path on user device
-                let status = Command::new(PATH.as_str())
+                let program_result = Command::new(PATH.as_str())
                     .arg("run")
                     .arg(file_path_str)
-                    .status()
+                    .output()
                     .expect("Failed to run command");
-                if status.success() {
+
+                let success = program_result.status.success();
+                if !contains_str(file_path_str).unwrap() && success {
+                    // Marks it complete so hint gives correct hint
+                    stages.write().unwrap().set_stage_completed(curr_stage);
                     curr_stage += 1;
-                    println!("You passed");
+                }
+
+                if success {
+                    print_msg(success, str::from_utf8(&program_result.stdout).unwrap());
                 } else {
-                    println!("You failed");
+                    print_msg(success, str::from_utf8(&program_result.stderr).unwrap());
                 }
             }
         }
     })
 }
 
-pub fn current_stage(stages: &mut Vec<(String, bool)>) -> usize {
-    for i in 0..stages.len() {
-        let file_name = &stages[i].0;
+pub fn current_stage(stages: Arc<RwLock<StageInfo>>) -> usize {
+    let read_only = stages.read().unwrap();
+    let total_stages = read_only.total_stages();
+    drop(read_only);
+
+    for i in 0..total_stages {
+        let read_only = stages.read().unwrap();
+        let file_name = read_only.get_stage_complete_at(i).0.clone();
 
         let is_dir = fs::read_dir(FILE_DIR);
         match is_dir {
@@ -138,7 +164,7 @@ pub fn current_stage(stages: &mut Vec<(String, bool)>) -> usize {
         let file_path = Path::new(FILE_DIR).join(file_name);
         let file_path_str = file_path.to_str().unwrap();
         if !fs::metadata(file_path_str).is_ok() {
-            match create_file(file_name) {
+            match create_file(stages.clone(), i) {
                 Ok(_) => {
                     return i;
                 }
@@ -149,60 +175,42 @@ pub fn current_stage(stages: &mut Vec<(String, bool)>) -> usize {
             }
         }
 
-        let status = Command::new(PATH.as_str())
+        let program_result = Command::new(PATH.as_str())
             .arg("run")
             .arg(file_path_str)
-            .status()
+            .output()
             .expect("Failed to run command.");
 
-        if status.success() {
-            stages[i].1 = true;
-            println!("You passed");
+        drop(read_only);
+
+        let success = program_result.status.success();
+        if success {
+            print_msg(success, str::from_utf8(&program_result.stdout).unwrap());
+            if contains_str(file_path_str).unwrap() {
+                return i;
+            }
+            stages.write().unwrap().set_stage_completed(i);
         } else {
+            print_msg(success, str::from_utf8(&program_result.stderr).unwrap());
             return i;
         }
     }
 
-    stages.len()
+    stages.read().unwrap().total_stages()
 }
 
-pub fn get_info() -> Vec<(String, bool)> {
-    vec![
-        (String::from("1_print.txt"), false),
-        (String::from("2_number.txt"), false),
-        (String::from("3_string.txt"), false),
-        (String::from("4_math.txt"), false),
-    ]
-}
-
-fn create_file(file_name: &str) -> Result<(), io::Error> {
-    let file_path = Path::new(FILE_DIR).join(file_name);
+fn create_file(stages: Arc<RwLock<StageInfo>>, problem_num: usize) -> Result<(), io::Error> {
+    let file_path =
+        Path::new(FILE_DIR).join(&stages.read().unwrap().get_stage_complete_at(problem_num).0);
     let file_path_str = file_path.to_str().unwrap();
     let mut file = File::create(file_path_str)?;
 
-    println!("{}", format!("{}{}", *INIT_STAGE_PATH, file_name));
-    let data =
-        fs::read(format!("{:?}{}", *INIT_STAGE_PATH, file_name)).expect("Unable to read file");
-    println!("{}", String::from_utf8(data.clone()).unwrap());
-    file.write(&data)?;
+    file.write(stages.read().unwrap().get_problem(problem_num).as_bytes())?;
 
     Ok(())
 }
 
-/*
-
-public class Conditional extends Statement {
-    Statement thenBlock
-    Statenemnt elseBlock
-    Expression name
+fn contains_str(path: &str) -> Result<bool, io::Error> {
+    let program = fs::read_to_string(path)?.to_lowercase();
+    Ok(program.contains(&"// STILL LEARNING".to_lowercase()))
 }
-
-public class Vairable extends Expression {
-    String variable name
-}
-
-public class Declarations {
-    Vec<Declaration>
-}
-
-*/

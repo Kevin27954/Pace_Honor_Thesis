@@ -1,6 +1,11 @@
-use std::{env, fs, process};
+use std::{
+    borrow::BorrowMut,
+    env, fs, process,
+    sync::{Arc, RwLock},
+};
 
-use biteling::{current_stage, get_info, start_file_listener, start_user_input};
+use biteling::{current_stage, start_file_listener, start_user_input};
+use stage_problems::StageInfo;
 use vm::{InterpretError, VM};
 
 mod biteling;
@@ -8,9 +13,13 @@ mod compiler;
 mod debug;
 mod expr_prec;
 mod native_functions;
+mod printer;
 mod scanner;
+mod stage_problems;
 mod test;
 mod vm;
+
+mod ansi;
 
 fn main() {
     if env::args().len() > 4 {
@@ -36,13 +45,19 @@ Unknown command. Usage:
                 read_file(&args[2]);
             }
             "learn" => {
-                let mut stages = get_info();
-                let user_input_rx = start_user_input();
-                let curr_stage = current_stage(&mut stages);
-                if curr_stage >= stages.len() {
+                print!("\x1B[2J");
+                print!("\x1B7\x1B[H");
+                println!("This would be the progress bar to a quiz");
+                print!("\x1B8");
+
+                let stages = Arc::new(RwLock::new(StageInfo::new()));
+
+                let curr_stage = current_stage(stages.clone());
+                let user_input_rx = start_user_input(stages.clone());
+                if curr_stage >= stages.read().unwrap().total_stages() {
                     println!("You finished");
                 } else {
-                    let handler = start_file_listener(user_input_rx, stages, curr_stage);
+                    let handler = start_file_listener(user_input_rx, stages.clone(), curr_stage);
                     // Wait for thread to finish.
                     let _ = handler.join();
                 }
