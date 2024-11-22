@@ -1,5 +1,4 @@
 use std::{
-    borrow::BorrowMut,
     env, fs, process,
     sync::{Arc, RwLock},
 };
@@ -12,14 +11,13 @@ mod biteling;
 mod compiler;
 mod debug;
 mod expr_prec;
+mod init_stages;
 mod native_functions;
 mod printer;
 mod scanner;
 mod stage_problems;
 mod test;
 mod vm;
-
-mod ansi;
 
 fn main() {
     if env::args().len() > 4 {
@@ -45,12 +43,12 @@ Unknown command. Usage:
                 read_file(&args[2]);
             }
             "learn" => {
+                let stages = Arc::new(RwLock::new(StageInfo::new()));
+
                 print!("\x1B[2J");
                 print!("\x1B7\x1B[H");
-                println!("This would be the progress bar to a quiz");
+                stages.clone().read().unwrap().print_progress_bar();
                 print!("\x1B8");
-
-                let stages = Arc::new(RwLock::new(StageInfo::new()));
 
                 let curr_stage = current_stage(stages.clone());
                 let user_input_rx = start_user_input(stages.clone());
@@ -88,7 +86,6 @@ fn read_file(path: &String) {
         Ok(_) => {}
         Err(err) => match err {
             InterpretError::CompileError => {
-                println!("i ran");
                 process::exit(65);
             }
             InterpretError::RuntimeError => process::exit(70),

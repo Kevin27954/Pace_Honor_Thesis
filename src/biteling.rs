@@ -45,6 +45,10 @@ pub fn start_user_input(stages: Arc<RwLock<StageInfo>>) -> mpsc::Receiver<UserIn
         } else if &input.cmp(&String::from("hint\n")) == &std::cmp::Ordering::Equal {
             print_hint(stages.read().unwrap().get_stage_hint());
             println!("\n\n\n\n\n\n");
+            print!("\x1B7\x1B[H");
+            stages.read().unwrap().print_progress_bar();
+            print!("\x1B8");
+            io::stdout().flush().unwrap();
         } else {
             // Show user how to quit
 
@@ -119,6 +123,8 @@ pub fn start_file_listener(
                 }
             };
 
+            drop(read_lock);
+
             if is_modified {
                 // Replace with built version in bin path on user device
                 let program_result = Command::new(PATH.as_str())
@@ -135,9 +141,17 @@ pub fn start_file_listener(
                 }
 
                 if success {
-                    print_msg(success, str::from_utf8(&program_result.stdout).unwrap());
+                    print_msg(
+                        success,
+                        str::from_utf8(&program_result.stdout).unwrap(),
+                        stages.clone(),
+                    );
                 } else {
-                    print_msg(success, str::from_utf8(&program_result.stderr).unwrap());
+                    print_msg(
+                        success,
+                        str::from_utf8(&program_result.stderr).unwrap(),
+                        stages.clone(),
+                    );
                 }
             }
         }
@@ -185,13 +199,21 @@ pub fn current_stage(stages: Arc<RwLock<StageInfo>>) -> usize {
 
         let success = program_result.status.success();
         if success {
-            print_msg(success, str::from_utf8(&program_result.stdout).unwrap());
+            print_msg(
+                success,
+                str::from_utf8(&program_result.stdout).unwrap(),
+                stages.clone(),
+            );
             if contains_str(file_path_str).unwrap() {
                 return i;
             }
             stages.write().unwrap().set_stage_completed(i);
         } else {
-            print_msg(success, str::from_utf8(&program_result.stderr).unwrap());
+            print_msg(
+                success,
+                str::from_utf8(&program_result.stderr).unwrap(),
+                stages.clone(),
+            );
             return i;
         }
     }
@@ -205,7 +227,14 @@ fn create_file(stages: Arc<RwLock<StageInfo>>, problem_num: usize) -> Result<(),
     let file_path_str = file_path.to_str().unwrap();
     let mut file = File::create(file_path_str)?;
 
-    file.write(stages.read().unwrap().get_problem(problem_num).as_bytes())?;
+    let read_only = stages.read().unwrap();
+
+    let mut file_contents = String::new();
+    file_contents.push_str(read_only.get_introductions(problem_num));
+    file_contents.push_str("\n\n");
+    file_contents.push_str(read_only.get_problem(problem_num));
+
+    file.write(file_contents.as_bytes())?;
 
     Ok(())
 }

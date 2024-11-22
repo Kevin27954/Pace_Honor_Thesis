@@ -1,7 +1,21 @@
+use std::sync::{Arc, RwLock};
+
+use crate::stage_problems::StageInfo;
+
 pub fn center_text(text: &str, offset: u16) -> String {
     let size = termsize::get().unwrap();
     // It should fit in unless the user is being a troll
-    let mid_text_idx: u16 = ((text.len() as u16) - offset) / 2;
+
+    let mut length = 0;
+    for char in text.chars() {
+        if char.is_ascii() {
+            length += 1;
+        } else {
+            length += 3;
+        }
+    }
+
+    let mid_text_idx: u16 = ((length) - offset) / 2;
 
     let num_empty_space = if (size.cols / 2) - mid_text_idx > 0 {
         " ".repeat(((size.cols / 2) - mid_text_idx).into())
@@ -12,13 +26,42 @@ pub fn center_text(text: &str, offset: u16) -> String {
     String::from(num_empty_space + text)
 }
 
+pub fn center_multi_line_text(text: &mut String) {
+    let size = termsize::get().unwrap();
+
+    let empty_space = if (size.cols / 2) - 22 > 0 {
+        " ".repeat(((size.cols / 2) - 22).into())
+    } else {
+        String::new()
+    };
+
+    let chars = text.chars();
+    let mut idx: Vec<usize> = vec![];
+    let mut i = 0;
+    for char in chars {
+        if char == '\n' {
+            idx.push(i + 1);
+        }
+        if !char.is_ascii() {
+            i += 3;
+        }
+        i += 1;
+    }
+
+    let mut offset = 0;
+    for i in 0..idx.len() - 1 {
+        text.insert_str(idx[i] + offset, &empty_space);
+        offset += empty_space.len();
+    }
+}
+
 pub fn print_hint(hint: &str) {
     let mut dog = String::from("\n  /^ ^\\\n / 0 0 \\\n V\\ Y /V\n  / - \\ \n /    |\nV__) ||\n");
     center_dog(&mut dog);
 
     let new_hint = center_hint(hint);
 
-    print!("\x1B[2J\x1B[20B");
+    print!("\x1B[2J\x1B[10B");
     print!("{}\x1B[38;5;226m{}\x1B[0m", new_hint, dog);
 }
 
@@ -57,7 +100,6 @@ fn center_hint(hint: &str) -> String {
         }
         if chars[i] == '\n' {
             let fill_amount = 40 - (counter % 40);
-            println!("Fillamount: {fill_amount}");
             new_hint.push_str(&" ".repeat(fill_amount));
             new_hint.push(' ');
             new_hint.push('|');
@@ -77,8 +119,6 @@ fn center_hint(hint: &str) -> String {
     new_hint.push_str(&"=".repeat(42));
     new_hint.push('+');
     new_hint.push('\n');
-
-    println!("{new_hint}");
 
     let chars = new_hint.chars();
     let mut idx: Vec<usize> = vec![];
@@ -128,12 +168,12 @@ fn center_dog(dog: &mut String) {
 
 // =============================================
 
-pub fn print_msg(success: bool, msg: &str) {
+pub fn print_msg(success: bool, msg: &str, stages: Arc<RwLock<StageInfo>>) {
     print!("\x1B[2J\x1B[H");
-    println!("This would be the progress bar to a quiz");
+    stages.read().unwrap().print_progress_bar();
 
     if success {
-        succes_output(msg);
+        success_output(msg);
     } else {
         failure_output(msg);
     }
@@ -151,29 +191,65 @@ Please fix it to move on.
     );
 }
 
-fn succes_output(msg: &str) {
-    print!(
+fn success_output(msg: &str) {
+    let mut centered_text = format!(
         "\
-{}Congratulations You Passed!{}
-
-Your program output:
-==============================
-
-{}
-==============================
-
-Remember to remove the text:
-
-{}// STILL LEARNING
-{}
-To move on to the next stage
-",
-        // I might need to perhaps get a fucntion for this so it is not just all over the place and
-        // more organized. These code means absolutely nothing to me.
-        "\x1B[38;5;113m\x1B[48;5;33m",
-        "\x1B[0m",
-        msg,
-        "\x1B[38;5;27m",
-        "\x1B[0m",
+\n
+\x1B[38;5;160m##    ## ##     ## ########   #######   ######
+\x1B[38;5;208m##   ##  ##     ## ##     ## ##     ## ##    ##
+\x1B[38;5;220m##  ##   ##     ## ##     ## ##     ## ##    
+\x1B[38;5;82m#####    ##     ## ##     ## ##     ##  ###### 
+\x1B[38;5;33m##  ##   ##     ## ##     ## ##     ##       ##
+\x1B[38;5;21m##   ##  ##     ## ##     ## ##     ## ##    ##
+\x1B[38;5;56m##    ##  #######  ########   #######   ######  
+\x1B[0m
+        ",
     );
+
+    center_multi_line_text(&mut centered_text);
+
+    let mut reminder = String::from(
+        "\
+\n
++=======================================+
+| Remember to remove the text:          |
+|                                       |
+| \x1B[38;5;60m// STILL LEARNING\x1B[0m                     |
+|                                       |
+| To move on to the next stage          |
++=======================================+
+",
+    );
+
+    center_multi_line_text(&mut reminder);
+
+    print!(
+        "{centered_text} 
+{}
+
+{}
+
+{}
+{}
+{msg}
+        ",
+        center_text(
+            "🚀 \x1B[38;5;113mCongratulations! You Passed This Stage!\x1B[0m 🚀",
+            20
+        ),
+        reminder,
+        center_text("Output", 0),
+        create_bar(),
+    );
+}
+
+fn create_bar() -> String {
+    let size = termsize::get().unwrap();
+
+    let mut bar = String::new();
+    for _ in 0..size.cols {
+        bar.push('=');
+    }
+
+    bar
 }

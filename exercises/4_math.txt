@@ -1,7 +1,0 @@
-// STILL LEARNING
-// Math operations
-
-
-
-print(29.44 - 992.2)
-

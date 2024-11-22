@@ -217,7 +217,7 @@ impl Parser {
         };
 
         if self.compiler.scope_depth >= 1 && DEBUG {
-            println!("There is a function declared in a local scope");
+            eprintln!("There is a function declared in a local scope");
         }
 
         let mut func_compiler = Compiler::new(function_type);
@@ -230,7 +230,7 @@ impl Parser {
 
         if let Some(ref fn_name) = main_fn_compiler.function.name {
             if fn_name.len() != 0 {
-                println!("There is a function declared in a local scope");
+                eprintln!("There is a function declared in a local scope");
             }
         }
 
@@ -923,18 +923,18 @@ impl Parser {
         if self.panic_error {
             return;
         }
-        print!("[line {}] Error", token.line);
+        eprint!("[line {}] Error", token.line);
 
         if token.token_type == TokenType::EOF {
-            print!(" at end of file");
+            eprint!(" at end of file");
         } else if token.token_type == TokenType::Error {
             // The message would be passed?
             // But don't we still want to display the Token??
         } else {
-            print!(" at {}", token);
+            eprint!(" at {}", token);
         }
 
-        println!(": {message}");
+        eprintln!(": {message}");
     }
 
     fn synchronize(&mut self) {
