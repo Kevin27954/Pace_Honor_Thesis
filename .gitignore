@@ -2,3 +2,6 @@ target/
 .git
 main.txt
 
+
+exercises/
+.DS_store

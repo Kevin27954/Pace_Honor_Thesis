@@ -1,4 +1,4 @@
-pub fn init_hints() -> [&'static str; 6] {
+pub fn init_hints() -> [&'static str; 7] {
     [
         "\
 To make Bitelang talk to you, you can 
@@ -34,7 +34,7 @@ Bitelang can understand true or false!
 These are called booleans.
 
 Try typing:
-print(True) or print(False)
+print(true) or print(false)
 
 Booleans are like tiny decision-makers.
 For example, type:
@@ -68,18 +68,21 @@ Try this:
 let message = \"Hello, Bitelang!\"
 print(message)
 
-You can change what’s inside a 
+You can change what's inside a
 variable.
-
 let message = \"Hello, Bitelang!\"
 message = message + \" Nice!\"
+//      or
+message = 3939
 print(message)
 ",
         "\
 Conditionals let Bitelang make 
 decisions!
 
-In Bitelang, we use 
+In Bitelang, we use logical operator
+to create logic.\n
+In Bitelang, you can use:
     > (Greater)
     < (Less)
     >= (Greater or Equal)
@@ -88,6 +91,27 @@ In Bitelang, we use
     != (Not Equals)
     and (And Logcial Operator)
     or (Or Logcial Operator)
+
+These will evaluate expressions to
+either 'true' or 'false'.
+",
+        "\
+As long as the <expression> evaluate
+to either 'true' or 'false', a `while`
+loop will work.
+
+Use what you learned last stage to
+help you out here.
+
+              -----------
+
+You can also use a for loop to control
+your repetition more precisely!
+A for loop needs:
+
+A starting variable declaration.
+An expression to check when to stop.
+An update to the variable.
 ",
     ]
 }

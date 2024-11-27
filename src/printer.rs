@@ -182,12 +182,23 @@ pub fn print_msg(success: bool, msg: &str, stages: Arc<RwLock<StageInfo>>) {
 fn failure_output(msg: &str) {
     print!(
         "\
-There seems to be an error in your program:
+\n
+ \x1B[38;5;124m
+      _____ ____  ____   ___  ____             _____ ____  ____   ___  ____             _____ ____  ____   ___  ____  
+     | ____|  _ \\|  _ \\ / _ \\|  _ \\           | ____|  _ \\|  _ \\ / _ \\|  _ \\           | ____|  _ \\|  _ \\ / _ \\|  _ \\ 
+     |  _| | |_) | |_) | | | | |_) |          |  _| | |_) | |_) | | | | |_) |          |  _| | |_) | |_) | | | | |_) |
+     | |___|  _ <|  _ <| |_| |  _ <           | |___|  _ <|  _ <| |_| |  _ <           | |___|  _ <|  _ <| |_| |  _ < 
+     |_____|_| \\_\\_| \\_\\\\___/|_| \\_\\          |_____|_| \\_\\_| \\_\\\\___/|_| \\_\\          |_____|_| \\_\\_| \\_\\\\___/|_| \\_\\
+ \x1B[0m                               
+\x1B[38;5;226m{}\x1B[0m
 
-{}{}{}
-Please fix it to move on.
+{}
+
+\x1B[38;5;161m{}\x1B[0m
 ",
-        "\x1B[38;5;161m", msg, "\x1B[0m",
+        center_text("Please fix the cause of this error below to move on", 0),
+        create_bar(),
+        msg,
     );
 }
 
@@ -238,7 +249,7 @@ fn success_output(msg: &str) {
             20
         ),
         reminder,
-        center_text("Output", 0),
+        center_text("<---- Output", 0),
         create_bar(),
     );
 }

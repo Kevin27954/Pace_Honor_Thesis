@@ -1,4 +1,4 @@
-pub fn init_introductions() -> [&'static str; 6] {
+pub fn init_introductions() -> [&'static str; 7] {
     [
         "\
 // STILL LEARNING
@@ -25,7 +25,7 @@ pub fn init_introductions() -> [&'static str; 6] {
 
 // Now let’s dive into booleans, the simplest data type that can only be true or false.
 // Booleans are the backbone of decision-making in programming. Practice declaring 
-// them, printing them, and combining them using logical operators like && (and), || (or), and ! (not).
+// them, printing them, and combining them using logical operators like and, or, and ! (not).
 ",
         "\
 // STILL LEARNING
@@ -33,8 +33,7 @@ pub fn init_introductions() -> [&'static str; 6] {
 // Stage 4
 
 // Strings are how we work with text in programming. In this stage, you’ll learn to create, manipulate, 
-// and print strings. Practice combining strings, measuring their length, and experimenting with 
-// escape characters like \\n for new lines or \\t for tabs. Let’s make text come alive!
+// and print strings. Practice combining strings and see what kind of text you can put there.
 ",
         "\
 // STILL LEARNING
@@ -53,6 +52,15 @@ pub fn init_introductions() -> [&'static str; 6] {
 // Time to make decisions! Conditional statements allow your program to execute different code based on 
 // specific conditions. In this stage, you’ll practice using if, else if, and else to control the flow
 // of your code. Get ready to think logically and handle different scenarios.
+",
+        "\
+// STILL LEARNING
+
+// Stage 7
+
+// Loops help you execute a block of code multiple times, making your programs more efficient. In 
+// this stage, you’ll explore while loops for repeated actions based on a condition and for loops for
+// iterating over ranges or collections. Let’s get looping!
 "
     ]
 }

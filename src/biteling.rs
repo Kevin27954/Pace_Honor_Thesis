@@ -19,8 +19,6 @@ use crate::stage_problems::StageInfo;
 
 pub enum UserInput {
     Quit,
-    Hint,
-    Other,
 }
 
 static FILE_DIR: &str = "exercises";
@@ -44,7 +42,7 @@ pub fn start_user_input(stages: Arc<RwLock<StageInfo>>) -> mpsc::Receiver<UserIn
             break;
         } else if &input.cmp(&String::from("hint\n")) == &std::cmp::Ordering::Equal {
             print_hint(stages.read().unwrap().get_stage_hint());
-            println!("\n\n\n\n\n\n");
+            println!("\n\n");
             print!("\x1B7\x1B[H");
             stages.read().unwrap().print_progress_bar();
             print!("\x1B8");

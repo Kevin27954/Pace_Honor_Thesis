@@ -4,10 +4,10 @@ use crate::{
 };
 
 pub struct StageInfo {
-    stage_complete: [(String, bool); 6],
-    stage_hints: [&'static str; 6],
-    stage_problems: [&'static str; 6],
-    stage_introductions: [&'static str; 6],
+    stage_complete: [(String, bool); 7],
+    stage_hints: [&'static str; 7],
+    stage_problems: [&'static str; 7],
+    stage_introductions: [&'static str; 7],
     curr_stage: usize,
     stages: usize,
 }

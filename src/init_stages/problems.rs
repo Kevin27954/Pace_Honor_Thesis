@@ -1,4 +1,4 @@
-pub fn init_problems() -> [&'static str; 6] {
+pub fn init_problems() -> [&'static str; 7] {
     [
         "\
 // Play around with the print function. Get use to it.
@@ -32,9 +32,6 @@ pub fn init_problems() -> [&'static str; 6] {
 
 // Combine strings:
 // print(\"John\" + \" \" + \"Doe\")
-
-// Use escape characters for formatting:
-// print(\"A new line\\n WOW!\")
 ",
         "\
 // Give the 'age' variable a value.
@@ -68,6 +65,35 @@ else
     print(\"Better stay indoors.\")
 end
 
+",
+        "\
+// Fix the loops conditions
+
+// Use a `while` loop to repeat until a condition is false:
+
+// Syntax for a while loop
+// while <expression> do
+//     code here...
+// end
+
+let count = 0
+// Fix the code below
+while count <  do
+     print(\"Count is:\", count)
+     count = count + 1 // Increment the counter
+end
+
+// Use a `for` loop to iterate over a range:
+
+// Syntax for a for loop
+// for <var decl> , <expression> , <expression> do
+//     code here...
+// end
+
+// Fix the code below
+for let i = 0, i < , i = i +  do
+    print(\"Number: \", i)
+end
 ",
     ]
 }

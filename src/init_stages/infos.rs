@@ -1,4 +1,4 @@
-pub fn init_info() -> [(String, bool); 6] {
+pub fn init_info() -> [(String, bool); 7] {
     [
         (String::from("1_print.txt"), false),
         (String::from("2_number.txt"), false),
@@ -6,5 +6,6 @@ pub fn init_info() -> [(String, bool); 6] {
         (String::from("4_string.txt"), false),
         (String::from("5_variables.txt"), false),
         (String::from("6_conditional.txt"), false),
+        (String::from("7_loops.txt"), false),
     ]
 }
