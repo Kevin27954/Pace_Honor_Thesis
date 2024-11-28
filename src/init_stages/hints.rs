@@ -1,4 +1,4 @@
-pub fn init_hints() -> [&'static str; 9] {
+pub fn init_hints() -> [&'static str; 10] {
     [
         "\
 To make Bitelang talk to you, you can 
@@ -139,6 +139,9 @@ print(var_name.<field2>)
             -- Prints 42
 
 
+",
+        "\
+There are not hints this time.
 ",
     ]
 }

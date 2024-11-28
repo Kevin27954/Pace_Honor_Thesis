@@ -1,4 +1,4 @@
-pub fn init_introductions() -> [&'static str; 9] {
+pub fn init_introductions() -> [&'static str; 10] {
     [
         "\
 // STILL LEARNING
@@ -92,6 +92,11 @@ pub fn init_introductions() -> [&'static str; 9] {
 //         ...
 //     field 255
 // }
+",
+            "\
+// Let's wrap it all up! In this challenge, you’ll use what you've learned so far—variables, structs,
+// conditionals, functions, and more—but without relying on arrays or collections. Tackle the problem
+// step-by-step and demonstrate your Bite expertise!
 "
     ]
 }

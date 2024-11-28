@@ -1,4 +1,4 @@
-pub fn init_problems() -> [&'static str; 9] {
+pub fn init_problems() -> [&'static str; 10] {
     [
         "\
 // Play around with the print function. Get use to it.
@@ -131,6 +131,16 @@ struct Point {
 }
 let origin = Point {}
 print(\"Point at:\", origin.x, origin.y)
+",
+        "\
+// Write a program to compare three books individually. Each book has a 'title', 'author', and
+// number of 'pages'. Your program should:
+// 
+// Define a struct to represent a book.
+// - Create three separate book variables.
+// - Write a function to compare the number of pages between two books and determine which
+//       one has more pages.
+// - Use conditionals to identify and print the book with the most pages at the end.
 ",
     ]
 }
