@@ -1,4 +1,4 @@
-pub fn init_introductions() -> [&'static str; 7] {
+pub fn init_introductions() -> [&'static str; 9] {
     [
         "\
 // STILL LEARNING
@@ -61,6 +61,37 @@ pub fn init_introductions() -> [&'static str; 7] {
 // Loops help you execute a block of code multiple times, making your programs more efficient. In 
 // this stage, you’ll explore while loops for repeated actions based on a condition and for loops for
 // iterating over ranges or collections. Let’s get looping!
+",
+    "\
+// STILL LEARNING
+            
+// Stage 8
+
+// Functions are the building blocks of reusable and modular code. In this stage, you’ll learn to
+// define your own functions, pass arguments, and return values. Practice breaking tasks into smaller
+// chunks using functions to make your code cleaner and more efficient!
+
+// How to create a function
+// function <name>(<parameters>)  
+//     code here...  
+//     return <value `optional`> 
+// end  
+",
+        "\
+// STILL LEARNING
+            
+// Stage 9
+
+// Structs let you create custom types to group related data together. They are the core Bite's
+// type system, enabling you to model real-world concepts. In this stage, you’ll define 
+// structs, initialize them, and access their fields. Time to build your own data structures!
+
+// How to create a struct
+// struct <name> {
+//     field 1,
+//         ...
+//     field 255
+// }
 "
     ]
 }

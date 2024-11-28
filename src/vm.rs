@@ -325,6 +325,7 @@ impl VM {
                                                 instance.borrow();
                                             let instance_fields: &HashMap<String, Value> =
                                                 &instance_obj.borrow().fields;
+
                                             if instance_fields.contains_key(name) {
                                                 self.pop_stack();
                                                 if let Some(value) = instance_fields.get(name) {

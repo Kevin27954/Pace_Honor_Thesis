@@ -1,4 +1,4 @@
-pub fn init_hints() -> [&'static str; 7] {
+pub fn init_hints() -> [&'static str; 9] {
     [
         "\
 To make Bitelang talk to you, you can 
@@ -112,6 +112,33 @@ A for loop needs:
 A starting variable declaration.
 An expression to check when to stop.
 An update to the variable.
+",
+        "\
+Functions are reusable blocks of code.
+They let you group instructions 
+together.
+",
+        "\
+Structs let you bundle related data.
+Once defined, you can create and use
+them!
+
+Here’s how to use a struct in Bite:
+
+Create an empty instance:
+let var_name = <struct_name>{}
+
+Initialize its fields:
+var_name.<field1> = \"Field 1\"
+var_name.<field2> = 42
+
+Access its fields:
+print(var_name.<field1>)
+            -- Prints \"Field 1\"
+print(var_name.<field2>) 
+            -- Prints 42
+
+
 ",
     ]
 }

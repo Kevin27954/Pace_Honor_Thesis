@@ -685,6 +685,7 @@ impl Parser {
         let curr_token_type = self.grab_curr_token_type().unwrap();
         if curr_token_type != TokenType::RightBrace {
             loop {
+                // Give an error perhaps here?
                 self.expression();
 
                 if arg_count == 255 {

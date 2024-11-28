@@ -1,4 +1,4 @@
-pub fn init_problems() -> [&'static str; 7] {
+pub fn init_problems() -> [&'static str; 9] {
     [
         "\
 // Play around with the print function. Get use to it.
@@ -94,6 +94,43 @@ end
 for let i = 0, i < , i = i +  do
     print(\"Number: \", i)
 end
+",
+        "\
+// Define and call a simple function called 'greet':
+function () do
+     print(\"Hello from a function!\")
+end
+// call your function below
+<name>()
+
+// Create a function that takes parameters, 'a' and 'b':
+function add_numbers() do
+    print(\"The sum is:\", a + b)
+end
+add_numbers(5, 10)
+
+// Create a function that returns a number squared:
+let num = <type your number>
+function square(number) do
+    return <number squared>
+end
+let result = square(num)
+print(\"Square of \",  num, \" is:\", result)
+            ",
+        "\
+// Define and use a basic struct:
+struct Person { name }
+let alice = Person {};
+// Access and modify the field 'name' from the struct alice.
+alice. = 
+print(\"Name:\", alice.name)
+
+// Create a Point struct with fields 'x' and 'y'
+struct Point {
+    Remove me and fill me in
+}
+let origin = Point {}
+print(\"Point at:\", origin.x, origin.y)
 ",
     ]
 }
