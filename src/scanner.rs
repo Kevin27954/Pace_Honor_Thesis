@@ -104,7 +104,11 @@ impl Token {
 
 impl Display for Token {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{} {} {}", self.line, self.token_type, self.lexeme)
+        if self.lexeme.cmp(&String::from("\n")) == std::cmp::Ordering::Equal {
+            write!(f, "{} {}", self.line, self.token_type)
+        } else {
+            write!(f, "{} {} {}", self.line, self.token_type, self.lexeme)
+        }
     }
 }
 
@@ -185,7 +189,7 @@ impl Scanner {
                 }
                 '/' => {
                     if self.peek_next() == '/' {
-                        while !self.is_at_end() && self.peek() == '\n' {
+                        while !self.is_at_end() && self.peek() != '\n' {
                             self.advance();
                         }
                     }
