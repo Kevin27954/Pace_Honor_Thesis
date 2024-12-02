@@ -173,16 +173,15 @@ pub fn print_msg(success: bool, msg: &str, stages: Arc<RwLock<StageInfo>>) {
     stages.read().unwrap().print_progress_bar();
 
     if success {
-        success_output(msg);
+        success_output(msg, stages.read().unwrap().get_current_stage_name());
     } else {
-        failure_output(msg);
+        failure_output(msg, stages.read().unwrap().get_current_stage_name());
     }
 }
 
-fn failure_output(msg: &str) {
+fn failure_output(msg: &str, stage: &String) {
     print!(
         "\
-\n
  \x1B[38;5;124m
       _____ ____  ____   ___  ____             _____ ____  ____   ___  ____             _____ ____  ____   ___  ____  
      | ____|  _ \\|  _ \\ / _ \\|  _ \\           | ____|  _ \\|  _ \\ / _ \\|  _ \\           | ____|  _ \\|  _ \\ / _ \\|  _ \\ 
@@ -190,19 +189,23 @@ fn failure_output(msg: &str) {
      | |___|  _ <|  _ <| |_| |  _ <           | |___|  _ <|  _ <| |_| |  _ <           | |___|  _ <|  _ <| |_| |  _ < 
      |_____|_| \\_\\_| \\_\\\\___/|_| \\_\\          |_____|_| \\_\\_| \\_\\\\___/|_| \\_\\          |_____|_| \\_\\_| \\_\\\\___/|_| \\_\\
  \x1B[0m                               
+
+{}
+
 \x1B[38;5;226m{}\x1B[0m
 
 {}
 
 \x1B[38;5;161m{}\x1B[0m
 ",
+        center_text(stage, 0),
         center_text("Please fix the cause of this error below to move on", 0),
         create_bar(),
         msg,
     );
 }
 
-fn success_output(msg: &str) {
+fn success_output(msg: &str, stage: &String) {
     let mut centered_text = format!(
         "\
 \n
@@ -241,9 +244,12 @@ fn success_output(msg: &str) {
 {}
 
 {}
+
+{}
 {}
 {msg}
         ",
+        center_text(stage, 0),
         center_text(
             "🚀 \x1B[38;5;113mCongratulations! You Passed This Stage!\x1B[0m 🚀",
             20

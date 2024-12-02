@@ -46,20 +46,34 @@ pub fn start_user_input(stages: Arc<RwLock<StageInfo>>) -> mpsc::Receiver<UserIn
             print!("\x1B7\x1B[H");
             stages.read().unwrap().print_progress_bar();
             print!("\x1B8");
-            io::stdout().flush().unwrap();
-        } else {
+        }
+        //        else if &input.cmp(&String::from("help\n")) == &std::cmp::Ordering::Equal {
+        //            // display the possible commands you can use
+        //            print!("\x1B[2J\x1B7\x1B[H");
+        //
+        //            print!(
+        //                r"
+        //help -> List out all the commands you can use.
+        //hint -> Gives hint for the current stage you are on.
+        //                "
+        //            );
+        //
+        //            print!("\x1B8");
+        //        } else if &input.cmp(&String::from("what\n")) == &std::cmp::Ordering::Equal {
+        //        }
+        else {
             // Show user how to quit
 
             print!("\x1B[1A\x1B[2K\x1B7\x1B[50B\x1B[2K");
             let text = center_text(
-                "Type \x1B[38;5;196mquit\x1B[0m to exit or quit the program.",
-                17,
+                "Type \x1B[38;5;196mquit\x1B[0m to exit the program. Type \x1B[38;5;33mhint\x1B[0m for hints.",
+                34,
             );
             print!("{text}");
             print!("\x1B8");
-
-            io::stdout().flush().unwrap();
         }
+
+        io::stdout().flush().unwrap();
     });
 
     rx
@@ -76,7 +90,6 @@ pub fn start_file_listener(
             match user_input_rx.recv_timeout(Duration::from_millis(200)) {
                 Ok(userinput) => match userinput {
                     UserInput::Quit => break,
-                    _ => {}
                 },
                 Err(err) => match err {
                     mpsc::RecvTimeoutError::Timeout => {}
@@ -89,7 +102,7 @@ pub fn start_file_listener(
 
             let read_lock = stages.read().unwrap();
 
-            if curr_stage >= read_lock.total_stages() {
+            if curr_stage > read_lock.total_stages() {
                 println!("You finished");
                 break;
             }

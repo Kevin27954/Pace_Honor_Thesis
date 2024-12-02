@@ -45,8 +45,7 @@ Unknown command. Usage:
             "learn" => {
                 let stages = Arc::new(RwLock::new(StageInfo::new()));
 
-                print!("\x1B[2J");
-                print!("\x1B7\x1B[H");
+                print!("\x1B[2J\x1B7\x1B[H");
                 stages.clone().read().unwrap().print_progress_bar();
                 print!("\x1B8");
 

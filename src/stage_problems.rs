@@ -20,8 +20,12 @@ impl StageInfo {
             stage_hints: hints::init_hints(),
             stage_introductions: introductions::init_introductions(),
             curr_stage: 0,
-            stages: 6,
+            stages: 10,
         }
+    }
+
+    pub fn get_current_stage_name(&self) -> &String {
+        &self.stage_complete[self.curr_stage].0
     }
 
     pub fn total_stages(&self) -> usize {

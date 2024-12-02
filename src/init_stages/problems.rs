@@ -6,6 +6,8 @@ pub fn init_problems() -> [&'static str; 10] {
 
 // print(123)
 // print(123, 456, 789)
+
+print(x)
 ",
         "\
 // Declare and print an integer:
@@ -16,6 +18,8 @@ pub fn init_problems() -> [&'static str; 10] {
 
 // Perform some operations:
 // print(10 + 5, 3.14 * 2.0)
+
+print(number)
 ",
         "\
 // Declare and print a boolean:
@@ -25,6 +29,8 @@ pub fn init_problems() -> [&'static str; 10] {
 // print(true and true, true or false)
 
 // print(!true)
+
+print(booleans)
 ",
         "\
 // Declare and print a string:
@@ -32,6 +38,8 @@ pub fn init_problems() -> [&'static str; 10] {
 
 // Combine strings:
 // print(\"John\" + \" \" + \"Doe\")
+
+print(String)
 ",
         "\
 // Give the 'age' variable a value.
@@ -43,22 +51,27 @@ age =
 print(age)
 ",
         "\
-// Use an `if` statement to check a condition:
 let number = 10
+        
+// Use an `if` statement to check a condition:
 
 // Use the correct math comparsion operator from:
 // <, >, >=, <=
 // To fix the expression below
-// number   5
-//        ^
-if number  5 then
+//                  number   5
+//                         ^
+let isGreaterThan5 = number 5
+    
+if isGreaterThan5 then
     print(\"Number is greater than 5!\")
 end
 
 // Give 'is_sunny' as boolean value
+
 let is_sunny = 
 
 // Add an `else` clause for alternative actions:
+
 if is_sunny then
     print(\"Let's go outside!\")
 else 
@@ -71,28 +84,11 @@ end
 
 // Use a `while` loop to repeat until a condition is false:
 
-// Syntax for a while loop
-// while <expression> do
-//     code here...
-// end
-
 let count = 0
 // Fix the code below
 while count <  do
      print(\"Count is:\", count)
      count = count + 1 // Increment the counter
-end
-
-// Use a `for` loop to iterate over a range:
-
-// Syntax for a for loop
-// for <var decl> , <expression> , <expression> do
-//     code here...
-// end
-
-// Fix the code below
-for let i = 0, i < , i = i +  do
-    print(\"Number: \", i)
 end
 ",
         "\
@@ -100,36 +96,45 @@ end
 function () do
      print(\"Hello from a function!\")
 end
+
 // call your function below
 <name>()
 
 // Create a function that takes parameters, 'a' and 'b':
-function add_numbers() do
+function add_numbers(_, _) do
     print(\"The sum is:\", a + b)
 end
+
 add_numbers(5, 10)
 
 // Create a function that returns a number squared:
 let num = <type your number>
-function square(number) do
+
+Function square(number) do
     return <number squared>
 end
+
 let result = square(num)
 print(\"Square of \",  num, \" is:\", result)
             ",
         "\
 // Define and use a basic struct:
 struct Person { name }
-let alice = Person {};
+
+let alice = Person {} // Creates a instance of Person type.
+
 // Access and modify the field 'name' from the struct alice.
 alice. = 
 print(\"Name:\", alice.name)
 
 // Create a Point struct with fields 'x' and 'y'
 struct Point {
-    Remove me and fill me in
+    // Fill me in
 }
-let origin = Point {}
+
+// Create an instance of Point struct
+let origin =
+
 print(\"Point at:\", origin.x, origin.y)
 ",
         "\
