@@ -6,6 +6,21 @@ This language is a dynamically typed programming language and functions as a fir
 
 ## Features
 
+**To use Bite**
+```
+cargo run run <path to file>
+```
+
+**Gamified Environment**
+
+To start the gamified environment run:
+```
+cargo run learn
+```
+
+
+## EBNF Grammar
+
 #### Variables and Types
 ```
 let string_var = "Some String"
