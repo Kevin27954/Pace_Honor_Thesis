@@ -2,7 +2,11 @@
 
 This project closely follows the book "*Crafting Interpreters*" by **Robert Nystrom**. However, a few deviations from the book, such as syntaxes (on the bottom), and features, such as OOP concepts, are missing from the book in my implementation. The main reason for this is because the purpose of this language is targeted towards absolute beginners or high schoolers, who might find OOP difficult to grasp.
 
-This language is a dynamically typed programming language and functions as a first-class value, with syntax inspired by **Lua**.
+This language is a dynamically typed programming language and functions as a first-class value, with syntax inspired by **Lua** for simplicity.
+
+# Future Works
+
+I plan to improve this project further by implementing my arena memory allocator as the memory manager. I also want to add a feature that allows the student to customize the syntax of the language to their liking. The idea is to have the student be able to translate their thoughts and ideas from their language into the program rather than learn a language itself - a lot more beneficial. Additionally, there will be a web interface version too, run on WASM, more suitable for students of earlier ages. Lastly, the ANSI terminal can be improved to include more levels/stages and an ASCII RPG.
 
 ## Features
 
